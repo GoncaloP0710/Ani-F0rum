@@ -1,0 +1,437 @@
+openapi: 3.0.0
+info:
+  title: "ANI-F0RUN REST API"
+  description: "An API about anime and anime-related topics"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  # Schemas used in the API 
+  schemas:
+    User: # User schema that represents a user
+      type: "object"
+      required:
+        - username
+        - password
+        - location
+        - anime_watched
+        - anime_watched_score
+        - topics_subscribed
+        - messages_sent
+        - karma
+        - achievements
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        location:
+          type: "string"
+        anime_watched:
+          type: "array"
+        anime_watched_score:
+          type: "array"
+        topics_subscribed:
+          type: "array"
+        messages_sent:
+          type: "array"
+        karma:
+          type: "integer"
+        achievements:
+          type: "array"
+    Message: # Message schema that represents a message
+      type: "object"
+      required:
+        - username
+        - message
+      properties:
+        username:
+          type: "string"
+        message:
+          type: "string"
+    Anime: #Anime schema that represents an anime
+      type: "object"
+      required:
+        - name
+        - genres
+        - episodes
+        - score
+        - aired
+        - synopsis
+      properties:
+        name:
+          type: "string"
+        genres:
+          type: "array"
+        episodes:
+          type: "integer"
+        score:
+          type: "number"
+        aired:
+          type: "string"
+        synopsis:
+          type: "string"
+    Topic: # Topic schema that represents a Topic
+      type: "object"
+      required: 
+        - name
+        - subscribers
+        - publications
+      properties:
+        name:
+          type: "string"
+        subscribers:
+          type: "array"
+        publications: 
+          type: "array"
+          $ref: "#/components/schemas/Publication"
+    Publication: # Publication schema that represents a Publication
+      type: "object"
+      required: 
+        - name
+        - topic_name
+      properties:
+        name:
+          type: "string"
+        topic_name:
+          type: "string"
+        message:
+          $ref: "#/components/schemas/Message"
+        images: 
+          type: "array"
+          $ref: "#/components/schemas/Image"
+    Image: # Image schema that represents a Image
+      type: "object"
+      required: 
+        - name
+      properties:
+        name:
+          type: "string"
+    Notification: # Notification schema that represents a Notification
+      type: "object"
+      required: 
+        - message
+      properties:
+        message:
+          type: "string"
+
+  # Parameters for paths 
+  parameters:
+    anime_name:
+      name: "anime_name"
+      description: "Name of the anime in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    user_name:
+      name: "user_name"
+      description: "Name of the user in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    topic_name:
+      name: "topic_name"
+      description: "Name of the topic"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    label:
+      name: "label"
+      description: "Label of the image"
+      in: path
+      required: True
+      schema:
+        type: "string"
+
+
+paths:
+  # =====================================================
+  # ======================= Topic =======================
+  # =====================================================
+  /topics:
+    get:
+      operationId: "topics.all_topics"
+      tags:
+        - Topic
+      summary: "Show a partial part of the topcis list"
+      responses:
+        "200":
+          description: "Successfully show partial topics list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "topic"
+                $ref: "#/components/schemas/Topic"
+    post:
+      operationId: "topics.create"
+      tags:
+        - Topic
+      summary: "Create a new topic"
+      requestBody:
+          description: "Topic to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "topic"
+                $ref: "#/components/schemas/Topic"
+      responses:
+        "201":
+          description: "Successfully created a topic"
+  /topics/{topic_name}:
+    get:
+      operationId: "topics.get_topic"
+      tags:
+        - Topic
+      summary: "Show a specific topic if it exists"
+      responses:
+        "200":
+          description: "Successfully show the topic"
+          content:
+            application/json:
+              schema:
+                x-body-name: "topic"
+                $ref: "#/components/schemas/Topic"
+        "404":
+          description: "Topic not found"
+    post:
+      operationId: "topics.publish"
+      tags:
+        - Topic
+      summary: "Create a publication in the topic"
+      requestBody:
+          description: "Publition to publish"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "publication"
+                $ref: "#/components/schemas/Publication"
+      responses:
+        "201":
+          description: "Successfully submitted a publication"
+  # =====================================================
+  # ======================= Image =======================
+  # =====================================================
+  /image:
+    post:
+      operationId: "images.label_generate"
+      tags:
+        - Images
+      summary: "Generates labels for the sent image"
+      requestBody:
+          description: "Image to extract labels"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "image"
+                $ref: "#/components/schemas/Image"
+      responses:
+        "201":
+          description: "Successfully submitted a publication"      
+  /image/{label}:
+    get:
+      operationId: "images.get_image"
+      tags:
+        - Images
+      summary: "Search for images based on the label parameter"
+      responses:
+        "200":
+          description: "Successfully show one or more images"
+        "404":
+          description: "No image with that label found"
+
+  # ====================================================
+  # ====================== Lookup ======================
+  # ====================================================
+            
+  /lookup:
+    get:
+      operationId: "server.lookup"
+      tags:
+        - Server
+      summary: "Search for available server addresses"
+      responses:
+        "200":
+          description: "Successfully show one or more addresses"
+        "404":
+          description: "No address available found"    
+
+
+
+  # =====================================================
+  # ======================= Anime =======================
+  # =====================================================  
+  
+  /anime:
+    get:
+      operationId: "anime.all_anime"
+      tags:
+        - Anime
+      summary: "Show the anime list"
+      responses:
+        "200":
+          description: "Successfully show anime list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "animes"
+                $ref: "#/components/schemas/Anime"
+          
+  /anime/anime_name/{anime_name}:
+    get:
+      operationId: "anime.get_anime"
+      tags:
+        - Anime
+      summary: "Show a specific anime if it exists"
+      responses:
+        "200":
+          description: "Successfully show the anime"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                x-body-name: "anime"
+                $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+
+  /anime/anime_genre/{anime_genre}:
+    get:
+      operationId: "anime.get_anime_by_genre"
+      tags:
+        - Anime
+      summary: "Show a partial part of the anime list by genre"
+      responses:
+        "200":
+          description: "Successfully show the anime"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "animes"
+                $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+  
+  /anime/anime_name/{anime_name}/related:
+    get:
+      operationId: "anime.get_related"
+      tags:
+        - Anime
+      summary: "Show related anime to the specific anime"
+      responses:
+        "200":
+          description: "Successfully show related anime"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "related_animes"
+                $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+          
+  # ============================================================
+  # ======================= Notification =======================
+  # ============================================================
+  
+  /notification/{user_name}:
+    get:
+      operationId: "notification.get_notifications"
+      tags:
+        - Notification
+      summary: "Show the notifications list"
+      responses:
+        "200":
+          description: "Successfully show notifications list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "notifications"
+                $ref: "#/components/schemas/Notification"
+
+  # ====================================================
+  # ======================= User =======================
+  # ====================================================
+
+  /user:
+    post:
+      operationId: "user.create"
+      tags:
+        - User
+      summary: "Create a new user"
+      requestBody:
+          description: "User to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "user"
+                $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "Successfully created a user"
+  
+  /user/{user_name}/related_by_anime:
+    get:
+      operationId: "user.get_related"
+      tags:
+        - User
+      summary: "Show related users to the specific user based on anime watched"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "related_users"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+  
+  /user/{user_name}/related_by_message:
+    get:
+      operationId: "user.get_related"
+      tags:
+        - User
+      summary: "Show related users to the specific user based on messages sent"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "related_users"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/achievements:
+    get:
+      operationId: "user.get_achievements"
+      tags:
+        - User
+      summary: "Show user achievements"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "user_achivements"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
