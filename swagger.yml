@@ -40,7 +40,7 @@ components:
         karma:
           type: "integer"
         achievements:
-          type: "array"
+          type: "object"
     Message: # Message schema that represents a message
       type: "object"
       required:
@@ -116,6 +116,22 @@ components:
       properties:
         message:
           type: "string"
+    Achievement: # Achievement schema that represents a Achievement
+      type: "object"
+      required: 
+        - name
+        - description
+        - date
+        - rarity
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        date:
+          type: "string"
+        rarity:
+          type: "string"
 
   # Parameters for paths 
   parameters:
@@ -147,12 +163,28 @@ components:
       required: True
       schema:
         type: "string"
+    anime_genre:
+      name: "anime_genre"
+      description: "Genre of the anime"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    achievement_name:
+      name: "achievement_name"
+      description: "Name of the achievement"
+      in: path
+      required: True
+      schema:
+        type: "string"
 
 
 paths:
+
   # =====================================================
   # ======================= Topic =======================
   # =====================================================
+
   /topics:
     get:
       operationId: "topics.all_topics"
@@ -216,9 +248,45 @@ paths:
       responses:
         "201":
           description: "Successfully submitted a publication"
+
+  /topics/{user_name}: 
+    get:
+      operationId: "topics.get_user_personalized"
+      tags:
+        - Topic
+      summary: "Get a personalized topic list for the user"
+      responses:
+        "200":
+          description: "Successfully show the topic list"
+          content:
+            application/json:
+              schema:
+                x-body-name: "array"
+                $ref: "#/components/schemas/Topic"
+        "404":
+          description: "User not found"
+  
+  /topics/{user_name}/feed: 
+    get:
+      operationId: "topics.get_user_personalized_feed"
+      tags:
+        - Topic
+      summary: "Get a personalized publication list for the user"
+      responses:
+        "200":
+          description: "Successfully show the publication list"
+          content:
+            application/json:
+              schema:
+                x-body-name: "array"
+                $ref: "#/components/schemas/Publication"
+        "404":
+          description: "User not found"
+
   # =====================================================
   # ======================= Image =======================
   # =====================================================
+
   /image:
     post:
       operationId: "images.label_generate"
@@ -263,8 +331,6 @@ paths:
           description: "Successfully show one or more addresses"
         "404":
           description: "No address available found"    
-
-
 
   # =====================================================
   # ======================= Anime =======================
@@ -431,7 +497,99 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "user_achivements"
+                x-body-name: "user_achievements"
                 $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
+
+  /user/{user_name}/karma:
+    get:
+      operationId: "user.get_karma"
+      tags:
+        - User
+      summary: "Show user karma"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "user_karma"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+  
+  /user/{user_name}/track_records:
+    get:
+      operationId: "user.get_track_records"
+      tags:
+        - User
+      summary: "Show user track records"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "user_track_records"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+  
+  /user/{user_name}/messages:
+    get:
+      operationId: "user.get_messages"
+      tags:
+        - User
+      summary: "Show user messages"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "user_messages"
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+# =====================================================
+# =================== Achievements ====================
+# =====================================================
+
+  /achievements:
+    get:
+      operationId: "achievements.all_achievements"
+      tags:
+        - Achievement
+      summary: "Show the achievements list"
+      responses:
+        "200":
+          description: "Successfully show achievements list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                x-body-name: "achievements"
+                $ref: "#/components/schemas/Achievement"
+  
+  /achievements/{achievement_name}:
+    get:
+      operationId: "achievements.get_achievement"
+      tags:
+        - Achievement
+      summary: "Show a specific achievement if it exists"
+      responses:
+        "200":
+          description: "Successfully show the achievement"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                x-body-name: "achievement"
+                $ref: "#/components/schemas/Achievement"
+        "404":
+          description: "Achievement not found"
