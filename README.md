@@ -39,7 +39,7 @@ The dataset was created on 28/07/2023 and is composed by these next parts:
 
 - Create a list of the most used topics for the user.
 - "Karma" system per user like the "Reddit" application in which you receive points according to your contribution to the forum.
-- Search anime by authors or genre.
+- Search anime by genre.
 - Recommendation of anime based on the user's topics of interest analisys. 
 - Implement authentication and authorization for secure access to the services.
 

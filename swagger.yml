@@ -576,7 +576,7 @@ paths:
       summary: "Show user achievements"
       responses:
         "200":
-          description: "Successfully show related users"
+          description: "Successfully show user achievements"
           content:
             application/json:
               schema:
@@ -585,6 +585,35 @@ paths:
                   $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
+  /user/{user_name}/{achievement_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "achievement_name"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
+    post:
+      operationId: "user.add_achievement"
+      tags:
+        - User
+      summary: "Add an achievement to a user"
+      requestBody:
+          description: "User and achievement to add"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "Successfully added achievement"
 
   /user/{user_name}/karma:
     parameters:
@@ -601,7 +630,7 @@ paths:
       summary: "Show user karma"
       responses:
         "200":
-          description: "Successfully show related users"
+          description: "Successfully show user karma"
           content:
             application/json:
               schema:
@@ -626,7 +655,7 @@ paths:
       summary: "Show user track records"
       responses:
         "200":
-          description: "Successfully show related users"
+          description: "Successfully show user track records"
           content:
             application/json:
               schema:
@@ -651,7 +680,7 @@ paths:
       summary: "Show user messages"
       responses:
         "200":
-          description: "Successfully show related users"
+          description: "Successfully show user messages"
           content:
             application/json:
               schema:
