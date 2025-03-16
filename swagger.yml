@@ -32,7 +32,7 @@ components:
         anime_watched:
           type: "array"
           items:
-            $ref: Anime
+            $ref: "#/components/schemas/Anime"
         anime_watched_score:
           type: "array"
           items:
@@ -44,7 +44,7 @@ components:
         messages_sent:
           type: "array"
           items:
-            $ref: Message
+            $ref: "#/components/schemas/Message"
         karma:
           type: "integer"
         achievements:
