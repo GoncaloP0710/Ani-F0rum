@@ -31,12 +31,20 @@ components:
           type: "string"
         anime_watched:
           type: "array"
+          items:
+            $ref: Anime
         anime_watched_score:
           type: "array"
+          items:
+            type: "integer"
         topics_subscribed:
           type: "array"
+          items:
+            type: "string"
         messages_sent:
           type: "array"
+          items:
+            $ref: Message
         karma:
           type: "integer"
         achievements:
@@ -65,6 +73,8 @@ components:
           type: "string"
         genres:
           type: "array"
+          items:
+            type: "string"
         episodes:
           type: "integer"
         score:
@@ -84,9 +94,12 @@ components:
           type: "string"
         subscribers:
           type: "array"
+          items:
+            type: "string"
         publications: 
           type: "array"
-          $ref: "#/components/schemas/Publication"
+          items:
+            $ref: "#/components/schemas/Publication"
     Publication: # Publication schema that represents a Publication
       type: "object"
       required: 
@@ -101,7 +114,8 @@ components:
           $ref: "#/components/schemas/Message"
         images: 
           type: "array"
-          $ref: "#/components/schemas/Image"
+          items:
+            $ref: "#/components/schemas/Image"
     Image: # Image schema that represents a Image
       type: "object"
       required: 
@@ -198,8 +212,8 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "topic"
-                $ref: "#/components/schemas/Topic"
+                items:
+                  $ref: "#/components/schemas/Topic"
     post:
       operationId: "topics.create"
       tags:
@@ -211,12 +225,18 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "topic"
                 $ref: "#/components/schemas/Topic"
       responses:
         "201":
           description: "Successfully created a topic"
   /topics/{topic_name}:
+    parameters:
+      - name: "topic_name"
+        in: path
+        required: true
+        description: "Name of the topic"
+        schema:
+          type: "string"
     get:
       operationId: "topics.get_topic"
       tags:
@@ -228,7 +248,6 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "topic"
                 $ref: "#/components/schemas/Topic"
         "404":
           description: "Topic not found"
@@ -243,13 +262,19 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "publication"
                 $ref: "#/components/schemas/Publication"
       responses:
         "201":
           description: "Successfully submitted a publication"
 
   /topics/{user_name}: 
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of a user"
+        schema:
+          type: "string"
     get:
       operationId: "topics.get_user_personalized"
       tags:
@@ -261,12 +286,18 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "array"
                 $ref: "#/components/schemas/Topic"
         "404":
           description: "User not found"
   
   /topics/{user_name}/feed: 
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of a user"
+        schema:
+          type: "string"
     get:
       operationId: "topics.get_user_personalized_feed"
       tags:
@@ -278,8 +309,9 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "array"
-                $ref: "#/components/schemas/Publication"
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Publication"
         "404":
           description: "User not found"
 
@@ -299,12 +331,18 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "image"
                 $ref: "#/components/schemas/Image"
       responses:
         "201":
           description: "Successfully submitted a publication"      
   /image/{label}:
+    parameters:
+      - name: "label"
+        in: path
+        required: true
+        description: "Label name"
+        schema:
+          type: "string"
     get:
       operationId: "images.get_image"
       tags:
@@ -349,10 +387,17 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "animes"
-                $ref: "#/components/schemas/Anime"
+                items:
+                  $ref: "#/components/schemas/Anime"
           
   /anime/anime_name/{anime_name}:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
     get:
       operationId: "anime.get_anime"
       tags:
@@ -364,13 +409,18 @@ paths:
           content:
             application/json:
               schema:
-                type: "object"
-                x-body-name: "anime"
                 $ref: "#/components/schemas/Anime"
         "404":
           description: "Anime not found"
 
   /anime/anime_genre/{anime_genre}:
+    parameters:
+      - name: "anime_genre"
+        in: path
+        required: true
+        description: "Genre of the anime"
+        schema:
+          type: "string"
     get:
       operationId: "anime.get_anime_by_genre"
       tags:
@@ -383,12 +433,19 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "animes"
-                $ref: "#/components/schemas/Anime"
+                items:
+                  $ref: "#/components/schemas/Anime"
         "404":
           description: "Anime not found"
   
   /anime/anime_name/{anime_name}/related:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
     get:
       operationId: "anime.get_related"
       tags:
@@ -401,8 +458,8 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "related_animes"
-                $ref: "#/components/schemas/Anime"
+                items:
+                  $ref: "#/components/schemas/Anime"
         "404":
           description: "Anime not found"
           
@@ -411,6 +468,13 @@ paths:
   # ============================================================
   
   /notification/{user_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "notification.get_notifications"
       tags:
@@ -423,8 +487,8 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "notifications"
-                $ref: "#/components/schemas/Notification"
+                items:
+                  $ref: "#/components/schemas/Notification"
 
   # ====================================================
   # ======================= User =======================
@@ -442,15 +506,21 @@ paths:
           content:
             application/json:
               schema:
-                x-body-name: "user"
                 $ref: "#/components/schemas/User"
       responses:
         "201":
           description: "Successfully created a user"
   
   /user/{user_name}/related_by_anime:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
-      operationId: "user.get_related"
+      operationId: "user.get_related_by_anime"
       tags:
         - User
       summary: "Show related users to the specific user based on anime watched"
@@ -461,14 +531,21 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "related_users"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
   
   /user/{user_name}/related_by_message:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
-      operationId: "user.get_related"
+      operationId: "user.get_related_by_message"
       tags:
         - User
       summary: "Show related users to the specific user based on messages sent"
@@ -479,12 +556,19 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "related_users"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
 
   /user/{user_name}/achievements:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "user.get_achievements"
       tags:
@@ -497,12 +581,19 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "user_achievements"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
 
   /user/{user_name}/karma:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "user.get_karma"
       tags:
@@ -515,12 +606,19 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "user_karma"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
   
   /user/{user_name}/track_records:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "user.get_track_records"
       tags:
@@ -533,12 +631,19 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "user_track_records"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
   
   /user/{user_name}/messages:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "user.get_messages"
       tags:
@@ -551,8 +656,8 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "user_messages"
-                $ref: "#/components/schemas/User"
+                items:
+                  $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
 
@@ -573,10 +678,17 @@ paths:
             application/json:
               schema:
                 type: "array"
-                x-body-name: "achievements"
-                $ref: "#/components/schemas/Achievement"
+                items:
+                  $ref: "#/components/schemas/Achievement"
   
   /achievements/{achievement_name}:
+    parameters:
+      - name: "achievement_name"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
     get:
       operationId: "achievements.get_achievement"
       tags:
@@ -589,7 +701,7 @@ paths:
             application/json:
               schema:
                 type: "object"
-                x-body-name: "achievement"
-                $ref: "#/components/schemas/Achievement"
+                items:
+                  $ref: "#/components/schemas/Achievement"
         "404":
           description: "Achievement not found"
