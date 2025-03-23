@@ -7,7 +7,7 @@ message Message {
 
 // Created for the purpose of the users_related_by_message_Request
 message related_messages_Request {
-    repeated string user_name = 1;
+    repeated string anime_names = 1;
 }
 
 // Created for the purpose of the users_related_by_message_Request
@@ -15,6 +15,14 @@ message related_messages_Response {
     repeated Message messages = 1;
 }
 
+// Created for the purpose of the get_all_messages_Request
+message get_all_messages_Request {}
+
+message get_all_messages_Response {
+    repeated Message messages = 1;
+}
+
 service PostRepository {
+    rpc GetAllMessages (get_all_messages_Request) returns (get_all_messages_Response);
     rpc GetMessagesRelatedToUser (related_messages_Request) returns (related_messages_Response);
 }

@@ -28,11 +28,11 @@ message get_animes_Response {
     repeated Anime animes = 1;
 }
 
-message anime_related_by_genre_Request {
-    string anime_name = 1;
+message anime_by_genre_Request {
+  AnimeGenre anime_genre = 1;
 }
 
-message anime_related_by_genre_Response {
+message anime_by_genre_Response {
     repeated Anime animes = 1;
 }
 

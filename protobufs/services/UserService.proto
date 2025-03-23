@@ -1,37 +1,19 @@
 syntax = "proto3";
 
-service UserService {
-    rpc GetUserStatistics (UserRequest) returns (UserStatistics);
-    rpc GetUserRecommendations (UserRequest) returns (UserRecommendations);
-    rpc GenerateFeed (UserRequest) returns (Feed);
-    rpc PublishPost (Post) returns (PostResponse);
-    rpc GetAchievements (UserRequest) returns (Achievements);
-}
-
-message UserRequest {
-    string user_id = 1;
-}
-
 message User {
     string username = 1;
     string password = 2;
-    string location = 3;
-    repeated Anime animes_watched = 4; 
+    optional string location = 3;
+    repeated string animes_watched = 4;
     repeated int32 anime_watched_score = 5;
     repeated string topics_subscribed = 6;
-    repeated Message messages_sent = 7;
     int32 karma = 8;
     repeated Achievement achievements = 9;
-}
-
-message Feed {
-    repeated string posts = 1;
 }
 
 message Anime {
     string title = 1;
     string genre = 2;
-    int32 episodes_watched = 3;
 }
 
 message Message {
@@ -43,4 +25,31 @@ message Achievement {
     string name = 1;
     string description = 2;
     string date_earned = 3;
+    required string rarity = 4;
+}
+
+message Feed { // Check after!
+    repeated string posts = 1;
+}
+
+message get_user_Request {
+    string user_id = 1;
+}
+
+message get_user_Response {
+    User user = 1;
+}
+
+message users_related_by_anime_Request {
+    repeated string anime_names = 1; // All the animes the user has watched and the ones related to them
+}
+
+message users_related_by_anime_Response {
+    repeated User users = 1;
+}
+
+service UserService {
+    rpc GetFeed (UserRequest) returns (Feed); // Check after!
+    rpc GetUser (get_user_Request) returns (get_user_Response);
+    rpc GetUsersRelatedByAnime (users_related_by_anime_Request) returns (users_related_by_anime_Response);
 }
