@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+service AchievementsController {
+    rpc GetAchivementList (AchievementListRequest) returns (AchievementListResponse);
+
+    rpc GetAchievement (AchievementRequest) returns (AchievementResponse);
+
+    rpc UpdateAchievement (UpdateRequest) returns (UpdateResponse);
+}
+
+message Achievement {
+    required string name = 1;
+    required string description = 2;
+    optional string date = 3;
+    required string rarity = 4;
+}
+
+message User {
+    required string username = 1;
+    required string password = 2;
+    optional string location = 3;
+    repeated Anime animes_watched = 4; 
+    repeated int32 anime_watched_score = 5;
+    repeated string topics_subscribed = 6;
+    repeated Message messages_sent = 7;
+    required int32 karma = 8;
+    repeated Achievement achievements = 9;
+}
+
+message AchievementListRequest {
+    string query = 0;
+}
+
+message AchievementListResponse {
+    repeated Achievement achievements = 1;
+}
+
+
+message AchievementRequest{
+    string name = 1;
+}
+
+message AchievementResponse{
+    Achievement item = 1;
+}
+
+message UpdateRequest{
+    User user_to_update = 1;
+    Achievement new = 2;
+}
+
+message UpdateResponse{
+    bool success = 1;
+}

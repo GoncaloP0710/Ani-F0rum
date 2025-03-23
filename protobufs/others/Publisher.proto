@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+message Subscriber {
+    string name = 1;
+}
+
+message Message {
+    string username = 1;
+    string content = 2;
+}
+
+message Image {
+    string name = 1;
+}
+
+message Publication {
+    string name = 1;
+    string topicname = 2;
+    oneof content {
+        Message message = 3;
+        Image images = 4;
+    }
+}
+
+message Topic {
+    string topicname = 1;
+    repeated Subscriber subscribers = 2;
+    repeated Publication publications = 3;
+}
+
+message GetTopicsRequest {}
+
+message GetTopicsResponse {
+    repeated Topic topics = 1;
+}
+
+message CreateTopicRequest {
+    string topicname = 1;
+}
+
+message CreateTopicResponse {
+    string topicname = 1;
+}
+
+message GetTopicRequest {
+    string topicname = 1;
+}
+
+message GetTopicResponse {
+    Topic topic = 1;
+}
+
+message PublishInTopicRequest {
+    int32 userId = 1;
+    string topicname = 2;
+    oneof content {
+        Message message = 3;
+        Image image = 4;
+    }
+}
+
+message PublishInTopicResponse {
+    string publicationname = 1;
+}
+
+message KarmaRequest {
+    string user_id = 1;
+    int32 post_count = 2;
+}
+
+message KarmaResponse {
+    string user_id = 1;
+    int32 karma_points = 2;
+}
+
+service Publisher {
+    rpc GetTopics (GetTopicsRequest) returns (GetTopicsResponse);
+    rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
+    rpc GetTopic (GetTopicRequest) returns (GetTopicResponse);
+    rpc Publish (PublishInTopicRequest) returns (PublishInTopicResponse);
+    rpc Karma (KarmaRequest) returns (KarmaResponse);
+}

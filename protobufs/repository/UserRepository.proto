@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+service UserRepository {
+    rpc SaveUser (User) returns (SaveResponse);
+    rpc GetUserById (UserIdRequest) returns (User);
+    rpc GetAllUsers (Empty) returns (UserList);
+    rpc DeleteUser (UserIdRequest) returns (DeleteResponse);
+}
+
+message User {
+  required string username = 1;
+  required string password = 2;
+  optional string location = 3;
+  repeated Anime animes_watched = 4; 
+  repeated int32 anime_watched_score = 5;
+  repeated string topics_subscribed = 6;
+  repeated Message messages_sent = 7;
+  required int32 karma = 8;
+  repeated Achievement achievements = 9;
+}
+
+message UserIdRequest {
+    string id = 1;
+}
+
+message UserList {
+    repeated User users = 1;
+}
+
+message SaveResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message DeleteResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message Empty {}

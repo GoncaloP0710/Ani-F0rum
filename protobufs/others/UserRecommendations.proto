@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+message Achievement {
+    string title = 1;
+    string description = 2;
+    string date = 3;
+    string rarity = 4; // Ninguém fala comigo, na minha cabeca deveria ser um enum. Obrigado equipa.
+}
+
+message User {
+    string username = 1;
+    string password = 2;
+    optional string location = 3;
+    repeated string animes_watched = 4;
+    repeated int32 anime_watched_score = 5;
+    repeated string topics_subscribed = 6;
+    int32 karma = 8;
+    repeated Achievement achievements = 9;
+}
+
+message users_related_by_anime_Request {
+    string user_name = 1; 
+}
+
+message users_related_by_anime_Response {
+    repeated User users = 1;
+}
+
+message users_related_by_message_Request {
+    string user_name = 1; 
+}
+
+message users_related_by_message_Response {
+    repeated User users = 1;
+}
+
+message users_related_by_topics_Request {
+    string user_name = 1; 
+}
+
+message users_related_by_topics_Response {
+    repeated User users = 1;
+}
+
+message recomended_animeList_Request {
+    string user_name = 1; 
+}
+
+message recomended_animeList_Response {
+    repeated Anime animes = 1;
+}
+
+service UserRecommendations {
+    rpc GetUsersRelatedByAnime (users_related_by_anime_Request) returns (users_related_by_anime_Response);
+    rpc GetUsersRelatedByMessage (users_related_by_message_Request) returns (users_related_by_message_Response);
+    rpc GetUsersRelatedByTopics (users_related_by_topics_Request) returns (users_related_by_topics_Response);
+    rpc GetRecomendedAnimeList (recomended_animeList_Request) returns (recomended_animeList_Response);
+}

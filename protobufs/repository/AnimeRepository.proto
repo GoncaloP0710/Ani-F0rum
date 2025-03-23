@@ -1,0 +1,51 @@
+syntax = "proto3";
+ 
+enum AnimeGenre {
+  ACTION = 0;
+  ADVENTURE = 1;
+  COMEDY = 2;
+  DRAMA = 3;
+  FANTASY = 4;
+  HORROR = 5;
+  MYSTERY = 6;
+  ROMANCE = 7;
+  SCI_FI = 8;
+  THRILLER = 9;
+}
+
+message Anime {
+  string name = 1;
+  repeated AnimeGenre genres = 2;
+  int32 episodes = 3;
+  float score = 4;
+  string aired = 5;
+  string synopsis = 6;
+}
+
+message get_animes {}
+
+message get_animes_Response {
+    repeated Anime animes = 1;
+}
+
+message anime_related_by_genre_Request {
+    string anime_name = 1;
+}
+
+message anime_related_by_genre_Response {
+    repeated Anime animes = 1;
+}
+
+message anime_by_name_Request {
+    string anime_name = 1;
+}
+
+message anime_by_name_Response {
+    Anime anime = 1;
+}
+
+service UserStatistics {
+    rpc GetAnimeRelatedByGenre (anime_related_by_genre_Request) returns (anime_related_by_genre_Response);
+    rpc GetAnimes (get_animes) returns (get_animes_Response);
+    rpc GetAnimeByName (anime_by_name_Request) returns (anime_by_name_Response);
+}

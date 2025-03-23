@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+service AchievementsController {
+    rpc GetAchivementList (AchievementListRequest) returns (AchievementListResponse);
+
+    rpc GetAchievement (AchievementRequest) returns (AchievementResponse);
+}
+
+message Achievement {
+    required string name = 1;
+    required string description = 2;
+    optional string date = 3;
+    required string rarity = 4;
+}
+
+message AchievementListResponse {
+    repeated Achievement achievements = 1;
+}
+
+message AchievementListRequest {
+    string query = 0;
+}
+
+message AchievementRequest{
+    int32 id = 1;
+}
+
+message AchievementResponse{
+    Achievement item = 1;
+}

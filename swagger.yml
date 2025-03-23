@@ -32,7 +32,7 @@ components:
         anime_watched:
           type: "array"
           items:
-            $ref: "#/components/schemas/Anime"
+            type: "string"
         anime_watched_score:
           type: "array"
           items:
@@ -41,23 +41,21 @@ components:
           type: "array"
           items:
             type: "string"
-        messages_sent:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Message"
         karma:
           type: "integer"
         achievements:
-          type: "object"
+          type: "array"
+          items:
+             $ref: "#/components/schemas/Achievement"
     Message: # Message schema that represents a message
       type: "object"
       required:
         - username
-        - message
+        - content
       properties:
         username:
           type: "string"
-        message:
+        content:
           type: "string"
     Anime: #Anime schema that represents an anime
       type: "object"
@@ -689,6 +687,74 @@ paths:
                   $ref: "#/components/schemas/User"
         "404":
           description: "User not found"
+
+  /user/{user_name}/recomended_animeList:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_recomended_animeList"
+      tags:
+        - User
+      summary: "Show recomended anime list for the user"
+      responses:
+        "200":
+          description: "Successfully show recomended anime list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
+        "404":
+          description: "User not found"
+
+  # =====================================================
+  # ======================= Server ======================
+  # =====================================================
+
+  /server:
+    get:
+      operationId: "server.get_server"
+      tags:
+        - Server
+      summary: "Show the server list"
+      responses:
+        "200":
+          description: "Successfully show server list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Server"
+  
+  /server/{server_name}:
+    parameters:
+      - name: "server_name"
+        in: path
+        required: true
+        description: "Name of the server"
+        schema:
+          type: "string"
+    get:
+      operationId: "server.get_server"
+      tags:
+        - Server
+      summary: "Show a specific server if it exists"
+      responses:
+        "200":
+          description: "Successfully show the server"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Server"
+        "404":
+          description: "Server not found"
 
 # =====================================================
 # =================== Achievements ====================
