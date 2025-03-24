@@ -1,5 +1,12 @@
 syntax = "proto3";
 
+message Achievement {
+    string title = 1;
+    string description = 2;
+    string date = 3;
+    string rarity = 4; // Ninguém fala comigo, na minha cabeca deveria ser um enum. Obrigado equipa.
+}
+
 message User {
     string username = 1;
     string password = 2;

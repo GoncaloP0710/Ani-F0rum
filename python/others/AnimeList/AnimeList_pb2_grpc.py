@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class UserStatisticsStub(object):
+class AnimeListStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,23 +35,23 @@ class UserStatisticsStub(object):
             channel: A grpc.Channel.
         """
         self.GetAnimeRelatedByGenre = channel.unary_unary(
-                '/UserStatistics/GetAnimeRelatedByGenre',
+                '/AnimeList/GetAnimeRelatedByGenre',
                 request_serializer=AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
                 response_deserializer=AnimeList__pb2.anime_related_by_genre_Response.FromString,
                 _registered_method=True)
         self.GetAnimes = channel.unary_unary(
-                '/UserStatistics/GetAnimes',
+                '/AnimeList/GetAnimes',
                 request_serializer=AnimeList__pb2.get_animes.SerializeToString,
                 response_deserializer=AnimeList__pb2.get_animes_Response.FromString,
                 _registered_method=True)
         self.GetAnimeByName = channel.unary_unary(
-                '/UserStatistics/GetAnimeByName',
+                '/AnimeList/GetAnimeByName',
                 request_serializer=AnimeList__pb2.anime_by_name_Request.SerializeToString,
                 response_deserializer=AnimeList__pb2.anime_by_name_Response.FromString,
                 _registered_method=True)
 
 
-class UserStatisticsServicer(object):
+class AnimeListServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetAnimeRelatedByGenre(self, request, context):
@@ -73,7 +73,7 @@ class UserStatisticsServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_UserStatisticsServicer_to_server(servicer, server):
+def add_AnimeListServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAnimeRelatedByGenre,
@@ -92,13 +92,13 @@ def add_UserStatisticsServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'UserStatistics', rpc_method_handlers)
+            'AnimeList', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('UserStatistics', rpc_method_handlers)
+    server.add_registered_method_handlers('AnimeList', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class UserStatistics(object):
+class AnimeList(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -115,7 +115,7 @@ class UserStatistics(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UserStatistics/GetAnimeRelatedByGenre',
+            '/AnimeList/GetAnimeRelatedByGenre',
             AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
             AnimeList__pb2.anime_related_by_genre_Response.FromString,
             options,
@@ -142,7 +142,7 @@ class UserStatistics(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UserStatistics/GetAnimes',
+            '/AnimeList/GetAnimes',
             AnimeList__pb2.get_animes.SerializeToString,
             AnimeList__pb2.get_animes_Response.FromString,
             options,
@@ -169,7 +169,7 @@ class UserStatistics(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UserStatistics/GetAnimeByName',
+            '/AnimeList/GetAnimeByName',
             AnimeList__pb2.anime_by_name_Request.SerializeToString,
             AnimeList__pb2.anime_by_name_Response.FromString,
             options,

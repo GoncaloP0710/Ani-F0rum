@@ -24,15 +24,15 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x41nimeList.proto\"t\n\x05\x41nime\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x06genres\x18\x02 \x03(\x0e\x32\x0b.AnimeGenre\x12\x10\n\x08\x65pisodes\x18\x03 \x01(\x05\x12\r\n\x05score\x18\x04 \x01(\x02\x12\r\n\x05\x61ired\x18\x05 \x01(\t\x12\x10\n\x08synopsis\x18\x06 \x01(\t\"\x0c\n\nget_animes\"-\n\x13get_animes_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"4\n\x1e\x61nime_related_by_genre_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"9\n\x1f\x61nime_related_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"%\n\x15\x61nime_by_name_Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"/\n\x16\x61nime_by_name_Response\x12\x15\n\x05\x61nime\x18\x01 \x01(\x0b\x32\x06.Anime*\x8b\x01\n\nAnimeGenre\x12\n\n\x06\x41\x43TION\x10\x00\x12\r\n\tADVENTURE\x10\x01\x12\n\n\x06\x43OMEDY\x10\x02\x12\t\n\x05\x44RAMA\x10\x03\x12\x0b\n\x07\x46\x41NTASY\x10\x04\x12\n\n\x06HORROR\x10\x05\x12\x0b\n\x07MYSTERY\x10\x06\x12\x0b\n\x07ROMANCE\x10\x07\x12\n\n\x06SCI_FI\x10\x08\x12\x0c\n\x08THRILLER\x10\t2\xe0\x01\n\x0eUserStatistics\x12[\n\x16GetAnimeRelatedByGenre\x12\x1f.anime_related_by_genre_Request\x1a .anime_related_by_genre_Response\x12.\n\tGetAnimes\x12\x0b.get_animes\x1a\x14.get_animes_Response\x12\x41\n\x0eGetAnimeByName\x12\x16.anime_by_name_Request\x1a\x17.anime_by_name_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x41nimeList.proto\"t\n\x05\x41nime\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1b\n\x06genres\x18\x02 \x03(\x0e\x32\x0b.AnimeGenre\x12\x10\n\x08\x65pisodes\x18\x03 \x01(\x05\x12\r\n\x05score\x18\x04 \x01(\x02\x12\r\n\x05\x61ired\x18\x05 \x01(\t\x12\x10\n\x08synopsis\x18\x06 \x01(\t\"\x0c\n\nget_animes\"-\n\x13get_animes_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"4\n\x1e\x61nime_related_by_genre_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"9\n\x1f\x61nime_related_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"+\n\x15\x61nime_by_name_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"/\n\x16\x61nime_by_name_Response\x12\x15\n\x05\x61nime\x18\x01 \x01(\x0b\x32\x06.Anime*\x8b\x01\n\nAnimeGenre\x12\n\n\x06\x41\x43TION\x10\x00\x12\r\n\tADVENTURE\x10\x01\x12\n\n\x06\x43OMEDY\x10\x02\x12\t\n\x05\x44RAMA\x10\x03\x12\x0b\n\x07\x46\x41NTASY\x10\x04\x12\n\n\x06HORROR\x10\x05\x12\x0b\n\x07MYSTERY\x10\x06\x12\x0b\n\x07ROMANCE\x10\x07\x12\n\n\x06SCI_FI\x10\x08\x12\x0c\n\x08THRILLER\x10\t2\xdb\x01\n\tAnimeList\x12[\n\x16GetAnimeRelatedByGenre\x12\x1f.anime_related_by_genre_Request\x1a .anime_related_by_genre_Response\x12.\n\tGetAnimes\x12\x0b.get_animes\x1a\x14.get_animes_Response\x12\x41\n\x0eGetAnimeByName\x12\x16.anime_by_name_Request\x1a\x17.anime_by_name_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'AnimeList_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_ANIMEGENRE']._serialized_start=400
-  _globals['_ANIMEGENRE']._serialized_end=539
+  _globals['_ANIMEGENRE']._serialized_start=406
+  _globals['_ANIMEGENRE']._serialized_end=545
   _globals['_ANIME']._serialized_start=19
   _globals['_ANIME']._serialized_end=135
   _globals['_GET_ANIMES']._serialized_start=137
@@ -44,9 +44,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_start=252
   _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_end=309
   _globals['_ANIME_BY_NAME_REQUEST']._serialized_start=311
-  _globals['_ANIME_BY_NAME_REQUEST']._serialized_end=348
-  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_start=350
-  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_end=397
-  _globals['_USERSTATISTICS']._serialized_start=542
-  _globals['_USERSTATISTICS']._serialized_end=766
+  _globals['_ANIME_BY_NAME_REQUEST']._serialized_end=354
+  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_start=356
+  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_end=403
+  _globals['_ANIMELIST']._serialized_start=548
+  _globals['_ANIMELIST']._serialized_end=767
 # @@protoc_insertion_point(module_scope)

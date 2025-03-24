@@ -44,7 +44,7 @@ message anime_by_name_Response {
     Anime anime = 1;
 }
 
-service UserStatistics {
+service AnimeList {
     rpc GetAnimeRelatedByGenre (anime_related_by_genre_Request) returns (anime_related_by_genre_Response);
     rpc GetAnimes (get_animes) returns (get_animes_Response);
     rpc GetAnimeByName (anime_by_name_Request) returns (anime_by_name_Response);

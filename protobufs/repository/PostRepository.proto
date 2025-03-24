@@ -14,5 +14,4 @@ message get_all_messages_Response {
 
 service PostRepository {
     rpc GetAllMessages (get_all_messages_Request) returns (get_all_messages_Response);
-    rpc GetMessagesRelatedToUser (related_messages_Request) returns (related_messages_Response);
 }
