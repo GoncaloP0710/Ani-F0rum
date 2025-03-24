@@ -3,7 +3,10 @@
 import grpc
 import warnings
 
-import AnimeService_pb2 as AnimeService__pb2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+import python.services.Anime.AnimeService_pb2 as services_dot_AnimeService__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +21,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in AnimeService_pb2_grpc.py depends on'
+        + f' but the generated code in services/AnimeService_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -26,7 +29,8 @@ if _version_not_supported:
 
 
 class AnimeServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR ANIME
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -34,47 +38,31 @@ class AnimeServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAnimeRelatedByGenre = channel.unary_unary(
-                '/AnimeService/GetAnimeRelatedByGenre',
-                request_serializer=AnimeService__pb2.anime_related_by_genre_Request.SerializeToString,
-                response_deserializer=AnimeService__pb2.anime_related_by_genre_Response.FromString,
-                _registered_method=True)
-        self.GetAnimeByGenre = channel.unary_unary(
-                '/AnimeService/GetAnimeByGenre',
-                request_serializer=AnimeService__pb2.anime_by_genre_Request.SerializeToString,
-                response_deserializer=AnimeService__pb2.anime_by_genre_Response.FromString,
-                _registered_method=True)
         self.GetAnimes = channel.unary_unary(
                 '/AnimeService/GetAnimes',
-                request_serializer=AnimeService__pb2.get_animes.SerializeToString,
-                response_deserializer=AnimeService__pb2.get_animes_Response.FromString,
+                request_serializer=services_dot_AnimeService__pb2.get_animes.SerializeToString,
+                response_deserializer=services_dot_AnimeService__pb2.get_animes_Response.FromString,
                 _registered_method=True)
         self.GetAnimeByName = channel.unary_unary(
                 '/AnimeService/GetAnimeByName',
-                request_serializer=AnimeService__pb2.anime_by_name_Request.SerializeToString,
-                response_deserializer=AnimeService__pb2.anime_by_name_Response.FromString,
+                request_serializer=services_dot_AnimeService__pb2.anime_by_name_Request.SerializeToString,
+                response_deserializer=services_dot_AnimeService__pb2.anime_by_name_Response.FromString,
                 _registered_method=True)
-        self.GetAnimeByUser = channel.unary_unary(
-                '/AnimeService/GetAnimeByUser',
-                request_serializer=AnimeService__pb2.get_anime_by_User_Request.SerializeToString,
-                response_deserializer=AnimeService__pb2.get_anime_by_User_Response.FromString,
+        self.GetMultipleAnime = channel.unary_unary(
+                '/AnimeService/GetMultipleAnime',
+                request_serializer=services_dot_AnimeService__pb2.get_multiple_anime_Request.SerializeToString,
+                response_deserializer=services_dot_AnimeService__pb2.get_multiple_anime_Response.FromString,
+                _registered_method=True)
+        self.GetAnimeByGenre = channel.unary_unary(
+                '/AnimeService/GetAnimeByGenre',
+                request_serializer=services_dot_AnimeService__pb2.anime_by_genre_Request.SerializeToString,
+                response_deserializer=services_dot_AnimeService__pb2.anime_by_genre_Response.FromString,
                 _registered_method=True)
 
 
 class AnimeServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def GetAnimeRelatedByGenre(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetAnimeByGenre(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+    """--------------------------> SERVICE FOR ANIME
+    """
 
     def GetAnimes(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -88,7 +76,13 @@ class AnimeServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimeByUser(self, request, context):
+    def GetMultipleAnime(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAnimeByGenre(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -97,30 +91,25 @@ class AnimeServiceServicer(object):
 
 def add_AnimeServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeRelatedByGenre,
-                    request_deserializer=AnimeService__pb2.anime_related_by_genre_Request.FromString,
-                    response_serializer=AnimeService__pb2.anime_related_by_genre_Response.SerializeToString,
-            ),
-            'GetAnimeByGenre': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeByGenre,
-                    request_deserializer=AnimeService__pb2.anime_by_genre_Request.FromString,
-                    response_serializer=AnimeService__pb2.anime_by_genre_Response.SerializeToString,
-            ),
             'GetAnimes': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAnimes,
-                    request_deserializer=AnimeService__pb2.get_animes.FromString,
-                    response_serializer=AnimeService__pb2.get_animes_Response.SerializeToString,
+                    request_deserializer=services_dot_AnimeService__pb2.get_animes.FromString,
+                    response_serializer=services_dot_AnimeService__pb2.get_animes_Response.SerializeToString,
             ),
             'GetAnimeByName': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAnimeByName,
-                    request_deserializer=AnimeService__pb2.anime_by_name_Request.FromString,
-                    response_serializer=AnimeService__pb2.anime_by_name_Response.SerializeToString,
+                    request_deserializer=services_dot_AnimeService__pb2.anime_by_name_Request.FromString,
+                    response_serializer=services_dot_AnimeService__pb2.anime_by_name_Response.SerializeToString,
             ),
-            'GetAnimeByUser': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeByUser,
-                    request_deserializer=AnimeService__pb2.get_anime_by_User_Request.FromString,
-                    response_serializer=AnimeService__pb2.get_anime_by_User_Response.SerializeToString,
+            'GetMultipleAnime': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMultipleAnime,
+                    request_deserializer=services_dot_AnimeService__pb2.get_multiple_anime_Request.FromString,
+                    response_serializer=services_dot_AnimeService__pb2.get_multiple_anime_Response.SerializeToString,
+            ),
+            'GetAnimeByGenre': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAnimeByGenre,
+                    request_deserializer=services_dot_AnimeService__pb2.anime_by_genre_Request.FromString,
+                    response_serializer=services_dot_AnimeService__pb2.anime_by_genre_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -131,61 +120,8 @@ def add_AnimeServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AnimeService(object):
-    """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def GetAnimeRelatedByGenre(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/AnimeService/GetAnimeRelatedByGenre',
-            AnimeService__pb2.anime_related_by_genre_Request.SerializeToString,
-            AnimeService__pb2.anime_related_by_genre_Response.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetAnimeByGenre(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/AnimeService/GetAnimeByGenre',
-            AnimeService__pb2.anime_by_genre_Request.SerializeToString,
-            AnimeService__pb2.anime_by_genre_Response.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
+    """--------------------------> SERVICE FOR ANIME
+    """
 
     @staticmethod
     def GetAnimes(request,
@@ -202,8 +138,8 @@ class AnimeService(object):
             request,
             target,
             '/AnimeService/GetAnimes',
-            AnimeService__pb2.get_animes.SerializeToString,
-            AnimeService__pb2.get_animes_Response.FromString,
+            services_dot_AnimeService__pb2.get_animes.SerializeToString,
+            services_dot_AnimeService__pb2.get_animes_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -229,8 +165,8 @@ class AnimeService(object):
             request,
             target,
             '/AnimeService/GetAnimeByName',
-            AnimeService__pb2.anime_by_name_Request.SerializeToString,
-            AnimeService__pb2.anime_by_name_Response.FromString,
+            services_dot_AnimeService__pb2.anime_by_name_Request.SerializeToString,
+            services_dot_AnimeService__pb2.anime_by_name_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -242,7 +178,7 @@ class AnimeService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetAnimeByUser(request,
+    def GetMultipleAnime(request,
             target,
             options=(),
             channel_credentials=None,
@@ -255,9 +191,36 @@ class AnimeService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeService/GetAnimeByUser',
-            AnimeService__pb2.get_anime_by_User_Request.SerializeToString,
-            AnimeService__pb2.get_anime_by_User_Response.FromString,
+            '/AnimeService/GetMultipleAnime',
+            services_dot_AnimeService__pb2.get_multiple_anime_Request.SerializeToString,
+            services_dot_AnimeService__pb2.get_multiple_anime_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetAnimeByGenre(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeService/GetAnimeByGenre',
+            services_dot_AnimeService__pb2.anime_by_genre_Request.SerializeToString,
+            services_dot_AnimeService__pb2.anime_by_genre_Response.FromString,
             options,
             channel_credentials,
             insecure,

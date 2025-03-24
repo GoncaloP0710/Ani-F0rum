@@ -1,34 +1,7 @@
 syntax = "proto3";
- 
-enum AnimeGenre {
-    ACTION = 0;
-    ADVENTURE = 1;
-    COMEDY = 2;
-    DRAMA = 3;
-    FANTASY = 4;
-    HORROR = 5;
-    MYSTERY = 6;
-    ROMANCE = 7;
-    SCI_FI = 8;
-    THRILLER = 9;
-}
+import "Common/Anime.proto";
 
-message Anime {
-    string name = 1;
-    repeated AnimeGenre genres = 2;
-    int32 episodes = 3;
-    float score = 4;
-    string aired = 5;
-    string synopsis = 6;
-}
-
-message get_animes {}
-
-message get_animes_Response {
-    repeated Anime animes = 1;
-}
-
-message anime_related_by_genre_Request {
+message anime_related_by_genre_Request { // -------------> REQUEST FOR GETTING ANIME RELATED BY GENRE
     string anime_name = 1;
 }
 
@@ -36,16 +9,15 @@ message anime_related_by_genre_Response {
     repeated Anime animes = 1;
 }
 
-message anime_by_name_Request {
-    string anime_name = 1;
+message user_watched_anime_Request { // -------------> REQUEST FOR GETTING ALL ANIMES WATCHED BY A USER
+    string user_name = 1;
 }
 
-message anime_by_name_Response {
-    Anime anime = 1;
+message user_watched_anime_Response {
+    repeated Anime animes = 1;
 }
 
-service AnimeList {
+service AnimeList { // --------------------------> SERVICE FOR ANIME LIST
     rpc GetAnimeRelatedByGenre (anime_related_by_genre_Request) returns (anime_related_by_genre_Response);
-    rpc GetAnimes (get_animes) returns (get_animes_Response);
-    rpc GetAnimeByName (anime_by_name_Request) returns (anime_by_name_Response);
+    rpc GetUserWatchedAnime (user_watched_anime_Request) returns (user_watched_anime_Response);
 }

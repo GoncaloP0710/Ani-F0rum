@@ -1,51 +1,93 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
 from concurrent import futures
 
 import grpc
-import AnimeService_pb2_grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from AnimeService_pb2 import (
-    AnimeGenre,
-    Anime,
-    get_animes,
+
+from python.services.Anime.AnimeService_pb2_grpc import (
+    AnimeServiceServicer,
+    add_AnimeServiceServicer_to_server,
+)
+from python.services.Anime.AnimeService_pb2 import (
     get_animes_Response,
-    anime_related_by_genre_Request,
-    anime_related_by_genre_Response,
-    anime_by_name_Request,
-    anime_by_name_Response,
 )
 
-class AnimeService(AnimeService_pb2_grpc.AnimeServiceServicer):
+from python.Common.Anime_pb2 import (
+    Anime,
+    AnimeGenre,
+) 
+
+class AnimeService(AnimeServiceServicer):
 
     def GetAnimes(self, request, context):
         all_animes = [
             Anime(
-                name="Naruto",
-                genre="Shounen",
+                name='Naruto',
+                genres=[AnimeGenre.ACTION],
+                score=8.5,
                 episodes=220,
-                rating=4.5,
-                year=2002,
+                aired="2002-2007",
+                synopsis="A young ninja strives to become the Hokage."
             ),
             Anime(
-                name="One Piece",
-                genre="Shounen",
+                name='One Piece',
+                genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+                score=8.7,
                 episodes=1000,
-                rating=4.8,
-                year=1999,
+                aired="1999-present",
+                synopsis="A pirate's quest to find the ultimate treasure."
             ),
             Anime(
-                name="Death Note",
-                genre="Mystery",
-                episodes=37,
-                rating=4.7,
-                year=2006,
-            ),
-            Anime(
-                name="Attack on Titan",
-                genre="Action",
+                name='Attack on Titan',
+                genres=[AnimeGenre.ACTION, AnimeGenre.THRILLER],
+                score=9.2,
                 episodes=75,
-                rating=4.9,
-                year=2013,
+                aired="2013-present",
+                synopsis="Humanity fights for survival against giant humanoid Titans."
+            ),
+            Anime(
+                name='Death Note',
+                genres=[AnimeGenre.MYSTERY, AnimeGenre.THRILLER],
+                score=9.0,
+                episodes=37,
+                aired="2006-2007",
+                synopsis="A high school student discovers a supernatural notebook."
+            ),
+            Anime(
+                name='My Hero Academia',
+                genres=[AnimeGenre.ACTION],
+                score=8.6,
+                episodes=113,
+                aired="2016-present",
+                synopsis="A boy born without superpowers in a world where they are common."
+            ),
+            Anime(
+                name='Tokyo Ghoul',
+                genres=[AnimeGenre.HORROR, AnimeGenre.ACTION],
+                score=8.0,
+                episodes=48,
+                aired="2014-2018",
+                synopsis="A college student becomes a half-ghoul after a near-fatal encounter."
+            ),
+            Anime(
+                name='Demon Slayer',
+                genres=[AnimeGenre.ACTION, AnimeGenre.FANTASY],
+                score=8.7,
+                episodes=26,
+                aired="2019",
+                synopsis="A young boy becomes a demon slayer to avenge his family."
+            ),
+            Anime(
+                name='Fullmetal Alchemist: Brotherhood',
+                genres=[AnimeGenre.ACTION, AnimeGenre.FANTASY],
+                score=9.1,
+                episodes=64,
+                aired="2009-2010",
+                synopsis="Two brothers use alchemy in their quest to restore their bodies."
             ),
         ]
         return get_animes_Response(animes=all_animes)
@@ -53,7 +95,10 @@ class AnimeService(AnimeService_pb2_grpc.AnimeServiceServicer):
     def GetAnimeByName(self, request, context):
         return NotFound('Anime not found')
     
-    def GetAnimeRelatedByGenre(self, request, context):
+    def GetMultipleAnime(self, request, context):
+        return NotFound('Anime not found')
+    
+    def GetAnimeByGenre(self, request, context):
         return NotFound('Anime not found')
     
 def serve():
@@ -61,7 +106,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    AnimeService_pb2_grpc.add_AnimeServiceServicer_to_server(
+    add_AnimeServiceServicer_to_server(
         AnimeService(), server
     )
     server.add_insecure_port('[::]:50051')

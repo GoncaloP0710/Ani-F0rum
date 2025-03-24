@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import AnimeList_pb2 as AnimeList__pb2
+import AnimeList_pb2 as others_dot_AnimeList__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in AnimeList_pb2_grpc.py depends on'
+        + f' but the generated code in others/AnimeList_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -26,7 +26,8 @@ if _version_not_supported:
 
 
 class AnimeListStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR ANIME LIST
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -36,23 +37,19 @@ class AnimeListStub(object):
         """
         self.GetAnimeRelatedByGenre = channel.unary_unary(
                 '/AnimeList/GetAnimeRelatedByGenre',
-                request_serializer=AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
-                response_deserializer=AnimeList__pb2.anime_related_by_genre_Response.FromString,
+                request_serializer=others_dot_AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.anime_related_by_genre_Response.FromString,
                 _registered_method=True)
-        self.GetAnimes = channel.unary_unary(
-                '/AnimeList/GetAnimes',
-                request_serializer=AnimeList__pb2.get_animes.SerializeToString,
-                response_deserializer=AnimeList__pb2.get_animes_Response.FromString,
-                _registered_method=True)
-        self.GetAnimeByName = channel.unary_unary(
-                '/AnimeList/GetAnimeByName',
-                request_serializer=AnimeList__pb2.anime_by_name_Request.SerializeToString,
-                response_deserializer=AnimeList__pb2.anime_by_name_Response.FromString,
+        self.GetUserWatchedAnime = channel.unary_unary(
+                '/AnimeList/GetUserWatchedAnime',
+                request_serializer=others_dot_AnimeList__pb2.user_watched_anime_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.user_watched_anime_Response.FromString,
                 _registered_method=True)
 
 
 class AnimeListServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR ANIME LIST
+    """
 
     def GetAnimeRelatedByGenre(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -60,13 +57,7 @@ class AnimeListServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimes(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetAnimeByName(self, request, context):
+    def GetUserWatchedAnime(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -77,18 +68,13 @@ def add_AnimeListServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAnimeRelatedByGenre,
-                    request_deserializer=AnimeList__pb2.anime_related_by_genre_Request.FromString,
-                    response_serializer=AnimeList__pb2.anime_related_by_genre_Response.SerializeToString,
+                    request_deserializer=others_dot_AnimeList__pb2.anime_related_by_genre_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.anime_related_by_genre_Response.SerializeToString,
             ),
-            'GetAnimes': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimes,
-                    request_deserializer=AnimeList__pb2.get_animes.FromString,
-                    response_serializer=AnimeList__pb2.get_animes_Response.SerializeToString,
-            ),
-            'GetAnimeByName': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeByName,
-                    request_deserializer=AnimeList__pb2.anime_by_name_Request.FromString,
-                    response_serializer=AnimeList__pb2.anime_by_name_Response.SerializeToString,
+            'GetUserWatchedAnime': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUserWatchedAnime,
+                    request_deserializer=others_dot_AnimeList__pb2.user_watched_anime_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.user_watched_anime_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -99,7 +85,8 @@ def add_AnimeListServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AnimeList(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR ANIME LIST
+    """
 
     @staticmethod
     def GetAnimeRelatedByGenre(request,
@@ -116,8 +103,8 @@ class AnimeList(object):
             request,
             target,
             '/AnimeList/GetAnimeRelatedByGenre',
-            AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
-            AnimeList__pb2.anime_related_by_genre_Response.FromString,
+            others_dot_AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
+            others_dot_AnimeList__pb2.anime_related_by_genre_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -129,7 +116,7 @@ class AnimeList(object):
             _registered_method=True)
 
     @staticmethod
-    def GetAnimes(request,
+    def GetUserWatchedAnime(request,
             target,
             options=(),
             channel_credentials=None,
@@ -142,36 +129,9 @@ class AnimeList(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeList/GetAnimes',
-            AnimeList__pb2.get_animes.SerializeToString,
-            AnimeList__pb2.get_animes_Response.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetAnimeByName(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/AnimeList/GetAnimeByName',
-            AnimeList__pb2.anime_by_name_Request.SerializeToString,
-            AnimeList__pb2.anime_by_name_Response.FromString,
+            '/AnimeList/GetUserWatchedAnime',
+            others_dot_AnimeList__pb2.user_watched_anime_Request.SerializeToString,
+            others_dot_AnimeList__pb2.user_watched_anime_Response.FromString,
             options,
             channel_credentials,
             insecure,
