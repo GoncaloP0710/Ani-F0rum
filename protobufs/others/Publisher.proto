@@ -63,14 +63,10 @@ message PublishInTopicResponse {
     string publicationname = 1;
 }
 
-message KarmaRequest {
-    string user_id = 1;
-    int32 post_count = 2;
-}
+message KarmaRequest {}
 
 message KarmaResponse {
-    string user_id = 1;
-    int32 karma_points = 2;
+    int32 karma_points = 1;
 }
 
 service Publisher {

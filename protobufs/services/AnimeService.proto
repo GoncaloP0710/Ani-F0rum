@@ -52,8 +52,17 @@ message anime_related_by_genre_Response {
   repeated Anime animes = 1;
 }
 
+message anime_by_genre_Request {
+  repeated AnimeGenre anime_genres = 1;
+}
+
+message anime_by_genre_Response {
+  repeated Anime animes = 1;
+}
+
 service AnimeService {
   rpc GetAnimeRelatedByGenre (anime_related_by_genre_Request) returns (anime_related_by_genre_Response);
+  rpc GetAnimeByGenre(anime_by_genre_Request) returns (anime_by_genre_Response)
   rpc GetAnimes (get_animes) returns (get_animes_Response);
   rpc GetAnimeByName (anime_by_name_Request) returns (anime_by_name_Response);
   rpc GetAnimeByUser (get_anime_by_User_Request) returns (get_anime_by_User_Response);

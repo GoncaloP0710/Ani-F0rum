@@ -144,6 +144,7 @@ components:
           type: "string"
         rarity:
           type: "string"
+          enum: [common, rare, epic, legendary, mythic]
 
   # Parameters for paths 
   parameters:
@@ -349,6 +350,12 @@ paths:
       responses:
         "200":
           description: "Successfully show one or more images"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Image"
         "404":
           description: "No image with that label found"
 
@@ -712,49 +719,6 @@ paths:
                   $ref: "#/components/schemas/Anime"
         "404":
           description: "User not found"
-
-  # =====================================================
-  # ======================= Server ======================
-  # =====================================================
-
-  /server:
-    get:
-      operationId: "server.get_server"
-      tags:
-        - Server
-      summary: "Show the server list"
-      responses:
-        "200":
-          description: "Successfully show server list"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Server"
-  
-  /server/{server_name}:
-    parameters:
-      - name: "server_name"
-        in: path
-        required: true
-        description: "Name of the server"
-        schema:
-          type: "string"
-    get:
-      operationId: "server.get_server"
-      tags:
-        - Server
-      summary: "Show a specific server if it exists"
-      responses:
-        "200":
-          description: "Successfully show the server"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Server"
-        "404":
-          description: "Server not found"
 
 # =====================================================
 # =================== Achievements ====================

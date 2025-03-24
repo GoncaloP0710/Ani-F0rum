@@ -1,10 +1,19 @@
 syntax = "proto3";
 
+// ideia do André
+enum Rarity {
+  COMMON = 0;
+  RARE = 1;
+  EPIC = 2;
+  LEGENDARY = 3;
+  MYTHIC = 4;
+}
+
 message Achievement {
     string title = 1;
     string description = 2;
     string date = 3;
-    string rarity = 4; // Ninguém fala comigo, na minha cabeca deveria ser um enum. Obrigado equipa.
+    Rarity rarity = 4;
 }
 
 message User {
@@ -50,9 +59,18 @@ message recomended_animeList_Response {
     repeated Anime animes = 1;
 }
 
+message recomended_animeList_by_topics_Request {
+    repeated string topicnames_subscribed = 1;
+}
+
+message recomended_animeList_by_topics_Response {
+    repeated Anime animes = 1;
+}
+
 service UserRecommendations {
     rpc GetUsersRelatedByAnime (users_related_by_anime_Request) returns (users_related_by_anime_Response);
     rpc GetUsersRelatedByMessage (users_related_by_message_Request) returns (users_related_by_message_Response);
     rpc GetUsersRelatedByTopics (users_related_by_topics_Request) returns (users_related_by_topics_Response);
     rpc GetRecomendedAnimeList (recomended_animeList_Request) returns (recomended_animeList_Response);
+    rpc GetAnimeByTopics (recomended_animeList_by_topics_Request) returns (recomended_animeList_by_topics_Response);
 }
