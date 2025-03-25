@@ -1,21 +1,21 @@
 syntax = "proto3";
 import "Common/Anime.proto";
 
-message get_animes {}
+message get_animes {} // --------------------------> REQUEST FOR GETTING ALL ANIMES
 
 message get_animes_Response {
     repeated Anime animes = 1;
 }
 
-message anime_by_genre_Request {
-  AnimeGenre anime_genre = 1;
+message anime_by_genre_Request { // -------------> REQUEST FOR GETTING ANIME BY GENRE
+    AnimeGenre anime_genre = 1;
 }
 
 message anime_by_genre_Response {
     repeated Anime animes = 1;
 }
 
-message anime_by_name_Request {
+message anime_by_name_Request { // ----------------> REQUEST FOR GETTING ANIME BY NAME
     string anime_name = 1;
 }
 
@@ -23,7 +23,7 @@ message anime_by_name_Response {
     Anime anime = 1;
 }
 
-service AnimeRepository {
+service AnimeRepository { // --------------------------> SERVICE FOR ANIMEREPOSITORY
     rpc GetAnimeRelatedByGenre (anime_by_genre_Request) returns (anime_by_genre_Response);
     rpc GetAnimes (get_animes) returns (get_animes_Response);
     rpc GetAnimeByName (anime_by_name_Request) returns (anime_by_name_Response);

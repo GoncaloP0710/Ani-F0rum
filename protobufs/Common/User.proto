@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+enum Rarity {
+    COMMON = 0;
+    RARE = 1;
+    EPIC = 2;
+    LEGENDARY = 3;
+    MYTHIC = 4;
+}
+
+message Achievement {
+    string title = 1;
+    string description = 2;
+    string date = 3;
+    Rarity rarity = 4;
+}
+
+message User {
+    string username = 1;
+    string password = 2;
+    optional string location = 3;
+    repeated string animes_watched = 4;
+    repeated int32 anime_watched_score = 5;
+    repeated string topics_subscribed = 6;
+    int32 karma = 8;
+    repeated Achievement achievements = 9;
+}

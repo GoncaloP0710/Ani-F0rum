@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "Common/Anime.proto";
+import "Common/User.proto";
 
 message anime_related_by_genre_Request { // -------------> REQUEST FOR GETTING ANIME RELATED BY GENRE
     string anime_name = 1;
@@ -10,14 +11,14 @@ message anime_related_by_genre_Response {
 }
 
 message user_watched_anime_Request { // -------------> REQUEST FOR GETTING ALL ANIMES WATCHED BY A USER
-    string user_name = 1;
+    User user = 1;
 }
 
 message user_watched_anime_Response {
     repeated Anime animes = 1;
 }
 
-service AnimeList { // --------------------------> SERVICE FOR ANIME LIST
+service AnimeList { // --------------------------> SERVICE FOR ANIMELIST
     rpc GetAnimeRelatedByGenre (anime_related_by_genre_Request) returns (anime_related_by_genre_Response);
     rpc GetUserWatchedAnime (user_watched_anime_Request) returns (user_watched_anime_Response);
 }

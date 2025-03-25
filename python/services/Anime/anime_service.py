@@ -14,6 +14,9 @@ from python.services.Anime.AnimeService_pb2_grpc import (
 )
 from python.services.Anime.AnimeService_pb2 import (
     get_animes_Response,
+    anime_by_name_Response,
+    get_multiple_anime_Response,
+    anime_by_genre_Response,
 )
 
 from python.Common.Anime_pb2 import (
@@ -21,85 +24,50 @@ from python.Common.Anime_pb2 import (
     AnimeGenre,
 ) 
 
-class AnimeService(AnimeServiceServicer):
+from python.repository.Anime import AnimeRepository_pb2
+from python.repository.Anime import AnimeRepository_pb2_grpc
 
+class AnimeService_Service(AnimeServiceServicer):
+
+    def __init__(self):
+        self.channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
+        self.stub = AnimeRepository_pb2_grpc.AnimeRepositoryStub(self.channel)
+
+    # Call the GetAnimes method of the AnimeRepository to get all animes
     def GetAnimes(self, request, context):
-        all_animes = [
-            Anime(
-                name='Naruto',
-                genres=[AnimeGenre.ACTION],
-                score=8.5,
-                episodes=220,
-                aired="2002-2007",
-                synopsis="A young ninja strives to become the Hokage."
-            ),
-            Anime(
-                name='One Piece',
-                genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
-                score=8.7,
-                episodes=1000,
-                aired="1999-present",
-                synopsis="A pirate's quest to find the ultimate treasure."
-            ),
-            Anime(
-                name='Attack on Titan',
-                genres=[AnimeGenre.ACTION, AnimeGenre.THRILLER],
-                score=9.2,
-                episodes=75,
-                aired="2013-present",
-                synopsis="Humanity fights for survival against giant humanoid Titans."
-            ),
-            Anime(
-                name='Death Note',
-                genres=[AnimeGenre.MYSTERY, AnimeGenre.THRILLER],
-                score=9.0,
-                episodes=37,
-                aired="2006-2007",
-                synopsis="A high school student discovers a supernatural notebook."
-            ),
-            Anime(
-                name='My Hero Academia',
-                genres=[AnimeGenre.ACTION],
-                score=8.6,
-                episodes=113,
-                aired="2016-present",
-                synopsis="A boy born without superpowers in a world where they are common."
-            ),
-            Anime(
-                name='Tokyo Ghoul',
-                genres=[AnimeGenre.HORROR, AnimeGenre.ACTION],
-                score=8.0,
-                episodes=48,
-                aired="2014-2018",
-                synopsis="A college student becomes a half-ghoul after a near-fatal encounter."
-            ),
-            Anime(
-                name='Demon Slayer',
-                genres=[AnimeGenre.ACTION, AnimeGenre.FANTASY],
-                score=8.7,
-                episodes=26,
-                aired="2019",
-                synopsis="A young boy becomes a demon slayer to avenge his family."
-            ),
-            Anime(
-                name='Fullmetal Alchemist: Brotherhood',
-                genres=[AnimeGenre.ACTION, AnimeGenre.FANTASY],
-                score=9.1,
-                episodes=64,
-                aired="2009-2010",
-                synopsis="Two brothers use alchemy in their quest to restore their bodies."
-            ),
-        ]
-        return get_animes_Response(animes=all_animes)
+        try:
+            response = self.stub.GetAnimes(AnimeRepository_pb2.get_animes())
+            return get_animes_Response(animes=response.animes)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
 
+    # Call the GetAnimeByName method of the AnimeRepository to get an anime by name
     def GetAnimeByName(self, request, context):
-        return NotFound('Anime not found')
+        try:
+            response = self.stub.GetAnimeByName(AnimeRepository_pb2.anime_by_name_Request(anime_name=request.anime_name))
+            return anime_by_name_Response(anime=response.anime)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
     
+    # Call multiple times the GetAnimeByName method of the AnimeRepository to get multiple animes by name
     def GetMultipleAnime(self, request, context):
-        return NotFound('Anime not found')
+        animeList = []
+        try:
+            for anime in request.anime_names:
+                response = self.stub.GetAnimeByName(AnimeRepository_pb2.anime_by_name_Request(anime_name=anime))
+                animeList.append(response.anime)
+            return get_multiple_anime_Response(animes=animeList)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
     
+    # Call the GetAnimeRelatedByGenre method of the AnimeRepository to get animes with the samme genre
+    # TODO: Change it to recive a list of genres
     def GetAnimeByGenre(self, request, context):
-        return NotFound('Anime not found')
+        try:
+            response = self.stub.GetAnimeRelatedByGenre(AnimeRepository_pb2.anime_by_genre_Request(anime_genre=request.anime_genre))
+            return anime_by_genre_Response(animes=response.animes)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
     
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
@@ -107,7 +75,7 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
     add_AnimeServiceServicer_to_server(
-        AnimeService(), server
+        AnimeService_Service(), server
     )
     server.add_insecure_port('[::]:50051')
     server.start()
