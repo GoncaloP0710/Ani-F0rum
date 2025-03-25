@@ -33,7 +33,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         AnimeGenre = request.anime_genre
         print("Searching for anime with genre: ", AnimeGenre)
         return anime_by_genre_Response(animes=[])
-    
+
     # Returns all animes
     def GetAnimes(self, request, context):
         print("Searching for all animes")
