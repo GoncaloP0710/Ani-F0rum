@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import AnimeRepository_pb2 as repository_dot_AnimeRepository__pb2
+import UserRepository_pb2 as repository_dot_UserRepository__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -18,16 +18,15 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in repository/AnimeRepository_pb2_grpc.py depends on'
+        + f' but the generated code in repository/UserRepository_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class AnimeRepositoryStub(object):
-    """--------------------------> SERVICE FOR ANIMEREPOSITORY
-    """
+class UserRepositoryStub(object):
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -35,77 +34,75 @@ class AnimeRepositoryStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAnimeRelatedByGenre = channel.unary_unary(
-                '/AnimeRepository/GetAnimeRelatedByGenre',
-                request_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
-                response_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
+        self.GetUser = channel.unary_unary(
+                '/UserRepository/GetUser',
+                request_serializer=repository_dot_UserRepository__pb2.get_user_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.get_user_Response.FromString,
                 _registered_method=True)
-        self.GetAnimes = channel.unary_unary(
-                '/AnimeRepository/GetAnimes',
-                request_serializer=repository_dot_AnimeRepository__pb2.get_animes.SerializeToString,
-                response_deserializer=repository_dot_AnimeRepository__pb2.get_animes_Response.FromString,
+        self.GetAllUsers = channel.unary_unary(
+                '/UserRepository/GetAllUsers',
+                request_serializer=repository_dot_UserRepository__pb2.get_all_users_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.get_all_users_Response.FromString,
                 _registered_method=True)
-        self.GetAnimeByName = channel.unary_unary(
-                '/AnimeRepository/GetAnimeByName',
-                request_serializer=repository_dot_AnimeRepository__pb2.anime_by_name_Request.SerializeToString,
-                response_deserializer=repository_dot_AnimeRepository__pb2.anime_by_name_Response.FromString,
+        self.GetUsersThatWatchedAnime = channel.unary_unary(
+                '/UserRepository/GetUsersThatWatchedAnime',
+                request_serializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.FromString,
                 _registered_method=True)
 
 
-class AnimeRepositoryServicer(object):
-    """--------------------------> SERVICE FOR ANIMEREPOSITORY
-    """
+class UserRepositoryServicer(object):
+    """Missing associated documentation comment in .proto file."""
 
-    def GetAnimeRelatedByGenre(self, request, context):
+    def GetUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimes(self, request, context):
+    def GetAllUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimeByName(self, request, context):
+    def GetUsersThatWatchedAnime(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_AnimeRepositoryServicer_to_server(servicer, server):
+def add_UserRepositoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeRelatedByGenre,
-                    request_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.FromString,
-                    response_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.SerializeToString,
+            'GetUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUser,
+                    request_deserializer=repository_dot_UserRepository__pb2.get_user_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.get_user_Response.SerializeToString,
             ),
-            'GetAnimes': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimes,
-                    request_deserializer=repository_dot_AnimeRepository__pb2.get_animes.FromString,
-                    response_serializer=repository_dot_AnimeRepository__pb2.get_animes_Response.SerializeToString,
+            'GetAllUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllUsers,
+                    request_deserializer=repository_dot_UserRepository__pb2.get_all_users_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.get_all_users_Response.SerializeToString,
             ),
-            'GetAnimeByName': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeByName,
-                    request_deserializer=repository_dot_AnimeRepository__pb2.anime_by_name_Request.FromString,
-                    response_serializer=repository_dot_AnimeRepository__pb2.anime_by_name_Response.SerializeToString,
+            'GetUsersThatWatchedAnime': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUsersThatWatchedAnime,
+                    request_deserializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'AnimeRepository', rpc_method_handlers)
+            'UserRepository', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('AnimeRepository', rpc_method_handlers)
+    server.add_registered_method_handlers('UserRepository', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class AnimeRepository(object):
-    """--------------------------> SERVICE FOR ANIMEREPOSITORY
-    """
+class UserRepository(object):
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetAnimeRelatedByGenre(request,
+    def GetUser(request,
             target,
             options=(),
             channel_credentials=None,
@@ -118,9 +115,9 @@ class AnimeRepository(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeRepository/GetAnimeRelatedByGenre',
-            repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
-            repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
+            '/UserRepository/GetUser',
+            repository_dot_UserRepository__pb2.get_user_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.get_user_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -132,7 +129,7 @@ class AnimeRepository(object):
             _registered_method=True)
 
     @staticmethod
-    def GetAnimes(request,
+    def GetAllUsers(request,
             target,
             options=(),
             channel_credentials=None,
@@ -145,9 +142,9 @@ class AnimeRepository(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeRepository/GetAnimes',
-            repository_dot_AnimeRepository__pb2.get_animes.SerializeToString,
-            repository_dot_AnimeRepository__pb2.get_animes_Response.FromString,
+            '/UserRepository/GetAllUsers',
+            repository_dot_UserRepository__pb2.get_all_users_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.get_all_users_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -159,7 +156,7 @@ class AnimeRepository(object):
             _registered_method=True)
 
     @staticmethod
-    def GetAnimeByName(request,
+    def GetUsersThatWatchedAnime(request,
             target,
             options=(),
             channel_credentials=None,
@@ -172,9 +169,9 @@ class AnimeRepository(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeRepository/GetAnimeByName',
-            repository_dot_AnimeRepository__pb2.anime_by_name_Request.SerializeToString,
-            repository_dot_AnimeRepository__pb2.anime_by_name_Response.FromString,
+            '/UserRepository/GetUsersThatWatchedAnime',
+            repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.FromString,
             options,
             channel_credentials,
             insecure,

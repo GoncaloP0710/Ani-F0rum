@@ -17,6 +17,11 @@ from python.others.AnimeList.AnimeList_pb2 import (
     anime_related_by_genre_Response,
 )
 
+from python.Common.Anime_pb2 import (
+    Anime,
+    AnimeGenre,
+)
+
 from python.services.Anime import AnimeService_pb2
 from python.services.Anime import AnimeService_pb2_grpc
 

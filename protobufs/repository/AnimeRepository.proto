@@ -8,7 +8,7 @@ message get_animes_Response {
 }
 
 message anime_by_genre_Request { // -------------> REQUEST FOR GETTING ANIME BY GENRE
-    AnimeGenre anime_genre = 1;
+    repeated AnimeGenre anime_genre = 1;
 }
 
 message anime_by_genre_Response {

@@ -43,7 +43,16 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
     def GetAnimeByName(self, request, context):
         AnimeName = request.anime_name
         print("Searching for anime with name: ", AnimeName)
-        return anime_by_name_Response(anime=Anime())
+        # Create an Anime object TODO: Remove this part after testing
+        anime = Anime(
+            name="Naruto",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],  # Example genres
+            episodes=220,
+            score=8.5,
+            aired="2002-2007",
+            synopsis="A young ninja strives to become the Hokage."
+        )
+        return anime_by_name_Response(anime=anime)
     
 
 def serve():
@@ -56,6 +65,7 @@ def serve():
     )
     server.add_insecure_port('[::]:50053')
     server.start()
+    print("AnimeRepository Server started on port 50053")
     server.wait_for_termination()
 
 if __name__ == '__main__':

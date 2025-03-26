@@ -1,24 +1,8 @@
 syntax = "proto3";
 
-message Achievement {
-    string title = 1;
-    string description = 2;
-    string date = 3;
-    string rarity = 4; // Ninguém fala comigo, na minha cabeca deveria ser um enum. Obrigado equipa.
-}
+import "Common/User.proto";
 
-message User {
-    string username = 1;
-    string password = 2;
-    optional string location = 3;
-    repeated string animes_watched = 4;
-    repeated int32 anime_watched_score = 5;
-    repeated string topics_subscribed = 6;
-    int32 karma = 8;
-    repeated Achievement achievements = 9;
-}
-
-message get_user_Request {
+message get_user_Request { // --------------------------> REQUEST FOR GETTING USER BY NAME
     string user_name = 1;
 }
 
@@ -26,13 +10,22 @@ message get_user_Response {
     User user = 1;
 }
 
-message get_all_users_Request {}
+message get_all_users_Request {} // --------------------------> REQUEST FOR GETTING ALL USERS
 
 message get_all_users_Response {
+    repeated User users = 1;
+}
+
+message get_users_that_watched_anime_Request { // -------------> REQUEST FOR GETTING USERS THAT WATCHED ONE OF THOSE ANIMES
+    repeated string anime_names = 1;
+}
+
+message get_users_that_watched_anime_Response {
     repeated User users = 1;
 }
 
 service UserRepository {
     rpc GetUser (get_user_Request) returns (get_user_Response);
     rpc GetAllUsers (get_all_users_Request) returns (get_all_users_Response);
+    rpc GetUsersThatWatchedAnime (get_users_that_watched_anime_Request) returns (get_users_that_watched_anime_Response);
 }

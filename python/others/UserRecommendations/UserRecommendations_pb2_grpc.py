@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import UserRecommendations_pb2 as UserRecommendations__pb2
+import UserRecommendations_pb2 as others_dot_UserRecommendations__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in UserRecommendations_pb2_grpc.py depends on'
+        + f' but the generated code in others/UserRecommendations_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -36,23 +36,28 @@ class UserRecommendationsStub(object):
         """
         self.GetUsersRelatedByAnime = channel.unary_unary(
                 '/UserRecommendations/GetUsersRelatedByAnime',
-                request_serializer=UserRecommendations__pb2.users_related_by_anime_Request.SerializeToString,
-                response_deserializer=UserRecommendations__pb2.users_related_by_anime_Response.FromString,
+                request_serializer=others_dot_UserRecommendations__pb2.users_related_by_anime_Request.SerializeToString,
+                response_deserializer=others_dot_UserRecommendations__pb2.users_related_by_anime_Response.FromString,
                 _registered_method=True)
         self.GetUsersRelatedByMessage = channel.unary_unary(
                 '/UserRecommendations/GetUsersRelatedByMessage',
-                request_serializer=UserRecommendations__pb2.users_related_by_message_Request.SerializeToString,
-                response_deserializer=UserRecommendations__pb2.users_related_by_message_Response.FromString,
+                request_serializer=others_dot_UserRecommendations__pb2.users_related_by_message_Request.SerializeToString,
+                response_deserializer=others_dot_UserRecommendations__pb2.users_related_by_message_Response.FromString,
                 _registered_method=True)
         self.GetUsersRelatedByTopics = channel.unary_unary(
                 '/UserRecommendations/GetUsersRelatedByTopics',
-                request_serializer=UserRecommendations__pb2.users_related_by_topics_Request.SerializeToString,
-                response_deserializer=UserRecommendations__pb2.users_related_by_topics_Response.FromString,
+                request_serializer=others_dot_UserRecommendations__pb2.users_related_by_topics_Request.SerializeToString,
+                response_deserializer=others_dot_UserRecommendations__pb2.users_related_by_topics_Response.FromString,
                 _registered_method=True)
         self.GetRecomendedAnimeList = channel.unary_unary(
                 '/UserRecommendations/GetRecomendedAnimeList',
-                request_serializer=UserRecommendations__pb2.recomended_animeList_Request.SerializeToString,
-                response_deserializer=UserRecommendations__pb2.recomended_animeList_Response.FromString,
+                request_serializer=others_dot_UserRecommendations__pb2.recomended_animeList_Request.SerializeToString,
+                response_deserializer=others_dot_UserRecommendations__pb2.recomended_animeList_Response.FromString,
+                _registered_method=True)
+        self.GetRecomendedAnimeListByTopics = channel.unary_unary(
+                '/UserRecommendations/GetRecomendedAnimeListByTopics',
+                request_serializer=others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Request.SerializeToString,
+                response_deserializer=others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Response.FromString,
                 _registered_method=True)
 
 
@@ -83,28 +88,39 @@ class UserRecommendationsServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetRecomendedAnimeListByTopics(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserRecommendationsServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetUsersRelatedByAnime': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUsersRelatedByAnime,
-                    request_deserializer=UserRecommendations__pb2.users_related_by_anime_Request.FromString,
-                    response_serializer=UserRecommendations__pb2.users_related_by_anime_Response.SerializeToString,
+                    request_deserializer=others_dot_UserRecommendations__pb2.users_related_by_anime_Request.FromString,
+                    response_serializer=others_dot_UserRecommendations__pb2.users_related_by_anime_Response.SerializeToString,
             ),
             'GetUsersRelatedByMessage': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUsersRelatedByMessage,
-                    request_deserializer=UserRecommendations__pb2.users_related_by_message_Request.FromString,
-                    response_serializer=UserRecommendations__pb2.users_related_by_message_Response.SerializeToString,
+                    request_deserializer=others_dot_UserRecommendations__pb2.users_related_by_message_Request.FromString,
+                    response_serializer=others_dot_UserRecommendations__pb2.users_related_by_message_Response.SerializeToString,
             ),
             'GetUsersRelatedByTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUsersRelatedByTopics,
-                    request_deserializer=UserRecommendations__pb2.users_related_by_topics_Request.FromString,
-                    response_serializer=UserRecommendations__pb2.users_related_by_topics_Response.SerializeToString,
+                    request_deserializer=others_dot_UserRecommendations__pb2.users_related_by_topics_Request.FromString,
+                    response_serializer=others_dot_UserRecommendations__pb2.users_related_by_topics_Response.SerializeToString,
             ),
             'GetRecomendedAnimeList': grpc.unary_unary_rpc_method_handler(
                     servicer.GetRecomendedAnimeList,
-                    request_deserializer=UserRecommendations__pb2.recomended_animeList_Request.FromString,
-                    response_serializer=UserRecommendations__pb2.recomended_animeList_Response.SerializeToString,
+                    request_deserializer=others_dot_UserRecommendations__pb2.recomended_animeList_Request.FromString,
+                    response_serializer=others_dot_UserRecommendations__pb2.recomended_animeList_Response.SerializeToString,
+            ),
+            'GetRecomendedAnimeListByTopics': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRecomendedAnimeListByTopics,
+                    request_deserializer=others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Request.FromString,
+                    response_serializer=others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -132,8 +148,8 @@ class UserRecommendations(object):
             request,
             target,
             '/UserRecommendations/GetUsersRelatedByAnime',
-            UserRecommendations__pb2.users_related_by_anime_Request.SerializeToString,
-            UserRecommendations__pb2.users_related_by_anime_Response.FromString,
+            others_dot_UserRecommendations__pb2.users_related_by_anime_Request.SerializeToString,
+            others_dot_UserRecommendations__pb2.users_related_by_anime_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -159,8 +175,8 @@ class UserRecommendations(object):
             request,
             target,
             '/UserRecommendations/GetUsersRelatedByMessage',
-            UserRecommendations__pb2.users_related_by_message_Request.SerializeToString,
-            UserRecommendations__pb2.users_related_by_message_Response.FromString,
+            others_dot_UserRecommendations__pb2.users_related_by_message_Request.SerializeToString,
+            others_dot_UserRecommendations__pb2.users_related_by_message_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -186,8 +202,8 @@ class UserRecommendations(object):
             request,
             target,
             '/UserRecommendations/GetUsersRelatedByTopics',
-            UserRecommendations__pb2.users_related_by_topics_Request.SerializeToString,
-            UserRecommendations__pb2.users_related_by_topics_Response.FromString,
+            others_dot_UserRecommendations__pb2.users_related_by_topics_Request.SerializeToString,
+            others_dot_UserRecommendations__pb2.users_related_by_topics_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -213,8 +229,35 @@ class UserRecommendations(object):
             request,
             target,
             '/UserRecommendations/GetRecomendedAnimeList',
-            UserRecommendations__pb2.recomended_animeList_Request.SerializeToString,
-            UserRecommendations__pb2.recomended_animeList_Response.FromString,
+            others_dot_UserRecommendations__pb2.recomended_animeList_Request.SerializeToString,
+            others_dot_UserRecommendations__pb2.recomended_animeList_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetRecomendedAnimeListByTopics(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRecommendations/GetRecomendedAnimeListByTopics',
+            others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Request.SerializeToString,
+            others_dot_UserRecommendations__pb2.recomended_animeList_by_topics_Response.FromString,
             options,
             channel_credentials,
             insecure,

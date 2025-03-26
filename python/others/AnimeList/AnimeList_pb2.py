@@ -21,27 +21,29 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 
 _sym_db = _symbol_database.Default()
 
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from python.Common import Anime_pb2 as Common_dot_Anime__pb2
+from python.Common import User_pb2 as Common_dot_User__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/AnimeList.proto\x1a\x12\x43ommon/Anime.proto\"4\n\x1e\x61nime_related_by_genre_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"9\n\x1f\x61nime_related_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"/\n\x1auser_watched_anime_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"5\n\x1buser_watched_anime_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\xba\x01\n\tAnimeList\x12[\n\x16GetAnimeRelatedByGenre\x12\x1f.anime_related_by_genre_Request\x1a .anime_related_by_genre_Response\x12P\n\x13GetUserWatchedAnime\x12\x1b.user_watched_anime_Request\x1a\x1c.user_watched_anime_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/AnimeList.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\"4\n\x1e\x61nime_related_by_genre_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"9\n\x1f\x61nime_related_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"1\n\x1auser_watched_anime_Request\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"5\n\x1buser_watched_anime_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\xba\x01\n\tAnimeList\x12[\n\x16GetAnimeRelatedByGenre\x12\x1f.anime_related_by_genre_Request\x1a .anime_related_by_genre_Response\x12P\n\x13GetUserWatchedAnime\x12\x1b.user_watched_anime_Request\x1a\x1c.user_watched_anime_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'others.AnimeList_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_start=46
-  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_end=98
-  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_start=100
-  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_end=157
-  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_start=159
-  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_end=206
-  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_start=208
-  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_end=261
-  _globals['_ANIMELIST']._serialized_start=264
-  _globals['_ANIMELIST']._serialized_end=450
+  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_start=65
+  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_end=117
+  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_start=119
+  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_end=176
+  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_start=178
+  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_end=227
+  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_start=229
+  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_end=282
+  _globals['_ANIMELIST']._serialized_start=285
+  _globals['_ANIMELIST']._serialized_end=471
 # @@protoc_insertion_point(module_scope)

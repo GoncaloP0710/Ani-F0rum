@@ -26,7 +26,7 @@ if _version_not_supported:
 
 
 class AnimeListStub(object):
-    """--------------------------> SERVICE FOR ANIME LIST
+    """--------------------------> SERVICE FOR ANIMELIST
     """
 
     def __init__(self, channel):
@@ -48,7 +48,7 @@ class AnimeListStub(object):
 
 
 class AnimeListServicer(object):
-    """--------------------------> SERVICE FOR ANIME LIST
+    """--------------------------> SERVICE FOR ANIMELIST
     """
 
     def GetAnimeRelatedByGenre(self, request, context):
@@ -85,7 +85,7 @@ def add_AnimeListServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AnimeList(object):
-    """--------------------------> SERVICE FOR ANIME LIST
+    """--------------------------> SERVICE FOR ANIMELIST
     """
 
     @staticmethod

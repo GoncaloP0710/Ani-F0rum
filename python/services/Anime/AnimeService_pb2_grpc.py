@@ -3,10 +3,7 @@
 import grpc
 import warnings
 
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-import python.services.Anime.AnimeService_pb2 as services_dot_AnimeService__pb2
+import AnimeService_pb2 as services_dot_AnimeService__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -29,7 +26,7 @@ if _version_not_supported:
 
 
 class AnimeServiceStub(object):
-    """--------------------------> SERVICE FOR ANIME
+    """--------------------------> SERVICE FOR ANIMESERVICE
     """
 
     def __init__(self, channel):
@@ -61,7 +58,7 @@ class AnimeServiceStub(object):
 
 
 class AnimeServiceServicer(object):
-    """--------------------------> SERVICE FOR ANIME
+    """--------------------------> SERVICE FOR ANIMESERVICE
     """
 
     def GetAnimes(self, request, context):
@@ -120,7 +117,7 @@ def add_AnimeServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AnimeService(object):
-    """--------------------------> SERVICE FOR ANIME
+    """--------------------------> SERVICE FOR ANIMESERVICE
     """
 
     @staticmethod

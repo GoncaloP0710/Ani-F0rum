@@ -15,6 +15,7 @@ from python.repository.User.UserRepository_pb2_grpc import (
 from python.repository.User.UserRepository_pb2 import (
     get_user_Response,
     get_all_users_Response,
+    get_users_that_watched_anime_Response,
 )
 
 # TODO: Change that latter for the correct import
@@ -35,6 +36,11 @@ class UserRepository_Service(UserRepositoryServicer) :
     def GetAllUsers(self, request, context):
         print("Searching for all users")
         return get_all_users_Response(users=[])
+    
+    # Returns all users with one of the animes in their list
+    def GetUsersThatWatchedAnime(self, request, context):
+        print("Searching for users that watched this animes: ", request.anime_names)
+        return get_users_that_watched_anime_Response(users=[])
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

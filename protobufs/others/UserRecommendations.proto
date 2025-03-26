@@ -2,7 +2,7 @@ syntax = "proto3";
 import "Common/Anime.proto";
 import "Common/User.proto";
 
-message users_related_by_anime_Request {
+message users_related_by_anime_Request { // -------------> REQUEST FOR GETTING USERS THAT MAY LIKE THE SAME ANIME
     string user_name = 1; 
 }
 
@@ -10,7 +10,7 @@ message users_related_by_anime_Response {
     repeated User users = 1;
 }
 
-message users_related_by_message_Request {
+message users_related_by_message_Request { // -------------> REQUEST FOR GETTING USERS THAT TALK ABOUT THE SAME ANIMES
     string user_name = 1; 
 }
 
@@ -26,7 +26,7 @@ message users_related_by_topics_Response {
     repeated User users = 1;
 }
 
-message recomended_animeList_Request {
+message recomended_animeList_Request { // -------------> REQUEST FOR GETTING RECOMENDED ANIMES FOR A USER
     string user_name = 1; 
 }
 
@@ -47,5 +47,5 @@ service UserRecommendations {
     rpc GetUsersRelatedByMessage (users_related_by_message_Request) returns (users_related_by_message_Response);
     rpc GetUsersRelatedByTopics (users_related_by_topics_Request) returns (users_related_by_topics_Response);
     rpc GetRecomendedAnimeList (recomended_animeList_Request) returns (recomended_animeList_Response);
-    rpc GetAnimeByTopics (recomended_animeList_by_topics_Request) returns (recomended_animeList_by_topics_Response);
+    rpc GetRecomendedAnimeListByTopics (recomended_animeList_by_topics_Request) returns (recomended_animeList_by_topics_Response);
 }
