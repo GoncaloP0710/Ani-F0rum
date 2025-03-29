@@ -8,6 +8,8 @@ from grpc_interceptor.exceptions import NotFound
 from user_statistics_pb2 import (
     Top10_Request,
     Top10_Response,
+    MostUsedTopics_Request,
+    MostUsedTopics_Response,
 )
 
 from python.repository.User import UserRepository_pb2_grpc as ur_grpc
@@ -49,27 +51,23 @@ class user_statistics(user_statistics_pb2_grpc.user_statisticsServicer):
         # TODO: Nao sei se preciso de usar este ou não
         user_topics = user.topics_subscribed
 
-        user_posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
-        if not user_posts:
+        #TODO: Descobrir como obter os posts do utilizador
+        # Fetch the posts made by the user
+        posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
+        if not posts:
             context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
-
+            
+        # Count the usage of each topic
         topic_usage = {}
-        for post in user_posts.posts:
-            topic_name = post.topic_name
-            if topic_name in topic_usage:
-                topic_usage[topic_name] += 1
-            else:
-                topic_usage[topic_name] = 1
+        for post in posts:
+            for topic in post.topics:
+                if topic not in topic_usage:
+                    topic_usage[topic] = 0
+                topic_usage[topic] += 1
 
         sorted_topics = sorted(topic_usage.items(), key=lambda x: x[1], reverse=True)
 
-        # Prepare the response
-        most_used_topics = [
-            TopicUsage(topic_name=topic, usage_count=count)
-            for topic, count in sorted_topics
-        ]
-
-        return MostUsedTopics(topics=most_used_topics)
+        return MostUsedTopics_Response(sorted_topics[:10])
         
         
 

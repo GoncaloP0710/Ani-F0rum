@@ -55,6 +55,11 @@ class AnimeListStub(object):
                 request_serializer=others_dot_AnimeList__pb2.get_similar_anime_Request.SerializeToString,
                 response_deserializer=others_dot_AnimeList__pb2.get_similar_anime_Response.FromString,
                 _registered_method=True)
+        self.GetRecomendedAnimeList = channel.unary_unary(
+                '/AnimeList/GetRecomendedAnimeList',
+                request_serializer=others_dot_AnimeList__pb2.recomended_animeList_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.recomended_animeList_Response.FromString,
+                _registered_method=True)
 
 
 class AnimeListServicer(object):
@@ -85,6 +90,12 @@ class AnimeListServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetRecomendedAnimeList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AnimeListServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -107,6 +118,11 @@ def add_AnimeListServicer_to_server(servicer, server):
                     servicer.GetSimilarAnime,
                     request_deserializer=others_dot_AnimeList__pb2.get_similar_anime_Request.FromString,
                     response_serializer=others_dot_AnimeList__pb2.get_similar_anime_Response.SerializeToString,
+            ),
+            'GetRecomendedAnimeList': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRecomendedAnimeList,
+                    request_deserializer=others_dot_AnimeList__pb2.recomended_animeList_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.recomended_animeList_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -218,6 +234,33 @@ class AnimeList(object):
             '/AnimeList/GetSimilarAnime',
             others_dot_AnimeList__pb2.get_similar_anime_Request.SerializeToString,
             others_dot_AnimeList__pb2.get_similar_anime_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetRecomendedAnimeList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeList/GetRecomendedAnimeList',
+            others_dot_AnimeList__pb2.recomended_animeList_Request.SerializeToString,
+            others_dot_AnimeList__pb2.recomended_animeList_Response.FromString,
             options,
             channel_credentials,
             insecure,

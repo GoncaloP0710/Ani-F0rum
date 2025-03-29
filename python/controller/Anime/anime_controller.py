@@ -1,0 +1,29 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
+import connexion
+import pathlib
+
+basedir = pathlib.Path(__file__).parent.resolve()
+
+connex_app = connexion.App(__name__, specification_dir=basedir)
+connex_app.add_api(basedir / "swagger.yml")
+
+import grpc
+from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
+from python.Common import User_pb2 as Common_dot_User__pb2
+
+def all_anime():
+    with grpc.insecure_channel('localhost:50052') as channel: # Connect to the anime_list server
+        stub = AnimeList_pb2_grpc.AnimeListStub(channel)
+        request = AnimeList_pb2.get_all_animes() # Create a request
+        
+        try:  # Make the request
+            response = stub.GetAllAnimes(request)
+            return [anime for anime in response.animes]  # Return the list of animes as JSON
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+if __name__ == "__main__":
+    connex_app.run(host="0.0.0.0", port=50051, debug=True)
