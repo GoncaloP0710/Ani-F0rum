@@ -4,7 +4,7 @@ import grpc
 import UserStatistics_pb2_grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from utatistics_pb2 import (
+from UserStatistics_pb2 import (
     Top10_Request,
     Top10_Response,
     MostUsedTopics_Request,
@@ -16,7 +16,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 from python.repository.Anime import AnimeRepository_pb2_grpc as ar_grpc
 from python.repository.Anime import AnimeRepository_pb2 as ar_pb2
 
-class userUserSttics(userUserSstics_pb2_grpc.userUserSsticsServicer):
+class UserSttics(UserStatistics_pb2_grpcr.UserStatisticsServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
@@ -76,8 +76,8 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    achievements_pb2_grpc.add_AchievementsServicer_to_server(
-        Achievements(), server
+    UserStatistics_pb2_grpcr.add_UserStatisticsServicer_to_server(
+        UserStatistics(), server
     )
 
    

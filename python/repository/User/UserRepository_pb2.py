@@ -21,8 +21,10 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 
 _sym_db = _symbol_database.Default()
 
-
-from Common import User_pb2 as Common_dot_User__pb2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+from python.Common import User_pb2 as Common_dot_User__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1frepository/UserRepository.proto\x1a\x11\x43ommon/User.proto\"%\n\x10get_user_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x11get_user_Response\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"\x17\n\x15get_all_users_Request\".\n\x16get_all_users_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\";\n$get_users_that_watched_anime_Request\x12\x13\n\x0b\x61nime_names\x18\x01 \x03(\t\"=\n%get_users_that_watched_anime_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\xed\x01\n\x0eUserRepository\x12\x30\n\x07GetUser\x12\x11.get_user_Request\x1a\x12.get_user_Response\x12>\n\x0bGetAllUsers\x12\x16.get_all_users_Request\x1a\x17.get_all_users_Response\x12i\n\x18GetUsersThatWatchedAnime\x12%.get_users_that_watched_anime_Request\x1a&.get_users_that_watched_anime_Responseb\x06proto3')

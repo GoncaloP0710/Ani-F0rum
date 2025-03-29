@@ -15,15 +15,18 @@ from python.others.Publisher.Publisher_pb2_grpc import (
 
 from python.others.Publisher.Publisher_pb2 import (
     # Responses
-    GetTopicsResponse,
-    CreateTopicResponse,
-    GetTopicResponse,
-    PublishInTopicResponse,
-    KarmaResponse
+    GetTopicsResponsePub,
+    CreateTopicResponsePub,
+    GetTopicResponsePub,
+    PublishInTopicResponsePub,
+    KarmaResponsePub
 )
 
+from python.repository.Topic.TopicRepository_pb2_grpc import (
+    TopicRepositoryStub
+)
 
-from python.Common.TopicRepository_pb2 import (
+from python.Common.Topic_pb2 import (
     Subscriber,
     Message,
     Image,
@@ -37,17 +40,18 @@ from grpc_interceptor.exceptions import NotFound
 from python.repository.Topic import TopicRepository_pb2
 from python.repository.Topic import TopicRepository_pb2_grpc   
 
-class PublishService(publisher_pb2_grpc.PublisherServicer):
+class PublishService(PublisherServicer):
 
     def __init__(self):
         self.channel = grpc.insecure_channel('localhost:50062')  # Create a channel to the TopicRepository
-        self.stub = TopicRepository_pb2_grpc.PublisherStub(self.channel)
+        self.stub = TopicRepositoryStub(self.channel)
 
     def GetTopics(self, request, context):
 
         try:
-            response = self.stub.Topics(TopicRepository_pb2.GetTopicsRequest())
-            return GetTopicsResponse(topics=response.topics)
+            print("Processing a GetTopics request")
+            response = self.stub.GetTopics(TopicRepository_pb2.GetTopicsRequest())
+            return GetTopicsResponsePub(topics=response.topics)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
@@ -55,8 +59,8 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
     def CreateTopic(self, request, context):
 
         try:
-            response = self.stub.Topics(TopicRepository_pb2.CreateTopicRequest(request.topicname))
-            return CreateTopicResponse(topicname=response.topicname)
+            response = self.stub.CreateTopic(TopicRepository_pb2.CreateTopicRequest(request.topicname))
+            return CreateTopicResponsePub(topicname=response.topicname)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
@@ -64,8 +68,8 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
     def GetTopic(self, request, context):
 
         try:
-            response = self.stub.Topics(TopicRepository_pb2.GetTopicRequest(request.topicname))
-            return GetTopicResponse(topic=response.topic)
+            response = self.stub.GetTopic(TopicRepository_pb2.GetTopicRequest(request.topicname))
+            return GetTopicResponsePub(topic=response.topic)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
@@ -80,7 +84,7 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
             if isinstance(content, Message):
 
                 micro_service_response = Topic()
-                reponse = self.stub.Topics(TopicRepository_pb2.PublishMessage(
+                reponse = self.stub.PublishMessage(TopicRepository_pb2.PublishMessage(
                     topic_name,
                     publication_name,
                     content
@@ -89,7 +93,7 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
             elif isinstance(content, Image):
 
                 micro_service_response = Topic()
-                reponse = self.stub.Topics(TopicRepository_pb2.PublishImage(
+                reponse = self.stub.PublishImage(TopicRepository_pb2.PublishImage(
                     topic_name,
                     publication_name,
                     content
@@ -98,7 +102,7 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
             else:
                 raise "Invalid content of publication"
 
-            return PublishInTopicResponse(publicationname=response.publicationname)
+            return PublishInTopicResponsePub(publicationname=response.publicationname)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
@@ -143,7 +147,11 @@ def serve():
     """
 
     server.add_insecure_port("[::]:50061")
+    print('Publisher server running on port 50061')
     server.start()
+
+    print(PublishService().GetTopics(None, None))
+
     server.wait_for_termination()
 
 if __name__ == "__main__":

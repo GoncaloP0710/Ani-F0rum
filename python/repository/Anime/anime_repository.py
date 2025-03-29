@@ -130,17 +130,12 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
     def AnimeRelatedByGenre(self, request, context):
         print("Searching for animes by genre")
         result = []  # Use a list instead of a set
-        print("--------------------------------")
-        print(request.anime_genres)
-        print("--------------------------------")
         
         for anime in self.Animes_Objects:
             print(anime.genres)
             # Check if any genre in request.anime_genres matches a genre in anime.genres
             if any(genre in anime.genres for genre in request.anime_genres):
                 result.append(anime)  # Add to the list
-        print("--------------------------------")
-        print(result)
         return anime_by_genre_Response(animes=result)
     
 

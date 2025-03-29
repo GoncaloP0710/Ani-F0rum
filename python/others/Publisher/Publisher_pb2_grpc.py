@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from others import Publisher_pb2 as others_dot_Publisher__pb2
+import Publisher_pb2 as others_dot_Publisher__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -36,28 +36,28 @@ class PublisherStub(object):
         """
         self.GetTopics = channel.unary_unary(
                 '/Publisher/GetTopics',
-                request_serializer=others_dot_Publisher__pb2.GetTopicsRequest.SerializeToString,
-                response_deserializer=others_dot_Publisher__pb2.GetTopicsResponse.FromString,
+                request_serializer=others_dot_Publisher__pb2.GetTopicsRequestPub.SerializeToString,
+                response_deserializer=others_dot_Publisher__pb2.GetTopicsResponsePub.FromString,
                 _registered_method=True)
         self.CreateTopic = channel.unary_unary(
                 '/Publisher/CreateTopic',
-                request_serializer=others_dot_Publisher__pb2.CreateTopicRequest.SerializeToString,
-                response_deserializer=others_dot_Publisher__pb2.CreateTopicResponse.FromString,
+                request_serializer=others_dot_Publisher__pb2.CreateTopicRequestPub.SerializeToString,
+                response_deserializer=others_dot_Publisher__pb2.CreateTopicResponsePub.FromString,
                 _registered_method=True)
         self.GetTopic = channel.unary_unary(
                 '/Publisher/GetTopic',
-                request_serializer=others_dot_Publisher__pb2.GetTopicRequest.SerializeToString,
-                response_deserializer=others_dot_Publisher__pb2.GetTopicResponse.FromString,
+                request_serializer=others_dot_Publisher__pb2.GetTopicRequestPub.SerializeToString,
+                response_deserializer=others_dot_Publisher__pb2.GetTopicResponsePub.FromString,
                 _registered_method=True)
         self.Publish = channel.unary_unary(
                 '/Publisher/Publish',
-                request_serializer=others_dot_Publisher__pb2.PublishInTopicRequest.SerializeToString,
-                response_deserializer=others_dot_Publisher__pb2.PublishInTopicResponse.FromString,
+                request_serializer=others_dot_Publisher__pb2.PublishInTopicRequestPub.SerializeToString,
+                response_deserializer=others_dot_Publisher__pb2.PublishInTopicResponsePub.FromString,
                 _registered_method=True)
         self.Karma = channel.unary_unary(
                 '/Publisher/Karma',
-                request_serializer=others_dot_Publisher__pb2.KarmaRequest.SerializeToString,
-                response_deserializer=others_dot_Publisher__pb2.KarmaResponse.FromString,
+                request_serializer=others_dot_Publisher__pb2.KarmaRequestPub.SerializeToString,
+                response_deserializer=others_dot_Publisher__pb2.KarmaResponsePub.FromString,
                 _registered_method=True)
 
 
@@ -99,28 +99,28 @@ def add_PublisherServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTopics,
-                    request_deserializer=others_dot_Publisher__pb2.GetTopicsRequest.FromString,
-                    response_serializer=others_dot_Publisher__pb2.GetTopicsResponse.SerializeToString,
+                    request_deserializer=others_dot_Publisher__pb2.GetTopicsRequestPub.FromString,
+                    response_serializer=others_dot_Publisher__pb2.GetTopicsResponsePub.SerializeToString,
             ),
             'CreateTopic': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTopic,
-                    request_deserializer=others_dot_Publisher__pb2.CreateTopicRequest.FromString,
-                    response_serializer=others_dot_Publisher__pb2.CreateTopicResponse.SerializeToString,
+                    request_deserializer=others_dot_Publisher__pb2.CreateTopicRequestPub.FromString,
+                    response_serializer=others_dot_Publisher__pb2.CreateTopicResponsePub.SerializeToString,
             ),
             'GetTopic': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTopic,
-                    request_deserializer=others_dot_Publisher__pb2.GetTopicRequest.FromString,
-                    response_serializer=others_dot_Publisher__pb2.GetTopicResponse.SerializeToString,
+                    request_deserializer=others_dot_Publisher__pb2.GetTopicRequestPub.FromString,
+                    response_serializer=others_dot_Publisher__pb2.GetTopicResponsePub.SerializeToString,
             ),
             'Publish': grpc.unary_unary_rpc_method_handler(
                     servicer.Publish,
-                    request_deserializer=others_dot_Publisher__pb2.PublishInTopicRequest.FromString,
-                    response_serializer=others_dot_Publisher__pb2.PublishInTopicResponse.SerializeToString,
+                    request_deserializer=others_dot_Publisher__pb2.PublishInTopicRequestPub.FromString,
+                    response_serializer=others_dot_Publisher__pb2.PublishInTopicResponsePub.SerializeToString,
             ),
             'Karma': grpc.unary_unary_rpc_method_handler(
                     servicer.Karma,
-                    request_deserializer=others_dot_Publisher__pb2.KarmaRequest.FromString,
-                    response_serializer=others_dot_Publisher__pb2.KarmaResponse.SerializeToString,
+                    request_deserializer=others_dot_Publisher__pb2.KarmaRequestPub.FromString,
+                    response_serializer=others_dot_Publisher__pb2.KarmaResponsePub.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -148,8 +148,8 @@ class Publisher(object):
             request,
             target,
             '/Publisher/GetTopics',
-            others_dot_Publisher__pb2.GetTopicsRequest.SerializeToString,
-            others_dot_Publisher__pb2.GetTopicsResponse.FromString,
+            others_dot_Publisher__pb2.GetTopicsRequestPub.SerializeToString,
+            others_dot_Publisher__pb2.GetTopicsResponsePub.FromString,
             options,
             channel_credentials,
             insecure,
@@ -175,8 +175,8 @@ class Publisher(object):
             request,
             target,
             '/Publisher/CreateTopic',
-            others_dot_Publisher__pb2.CreateTopicRequest.SerializeToString,
-            others_dot_Publisher__pb2.CreateTopicResponse.FromString,
+            others_dot_Publisher__pb2.CreateTopicRequestPub.SerializeToString,
+            others_dot_Publisher__pb2.CreateTopicResponsePub.FromString,
             options,
             channel_credentials,
             insecure,
@@ -202,8 +202,8 @@ class Publisher(object):
             request,
             target,
             '/Publisher/GetTopic',
-            others_dot_Publisher__pb2.GetTopicRequest.SerializeToString,
-            others_dot_Publisher__pb2.GetTopicResponse.FromString,
+            others_dot_Publisher__pb2.GetTopicRequestPub.SerializeToString,
+            others_dot_Publisher__pb2.GetTopicResponsePub.FromString,
             options,
             channel_credentials,
             insecure,
@@ -229,8 +229,8 @@ class Publisher(object):
             request,
             target,
             '/Publisher/Publish',
-            others_dot_Publisher__pb2.PublishInTopicRequest.SerializeToString,
-            others_dot_Publisher__pb2.PublishInTopicResponse.FromString,
+            others_dot_Publisher__pb2.PublishInTopicRequestPub.SerializeToString,
+            others_dot_Publisher__pb2.PublishInTopicResponsePub.FromString,
             options,
             channel_credentials,
             insecure,
@@ -256,8 +256,8 @@ class Publisher(object):
             request,
             target,
             '/Publisher/Karma',
-            others_dot_Publisher__pb2.KarmaRequest.SerializeToString,
-            others_dot_Publisher__pb2.KarmaResponse.FromString,
+            others_dot_Publisher__pb2.KarmaRequestPub.SerializeToString,
+            others_dot_Publisher__pb2.KarmaResponsePub.FromString,
             options,
             channel_credentials,
             insecure,

@@ -16,7 +16,8 @@ from python.repository.User.UserRepository_pb2 import (
     get_user_Response,
     get_all_users_Response,
     get_users_that_watched_anime_Response,
-    update_User_Response,
+    # TODO: After testing, uncomment the following line
+    # update_User_Response,
 )
 
 # TODO: Change that latter for the correct import
@@ -106,13 +107,15 @@ class UserRepository_Service(UserRepositoryServicer) :
     
     # Returns all users with one of the animes in their list
     def GetUsersThatWatchedAnime(self, request, context):
-        print("Searching for users that watched this animes: ", request.anime_names)
-        users = set()
+        print("Searching for users that watched these animes: ", request.anime_names)
+        users = []  # Use a list instead of a set
         for anime in request.anime_names:
             for user in self.Users:
-                if anime in user.animes_watched:
-                    users.add(user)
-        return get_users_that_watched_anime_Response(users=list(users))
+                if anime in user.animes_watched and user not in users:
+                    users.append(user)  # Add user to the list if not already present
+
+        print("Found users: ", users)
+        return get_users_that_watched_anime_Response(users=users)
     
     # TODO: Remove comments when _pb2_grpc files are updated
     # Returns success of the update

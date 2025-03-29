@@ -22,7 +22,10 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from Common import Topic_pb2 as Common_dot_Topic__pb2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+from python.Common import Topic_pb2 as Common_dot_Topic__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n repository/TopicRepository.proto\x1a\x12\x43ommon/Topic.proto\"\x17\n\x15MostUsedTopicsRequest\"0\n\x16MostUsedTopicsResponse\x12\x16\n\x06topics\x18\x01 \x03(\x0b\x32\x06.Topic\"-\n\x17TopicSubscribersRequest\x12\x12\n\ntopicnames\x18\x01 \x03(\t\"/\n\x18TopicSubscribersResponse\x12\x13\n\x0bsubscribers\x18\x01 \x03(\t\"%\n\x14RecomendationRequest\x12\r\n\x05theme\x18\x01 \x01(\t\"1\n\x15RecomendationResponse\x12\x18\n\x10publicationNames\x18\x01 \x03(\t\"\'\n\x12\x43reateTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\"(\n\x13\x43reateTopicResponse\x12\x11\n\ttopicname\x18\x01 \x01(\t\"\x12\n\x10GetTopicsRequest\"+\n\x11GetTopicsResponse\x12\x16\n\x06topics\x18\x01 \x03(\x0b\x32\x06.Topic\"$\n\x0fGetTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\")\n\x10GetTopicResponse\x12\x15\n\x05topic\x18\x01 \x01(\x0b\x32\x06.Topic\"e\n\x1cPublishMessageInTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\x12\x17\n\x0fpublicationname\x18\x02 \x01(\t\x12\x19\n\x07message\x18\x03 \x01(\x0b\x32\x08.Message\"_\n\x1aPublishImageInTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\x12\x17\n\x0fpublicationname\x18\x02 \x01(\t\x12\x15\n\x05image\x18\x03 \x01(\x0b\x32\x06.Image\"1\n\x16PublishInTopicResponse\x12\x17\n\x0fpublicationname\x18\x01 \x01(\t2\x8c\x04\n\x0fTopicRepository\x12\x41\n\x0eMostUsedTopics\x12\x16.MostUsedTopicsRequest\x1a\x17.MostUsedTopicsResponse\x12G\n\x10TopicSubscribers\x12\x18.TopicSubscribersRequest\x1a\x19.TopicSubscribersResponse\x12>\n\rRecomendation\x12\x15.RecomendationRequest\x1a\x16.RecomendationResponse\x12\x32\n\tGetTopics\x12\x11.GetTopicsRequest\x1a\x12.GetTopicsResponse\x12\x38\n\x0b\x43reateTopic\x12\x13.CreateTopicRequest\x1a\x14.CreateTopicResponse\x12/\n\x08GetTopic\x12\x10.GetTopicRequest\x1a\x11.GetTopicResponse\x12H\n\x0ePublishMessage\x12\x1d.PublishMessageInTopicRequest\x1a\x17.PublishInTopicResponse\x12\x44\n\x0cPublishImage\x12\x1b.PublishImageInTopicRequest\x1a\x17.PublishInTopicResponseb\x06proto3')

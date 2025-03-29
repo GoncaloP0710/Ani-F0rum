@@ -21,10 +21,10 @@ from python.repository.Topic.TopicRepository_pb2 import (
     CreateTopicResponse,
     GetTopicResponse,
     PublishInTopicResponse,
-    KarmaResponse
+    #KarmaResponse
 )
 
-from python.Common.TopicRepository_pb2 import (
+from python.Common.Topic_pb2 import (
     Subscriber,
     Message,
     Image,
@@ -33,58 +33,59 @@ from python.Common.TopicRepository_pb2 import (
 )
 
 from grpc_interceptor import ExceptionToStatusInterceptor
-from grpc_interceptor.exceptions import NotFound, BadRequest
+from grpc_interceptor.exceptions import NotFound
 
 class TopicService(TopicRepositoryServicer):
 
-    Topics = [
-        Topic(
-            topicname = 'Solo Leveling ep12',
-            subscribers = [
-                Subscriber(name = 'Diogo'),
-                Subscriber(name = 'Gonçalo'),
-                Subscriber(name = 'André'),
-                Subscriber(name = 'Daniel')
-            ],
-            publications = [
-                Publication(
-                    name = 'Diogo Reaction',
-                    topicname = 'Solo Leveling',
-                    content = Message(
-                        username = 'Diogo',
-                        content = 'Wow, it was amazing!'
+    def __init__(self):
+        self.Topics = [
+            Topic(
+                topicname = 'Solo Leveling ep12',
+                subscribers = [
+                    Subscriber(name = 'Diogo'),
+                    Subscriber(name = 'Gonçalo'),
+                    Subscriber(name = 'André'),
+                    Subscriber(name = 'Daniel')
+                ],
+                publications = [
+                    Publication(
+                        name = "Diogo Reaction",
+                        topicname = 'Solo Leveling',
+                        message = Message(
+                            username = 'Diogo',
+                            content = 'Wow, it was amazing!'
+                        )
+                    ),
+                    Publication(
+                        name = 'Answer to Diogo Reaction',
+                        topicname = 'Solo Leveling',
+                        message = Message(
+                            username = 'Gonçalo',
+                            content = 'I agree Gajo.'
+                        )
                     )
-                ),
-                Publication(
-                    name = 'Answer to Diogo Reaction',
-                    topicname = 'Solo Leveling',
-                    content = Message(
-                        username = 'Gonçalo',
-                        content = 'I agree Gajo.'
+                ]
+            ),
+            Topic(
+                topicname = 'Solo Leveling images',
+                subscribers = [
+                    Subscriber(name = 'Diogo'),
+                    Subscriber(name = 'Gonçalo'),
+                    Subscriber(name = 'André'),
+                    Subscriber(name = 'Daniel')
+                ],
+                publications = [
+                    Publication(
+                        name = 'Last fight',
+                        topicname = 'Solo Leveling',
+                        images = Image(
+                            name = 'Epic fight',
+                            username = 'Diogo'
+                        )
                     )
-                )
-            ]
-        ),
-        Topic(
-            topicname = 'Solo Leveling images',
-            subscribers = [
-                Subscriber(name = 'Diogo'),
-                Subscriber(name = 'Gonçalo'),
-                Subscriber(name = 'André'),
-                Subscriber(name = 'Daniel')
-            ],
-            publications = [
-                Publication(
-                    name = 'Last fight',
-                    topicname = 'Solo Leveling',
-                    content = Image(
-                        name = 'Epic fight',
-                        username = 'Diogo'
-                    )
-                )
-            ]
-        )
-    ]
+                ]
+            )
+        ]
 
     def MostUsedTopics(self, request, context):
         
@@ -93,7 +94,7 @@ class TopicService(TopicRepositoryServicer):
         print("Received response from other micro service")
 
         # assume that the anime name are the first 2 words
-        anime_names = [" ".join(topic.topicname.split()[:2]) for topic in Topics]
+        anime_names = [" ".join(topic.topicname.split()[:2]) for topic in self.Topics]
         counter = Counter(anime_names)
         most_used = counter.most_common(1)
         
@@ -107,7 +108,7 @@ class TopicService(TopicRepositoryServicer):
         
         res = []
 
-        for topic in Topics:
+        for topic in self.Topics:
             if topic.name in request.topicnames:
                 micro_service_response = []
                 print("Received response from other micro service for topic name: " + topic_name)
@@ -135,39 +136,37 @@ class TopicService(TopicRepositoryServicer):
 
         print("Processing a GetTopics request")
 
-        micro_service_response = [] # TODO with SQL
-        print("Received response from other micro service")
-        topics = Topics # interagir com o próximo microserviço
+        print("Returning the response")
 
-        print("Returning the response: " + topics)
-
-        return GetTopicsResponse(topics) if len(topics > 0) else NotFound("No topics found")
+        return GetTopicsResponse(topics = self.Topics) #if len(topics > 0) else NotFound("No topics found")
     
     def CreateTopic(self, request, context):
 
-        print("Processing a GetTopics request")
+        print("Processing a CreateTopic request")
 
         micro_service_response = 'topicname'
         print("Received response from other micro service")
         res = request.topicname
 
-        Topics.append(Topic(topic_name = res, subscribers = [], publications = []))
+        self.Topics.append(Topic(topic_name = res, subscribers = [], publications = []))
 
         print("Returning the response: " + res)
 
-        return CreateTopicResponse(res)
+        return CreateTopicResponse(topicname = res)
     
     def GetTopic(self, request, context):
+
+        print("Processing a GetTopic request")
 
         topic_name = request.topicname
 
         micro_service_response = Topic()
         print("Received response from other micro service")
-        topic = Topics.get(topic_name)
+        topic = self.Topics.get(topic_name)
 
         print("Returning the response: " + topic)
 
-        return GetTopicResponse(topic)
+        return GetTopicResponse(topic = topic)
     
     def PublishMessage(self, request, context):
 
@@ -177,7 +176,7 @@ class TopicService(TopicRepositoryServicer):
         publication_name = request.publicationname
         message = request.message
 
-        for topic in Topics:
+        for topic in self.Topics:
             if topic.name == topic_name:
                 micro_service_response = Topic()
                 print("Received response from other micro service")
@@ -194,7 +193,7 @@ class TopicService(TopicRepositoryServicer):
                  
         print("Returning the response: " + publication_name)
 
-        return PublishInTopicResponse(publication_name)
+        return PublishInTopicResponse(publicationname = publication_name)
     
     def PublishImage(self, request, context):
 
@@ -204,7 +203,7 @@ class TopicService(TopicRepositoryServicer):
         publication_name = request.publicationname
         image = request.image
 
-        for topic in Topics:
+        for topic in self.Topics:
             if topic.name == topic_name:
                 micro_service_response = Topic()
                 print("Received response from other micro service")
@@ -221,7 +220,7 @@ class TopicService(TopicRepositoryServicer):
                  
         print("Returning the response: " + publication_name)
 
-        return PublishInTopicResponse(publication_name)
+        return PublishInTopicResponse(publicationname = publication_name)
     
     def Karma(self, request, context):
         ...
