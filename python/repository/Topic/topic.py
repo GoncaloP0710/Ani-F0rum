@@ -147,7 +147,17 @@ class PublishService(PublisherServicer):
         return PublishInTopicResponse(topic)
     
     def Karma(self, request, context):
-        ...
+        topic_name = request.topicname
+        user_id = request.userId
+
+        micro_service_response = Topic()
+        print("Received response from other micro service")
+        topic = micro_service_response
+
+        print("Returning the response: " + topic)
+
+        return KarmaResponse(topic)
+        
 
 """
     def Recommend(self, request, context):

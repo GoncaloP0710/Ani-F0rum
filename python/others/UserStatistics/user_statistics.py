@@ -33,12 +33,44 @@ class user_statistics(user_statistics_pb2_grpc.user_statisticsServicer):
         dict_list = dict(zip(user.anime_watched_score, user.animes_watched))
         sorted_dict = sorted(dict_list)[:10]
 
-        responseList = self.anime_stub.MultipleAnimeByName(ar_pb2.multiple_anime_by_name_Request(anime_names=sorted_dict))
+        responseList = self.anime_stub.MultipleAnimeByName(ar_pb2.multiple_anime_by_name_Request(anime_names=sorted_dict.values()))
         if responseList is None:
             return NotFound("Anime list not found")
 
         return Top10_Response(responseList)
 
+    #TODO: AINDA NAO SEI COMO FUNCIONA O GETUSERPOSTS
+    def GetMostUsedTopics(self, request, context):
+        # Fetch the user making the request
+        user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        if not user:
+            context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
+
+        # TODO: Nao sei se preciso de usar este ou não
+        user_topics = user.topics_subscribed
+
+        user_posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
+        if not user_posts:
+            context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
+
+        topic_usage = {}
+        for post in user_posts.posts:
+            topic_name = post.topic_name
+            if topic_name in topic_usage:
+                topic_usage[topic_name] += 1
+            else:
+                topic_usage[topic_name] = 1
+
+        sorted_topics = sorted(topic_usage.items(), key=lambda x: x[1], reverse=True)
+
+        # Prepare the response
+        most_used_topics = [
+            TopicUsage(topic_name=topic, usage_count=count)
+            for topic, count in sorted_topics
+        ]
+
+        return MostUsedTopics(topics=most_used_topics)
+        
         
 
 #TODO
