@@ -1,32 +1,5 @@
 syntax = "proto3";
-
-message Subscriber {
-    string name = 1;
-}
-
-message Message {
-    string username = 1;
-    string content = 2;
-}
-
-message Image {
-    string name = 1;
-}
-
-message Publication {
-    string name = 1;
-    string topicname = 2;
-    oneof content {
-        Message message = 3;
-        Image images = 4;
-    }
-}
-
-message Topic {
-    string topicname = 1;
-    repeated Subscriber subscribers = 2;
-    repeated Publication publications = 3;
-}
+import "Common/Topic.proto";
 
 message GetTopicsRequest {}
 
@@ -51,8 +24,8 @@ message GetTopicResponse {
 }
 
 message PublishInTopicRequest {
-    int32 userId = 1;
-    string topicname = 2;
+    string topicname = 1;
+    string publicationname = 2;
     oneof content {
         Message message = 3;
         Image image = 4;

@@ -22,45 +22,36 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from Common import Topic_pb2 as Common_dot_Topic__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/Publisher.proto\"\x1a\n\nSubscriber\x12\x0c\n\x04name\x18\x01 \x01(\t\",\n\x07Message\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"\x15\n\x05Image\x12\x0c\n\x04name\x18\x01 \x01(\t\"p\n\x0bPublication\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttopicname\x18\x02 \x01(\t\x12\x1b\n\x07message\x18\x03 \x01(\x0b\x32\x08.MessageH\x00\x12\x18\n\x06images\x18\x04 \x01(\x0b\x32\x06.ImageH\x00\x42\t\n\x07\x63ontent\"`\n\x05Topic\x12\x11\n\ttopicname\x18\x01 \x01(\t\x12 \n\x0bsubscribers\x18\x02 \x03(\x0b\x32\x0b.Subscriber\x12\"\n\x0cpublications\x18\x03 \x03(\x0b\x32\x0c.Publication\"\x12\n\x10GetTopicsRequest\"+\n\x11GetTopicsResponse\x12\x16\n\x06topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\'\n\x12\x43reateTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\"(\n\x13\x43reateTopicResponse\x12\x11\n\ttopicname\x18\x01 \x01(\t\"$\n\x0fGetTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\")\n\x10GetTopicResponse\x12\x15\n\x05topic\x18\x01 \x01(\x0b\x32\x06.Topic\"{\n\x15PublishInTopicRequest\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x11\n\ttopicname\x18\x02 \x01(\t\x12\x1b\n\x07message\x18\x03 \x01(\x0b\x32\x08.MessageH\x00\x12\x17\n\x05image\x18\x04 \x01(\x0b\x32\x06.ImageH\x00\x42\t\n\x07\x63ontent\"1\n\x16PublishInTopicResponse\x12\x17\n\x0fpublicationname\x18\x01 \x01(\t\"\x0e\n\x0cKarmaRequest\"%\n\rKarmaResponse\x12\x14\n\x0ckarma_points\x18\x01 \x01(\x05\x32\x8e\x02\n\tPublisher\x12\x32\n\tGetTopics\x12\x11.GetTopicsRequest\x1a\x12.GetTopicsResponse\x12\x38\n\x0b\x43reateTopic\x12\x13.CreateTopicRequest\x1a\x14.CreateTopicResponse\x12/\n\x08GetTopic\x12\x10.GetTopicRequest\x1a\x11.GetTopicResponse\x12:\n\x07Publish\x12\x16.PublishInTopicRequest\x1a\x17.PublishInTopicResponse\x12&\n\x05Karma\x12\r.KarmaRequest\x1a\x0e.KarmaResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/Publisher.proto\x1a\x12\x43ommon/Topic.proto\"\x12\n\x10GetTopicsRequest\"+\n\x11GetTopicsResponse\x12\x16\n\x06topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\'\n\x12\x43reateTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\"(\n\x13\x43reateTopicResponse\x12\x11\n\ttopicname\x18\x01 \x01(\t\"$\n\x0fGetTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\")\n\x10GetTopicResponse\x12\x15\n\x05topic\x18\x01 \x01(\x0b\x32\x06.Topic\"\x84\x01\n\x15PublishInTopicRequest\x12\x11\n\ttopicname\x18\x01 \x01(\t\x12\x17\n\x0fpublicationname\x18\x02 \x01(\t\x12\x1b\n\x07message\x18\x03 \x01(\x0b\x32\x08.MessageH\x00\x12\x17\n\x05image\x18\x04 \x01(\x0b\x32\x06.ImageH\x00\x42\t\n\x07\x63ontent\"1\n\x16PublishInTopicResponse\x12\x17\n\x0fpublicationname\x18\x01 \x01(\t\"\x0e\n\x0cKarmaRequest\"%\n\rKarmaResponse\x12\x14\n\x0ckarma_points\x18\x01 \x01(\x05\x32\x8e\x02\n\tPublisher\x12\x32\n\tGetTopics\x12\x11.GetTopicsRequest\x1a\x12.GetTopicsResponse\x12\x38\n\x0b\x43reateTopic\x12\x13.CreateTopicRequest\x1a\x14.CreateTopicResponse\x12/\n\x08GetTopic\x12\x10.GetTopicRequest\x1a\x11.GetTopicResponse\x12:\n\x07Publish\x12\x16.PublishInTopicRequest\x1a\x17.PublishInTopicResponse\x12&\n\x05Karma\x12\r.KarmaRequest\x1a\x0e.KarmaResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'others.Publisher_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_SUBSCRIBER']._serialized_start=26
-  _globals['_SUBSCRIBER']._serialized_end=52
-  _globals['_MESSAGE']._serialized_start=54
-  _globals['_MESSAGE']._serialized_end=98
-  _globals['_IMAGE']._serialized_start=100
-  _globals['_IMAGE']._serialized_end=121
-  _globals['_PUBLICATION']._serialized_start=123
-  _globals['_PUBLICATION']._serialized_end=235
-  _globals['_TOPIC']._serialized_start=237
-  _globals['_TOPIC']._serialized_end=333
-  _globals['_GETTOPICSREQUEST']._serialized_start=335
-  _globals['_GETTOPICSREQUEST']._serialized_end=353
-  _globals['_GETTOPICSRESPONSE']._serialized_start=355
-  _globals['_GETTOPICSRESPONSE']._serialized_end=398
-  _globals['_CREATETOPICREQUEST']._serialized_start=400
-  _globals['_CREATETOPICREQUEST']._serialized_end=439
-  _globals['_CREATETOPICRESPONSE']._serialized_start=441
-  _globals['_CREATETOPICRESPONSE']._serialized_end=481
-  _globals['_GETTOPICREQUEST']._serialized_start=483
-  _globals['_GETTOPICREQUEST']._serialized_end=519
-  _globals['_GETTOPICRESPONSE']._serialized_start=521
-  _globals['_GETTOPICRESPONSE']._serialized_end=562
-  _globals['_PUBLISHINTOPICREQUEST']._serialized_start=564
-  _globals['_PUBLISHINTOPICREQUEST']._serialized_end=687
-  _globals['_PUBLISHINTOPICRESPONSE']._serialized_start=689
-  _globals['_PUBLISHINTOPICRESPONSE']._serialized_end=738
-  _globals['_KARMAREQUEST']._serialized_start=740
-  _globals['_KARMAREQUEST']._serialized_end=754
-  _globals['_KARMARESPONSE']._serialized_start=756
-  _globals['_KARMARESPONSE']._serialized_end=793
-  _globals['_PUBLISHER']._serialized_start=796
-  _globals['_PUBLISHER']._serialized_end=1066
+  _globals['_GETTOPICSREQUEST']._serialized_start=46
+  _globals['_GETTOPICSREQUEST']._serialized_end=64
+  _globals['_GETTOPICSRESPONSE']._serialized_start=66
+  _globals['_GETTOPICSRESPONSE']._serialized_end=109
+  _globals['_CREATETOPICREQUEST']._serialized_start=111
+  _globals['_CREATETOPICREQUEST']._serialized_end=150
+  _globals['_CREATETOPICRESPONSE']._serialized_start=152
+  _globals['_CREATETOPICRESPONSE']._serialized_end=192
+  _globals['_GETTOPICREQUEST']._serialized_start=194
+  _globals['_GETTOPICREQUEST']._serialized_end=230
+  _globals['_GETTOPICRESPONSE']._serialized_start=232
+  _globals['_GETTOPICRESPONSE']._serialized_end=273
+  _globals['_PUBLISHINTOPICREQUEST']._serialized_start=276
+  _globals['_PUBLISHINTOPICREQUEST']._serialized_end=408
+  _globals['_PUBLISHINTOPICRESPONSE']._serialized_start=410
+  _globals['_PUBLISHINTOPICRESPONSE']._serialized_end=459
+  _globals['_KARMAREQUEST']._serialized_start=461
+  _globals['_KARMAREQUEST']._serialized_end=475
+  _globals['_KARMARESPONSE']._serialized_start=477
+  _globals['_KARMARESPONSE']._serialized_end=514
+  _globals['_PUBLISHER']._serialized_start=517
+  _globals['_PUBLISHER']._serialized_end=787
 # @@protoc_insertion_point(module_scope)

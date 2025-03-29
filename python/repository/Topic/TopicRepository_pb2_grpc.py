@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import TopicRepository_pb2 as repository_dot_TopicRepository__pb2
+from repository import TopicRepository_pb2 as repository_dot_TopicRepository__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class PublisherStub(object):
+class TopicRepositoryStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,43 +35,48 @@ class PublisherStub(object):
             channel: A grpc.Channel.
         """
         self.MostUsedTopics = channel.unary_unary(
-                '/Publisher/MostUsedTopics',
+                '/TopicRepository/MostUsedTopics',
                 request_serializer=repository_dot_TopicRepository__pb2.MostUsedTopicsRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.MostUsedTopicsResponse.FromString,
                 _registered_method=True)
         self.TopicSubscribers = channel.unary_unary(
-                '/Publisher/TopicSubscribers',
+                '/TopicRepository/TopicSubscribers',
                 request_serializer=repository_dot_TopicRepository__pb2.TopicSubscribersRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.TopicSubscribersResponse.FromString,
                 _registered_method=True)
         self.Recomendation = channel.unary_unary(
-                '/Publisher/Recomendation',
+                '/TopicRepository/Recomendation',
                 request_serializer=repository_dot_TopicRepository__pb2.RecomendationRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.RecomendationResponse.FromString,
                 _registered_method=True)
         self.GetTopics = channel.unary_unary(
-                '/Publisher/GetTopics',
+                '/TopicRepository/GetTopics',
                 request_serializer=repository_dot_TopicRepository__pb2.GetTopicsRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.GetTopicsResponse.FromString,
                 _registered_method=True)
         self.CreateTopic = channel.unary_unary(
-                '/Publisher/CreateTopic',
+                '/TopicRepository/CreateTopic',
                 request_serializer=repository_dot_TopicRepository__pb2.CreateTopicRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.CreateTopicResponse.FromString,
                 _registered_method=True)
         self.GetTopic = channel.unary_unary(
-                '/Publisher/GetTopic',
+                '/TopicRepository/GetTopic',
                 request_serializer=repository_dot_TopicRepository__pb2.GetTopicRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.GetTopicResponse.FromString,
                 _registered_method=True)
-        self.Publish = channel.unary_unary(
-                '/Publisher/Publish',
-                request_serializer=repository_dot_TopicRepository__pb2.PublishInTopicRequest.SerializeToString,
+        self.PublishMessage = channel.unary_unary(
+                '/TopicRepository/PublishMessage',
+                request_serializer=repository_dot_TopicRepository__pb2.PublishMessageInTopicRequest.SerializeToString,
+                response_deserializer=repository_dot_TopicRepository__pb2.PublishInTopicResponse.FromString,
+                _registered_method=True)
+        self.PublishImage = channel.unary_unary(
+                '/TopicRepository/PublishImage',
+                request_serializer=repository_dot_TopicRepository__pb2.PublishImageInTopicRequest.SerializeToString,
                 response_deserializer=repository_dot_TopicRepository__pb2.PublishInTopicResponse.FromString,
                 _registered_method=True)
 
 
-class PublisherServicer(object):
+class TopicRepositoryServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def MostUsedTopics(self, request, context):
@@ -110,7 +115,13 @@ class PublisherServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Publish(self, request, context):
+    def PublishMessage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PublishImage(self, request, context):
         """rpc Karma (KarmaRequest) returns (KarmaResponse);
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -118,7 +129,7 @@ class PublisherServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_PublisherServicer_to_server(servicer, server):
+def add_TopicRepositoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'MostUsedTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.MostUsedTopics,
@@ -150,20 +161,25 @@ def add_PublisherServicer_to_server(servicer, server):
                     request_deserializer=repository_dot_TopicRepository__pb2.GetTopicRequest.FromString,
                     response_serializer=repository_dot_TopicRepository__pb2.GetTopicResponse.SerializeToString,
             ),
-            'Publish': grpc.unary_unary_rpc_method_handler(
-                    servicer.Publish,
-                    request_deserializer=repository_dot_TopicRepository__pb2.PublishInTopicRequest.FromString,
+            'PublishMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.PublishMessage,
+                    request_deserializer=repository_dot_TopicRepository__pb2.PublishMessageInTopicRequest.FromString,
+                    response_serializer=repository_dot_TopicRepository__pb2.PublishInTopicResponse.SerializeToString,
+            ),
+            'PublishImage': grpc.unary_unary_rpc_method_handler(
+                    servicer.PublishImage,
+                    request_deserializer=repository_dot_TopicRepository__pb2.PublishImageInTopicRequest.FromString,
                     response_serializer=repository_dot_TopicRepository__pb2.PublishInTopicResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Publisher', rpc_method_handlers)
+            'TopicRepository', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('Publisher', rpc_method_handlers)
+    server.add_registered_method_handlers('TopicRepository', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class Publisher(object):
+class TopicRepository(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -180,7 +196,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/MostUsedTopics',
+            '/TopicRepository/MostUsedTopics',
             repository_dot_TopicRepository__pb2.MostUsedTopicsRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.MostUsedTopicsResponse.FromString,
             options,
@@ -207,7 +223,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/TopicSubscribers',
+            '/TopicRepository/TopicSubscribers',
             repository_dot_TopicRepository__pb2.TopicSubscribersRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.TopicSubscribersResponse.FromString,
             options,
@@ -234,7 +250,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/Recomendation',
+            '/TopicRepository/Recomendation',
             repository_dot_TopicRepository__pb2.RecomendationRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.RecomendationResponse.FromString,
             options,
@@ -261,7 +277,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/GetTopics',
+            '/TopicRepository/GetTopics',
             repository_dot_TopicRepository__pb2.GetTopicsRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.GetTopicsResponse.FromString,
             options,
@@ -288,7 +304,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/CreateTopic',
+            '/TopicRepository/CreateTopic',
             repository_dot_TopicRepository__pb2.CreateTopicRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.CreateTopicResponse.FromString,
             options,
@@ -315,7 +331,7 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/GetTopic',
+            '/TopicRepository/GetTopic',
             repository_dot_TopicRepository__pb2.GetTopicRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.GetTopicResponse.FromString,
             options,
@@ -329,7 +345,7 @@ class Publisher(object):
             _registered_method=True)
 
     @staticmethod
-    def Publish(request,
+    def PublishMessage(request,
             target,
             options=(),
             channel_credentials=None,
@@ -342,8 +358,35 @@ class Publisher(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/Publisher/Publish',
-            repository_dot_TopicRepository__pb2.PublishInTopicRequest.SerializeToString,
+            '/TopicRepository/PublishMessage',
+            repository_dot_TopicRepository__pb2.PublishMessageInTopicRequest.SerializeToString,
+            repository_dot_TopicRepository__pb2.PublishInTopicResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PublishImage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/TopicRepository/PublishImage',
+            repository_dot_TopicRepository__pb2.PublishImageInTopicRequest.SerializeToString,
             repository_dot_TopicRepository__pb2.PublishInTopicResponse.FromString,
             options,
             channel_credentials,

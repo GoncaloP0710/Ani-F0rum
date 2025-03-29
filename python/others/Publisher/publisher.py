@@ -22,6 +22,15 @@ from python.others.Publisher.Publisher_pb2 import (
     KarmaResponse
 )
 
+
+from python.Common.TopicRepository_pb2 import (
+    Subscriber,
+    Message,
+    Image,
+    Publication,
+    Topic,
+)
+
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
@@ -31,53 +40,68 @@ from python.repository.Topic import TopicRepository_pb2_grpc
 class PublishService(publisher_pb2_grpc.PublisherServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50060')  # Create a channel to the AnimeRepository
+        self.channel = grpc.insecure_channel('localhost:50060')  # Create a channel to the TopicRepository
         self.stub = TopicRepository_pb2_grpc.PublisherStub(self.channel)
 
     def GetTopics(self, request, context):
 
-        micro_service_response = self.stub.GetTopics(TopicRepository_pb2.GetTopicsRequest())
-        print("Micro service response: " + micro_service_response)
-        topics = [Topic(n) for n in micro_service_response] # interagir com o próximo microserviço
-
-        return GetTopicsResponse(topics)
+        try:
+            response = self.stub.Topics(TopicRepository_pb2.GetTopicsRequest())
+            return GetTopicsResponse(topics=response.topics)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            return None
     
     def CreateTopic(self, request, context):
 
-        micro_service_response = 'topicname'
-        res = micro_service_response
-
-        return CreateTopicResponse(res)
+        try:
+            response = self.stub.Topics(TopicRepository_pb2.CreateTopicRequest(request.topicname))
+            return CreateTopicResponse(topicname=response.topicname)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            return None
     
     def GetTopic(self, request, context):
 
-        topic_name = request.topicname
-
-        micro_service_response = Topic()
-        topic = micro_service_response
-
-        return GetTopicResponse(topic)
+        try:
+            response = self.stub.Topics(TopicRepository_pb2.GetTopicRequest(request.topicname))
+            return GetTopicResponse(topic=response.topic)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            return None
     
     def PublishInTopic(self, request, context):
 
-        user_id = request.userId
         topic_name = request.topicname
+        publication_name = request.publicationname
         content = request.content
 
-        if isinstance(content, Message):
+        try:
+            if isinstance(content, Message):
 
-            micro_service_response = Topic()
-            topic = micro_service_response
-            
-        elif isinstance(content, Image):
+                micro_service_response = Topic()
+                reponse = self.stub.Topics(TopicRepository_pb2.PublishMessage(
+                    topic_name,
+                    publication_name,
+                    content
+                ))
+                
+            elif isinstance(content, Image):
 
-            micro_service_response = Topic()
-            topic = micro_service_response
-    
-        else:
-            raise "Invalid content of publication"
+                micro_service_response = Topic()
+                reponse = self.stub.Topics(TopicRepository_pb2.PublishImage(
+                    topic_name,
+                    publication_name,
+                    content
+                ))
+        
+            else:
+                raise "Invalid content of publication"
 
-        return PublishInTopicResponse(topic)
+            return PublishInTopicResponse(publicationname=response.publicationname)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            return None
     
     def Karma(self, request, context):
         ...

@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import Publisher_pb2 as others_dot_Publisher__pb2
+from others import Publisher_pb2 as others_dot_Publisher__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__

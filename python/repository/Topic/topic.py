@@ -3,13 +3,14 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 import random
+from collections import Counter
 from concurrent import futures
 
 import grpc
 
 from python.repository.Topic.TopicRepository_pb2_grpc import (
-    PublisherServicer,
-    add_TopicServicer_to_server,
+    TopicRepositoryServicer,
+    add_TopicRepositoryServicer_to_server,
 )
 
 from python.repository.Topic.TopicRepository_pb2 import (
@@ -23,35 +24,82 @@ from python.repository.Topic.TopicRepository_pb2 import (
     KarmaResponse
 )
 
-from grpc_interceptor import ExceptionToStatusInterceptor
-from grpc_interceptor.exceptions import NotFound, BadRequest
-from topic_pb2 import (
+from python.Common.TopicRepository_pb2 import (
     Subscriber,
     Message,
     Image,
     Publication,
     Topic,
-    MostUsedTopicsResponse,
-    TopicSubscribersResponse,
-    RecomendationResponse,
-    GetTopicsResponse,
-    CreateTopicResponse,
-    GetTopicResponse,
-    PublishInTopicResponse,
-    KarmaResponse
 )
 
-class PublishService(PublisherServicer):
+from grpc_interceptor import ExceptionToStatusInterceptor
+from grpc_interceptor.exceptions import NotFound, BadRequest
+
+class TopicService(TopicRepositoryServicer):
+
+    Topics = [
+        Topic(
+            topicname = 'Solo Leveling ep12',
+            subscribers = [
+                Subscriber(name = 'Diogo'),
+                Subscriber(name = 'Gonçalo'),
+                Subscriber(name = 'André'),
+                Subscriber(name = 'Daniel')
+            ],
+            publications = [
+                Publication(
+                    name = 'Diogo Reaction',
+                    topicname = 'Solo Leveling',
+                    content = Message(
+                        username = 'Diogo',
+                        content = 'Wow, it was amazing!'
+                    )
+                ),
+                Publication(
+                    name = 'Answer to Diogo Reaction',
+                    topicname = 'Solo Leveling',
+                    content = Message(
+                        username = 'Gonçalo',
+                        content = 'I agree Gajo.'
+                    )
+                )
+            ]
+        ),
+        Topic(
+            topicname = 'Solo Leveling images',
+            subscribers = [
+                Subscriber(name = 'Diogo'),
+                Subscriber(name = 'Gonçalo'),
+                Subscriber(name = 'André'),
+                Subscriber(name = 'Daniel')
+            ],
+            publications = [
+                Publication(
+                    name = 'Last fight',
+                    topicname = 'Solo Leveling',
+                    content = Image(
+                        name = 'Epic fight',
+                        username = 'Diogo'
+                    )
+                )
+            ]
+        )
+    ]
 
     def MostUsedTopics(self, request, context):
         
         print("Processing a MostUsedTopics request")
-        micro_service_response = []
+        micro_service_response = [] # TODO with SQL
         print("Received response from other micro service")
-        trending_topics = [Topic(n) for n in micro_service_response] # interagir com o próximo microserviço
+
+        # assume that the anime name are the first 2 words
+        anime_names = [" ".join(topic.topicname.split()[:2]) for topic in Topics]
+        counter = Counter(anime_names)
+        most_used = counter.most_common(1)
+        
         print("Returning the response: " + trending_topics)
 
-        return MostUsedTopicsResponse(trending_topics)
+        return MostUsedTopicsResponse(most_used[0][0]) if most_used else NotFound("No topics found")
     
     def TopicSubscribers(self, request, context):
 
@@ -59,13 +107,13 @@ class PublishService(PublisherServicer):
         
         res = []
 
-        for topic_name in request.topicnames:
-            
-            micro_service_response = []
-            print("Received response from other micro service for topic name: " + topic_name)
-            subscribers = [Subscriber() for n in micro_service_response] # interagir com o próximo microserviço
-            res.append(subscribers)
-
+        for topic in Topics:
+            if topic.name in request.topicnames:
+                micro_service_response = []
+                print("Received response from other micro service for topic name: " + topic_name)
+                subscribers = topic.subscribers
+                res.append(topsubscribers)
+                
         print("Returning the response: " + res)
         return TopicSubscribersResponse(subscribers)
 
@@ -87,13 +135,13 @@ class PublishService(PublisherServicer):
 
         print("Processing a GetTopics request")
 
-        micro_service_response = []
+        micro_service_response = [] # TODO with SQL
         print("Received response from other micro service")
-        topics = [Topic(n) for n in micro_service_response] # interagir com o próximo microserviço
+        topics = Topics # interagir com o próximo microserviço
 
         print("Returning the response: " + topics)
 
-        return GetTopicsResponse(topics)
+        return GetTopicsResponse(topics) if len(topics > 0) else NotFound("No topics found")
     
     def CreateTopic(self, request, context):
 
@@ -101,7 +149,9 @@ class PublishService(PublisherServicer):
 
         micro_service_response = 'topicname'
         print("Received response from other micro service")
-        res = micro_service_response
+        res = request.topicname
+
+        Topics.append(Topic(topic_name = res, subscribers = [], publications = []))
 
         print("Returning the response: " + res)
 
@@ -113,51 +163,68 @@ class PublishService(PublisherServicer):
 
         micro_service_response = Topic()
         print("Received response from other micro service")
-        topic = micro_service_response
+        topic = Topics.get(topic_name)
 
         print("Returning the response: " + topic)
 
         return GetTopicResponse(topic)
     
-    def PublishInTopic(self, request, context):
+    def PublishMessage(self, request, context):
 
-        print("Processing a PublishInTopic request")
+        print("Processing a PublishMessage request")
 
-        user_id = request.userId
         topic_name = request.topicname
-        content = request.content
+        publication_name = request.publicationname
+        message = request.message
 
-        if isinstance(content, Message):
+        for topic in Topics:
+            if topic.name == topic_name:
+                micro_service_response = Topic()
+                print("Received response from other micro service")
+                topic.publications.append(
+                    Publication(
+                        name = publication_name,
+                        topicname = topic_name,
+                        content = Message(
+                            username = message.username,
+                            content = message.content,
+                        )
+                    )
+                )
+                 
+        print("Returning the response: " + publication_name)
 
-            micro_service_response = Topic()
-            print("Received response from other micro service")
-            topic = micro_service_response
-            
-        elif isinstance(content, Image):
-
-            micro_service_response = Topic()
-            print("Received response from other micro service")
-            topic = micro_service_response
+        return PublishInTopicResponse(publication_name)
     
-        else:
-            raise BadRequest("Invalid content of publication")
+    def PublishImage(self, request, context):
 
-        print("Returning the response: " + topic)
+        print("Processing a PublishImage request")
 
-        return PublishInTopicResponse(topic)
+        topic_name = request.topicname
+        publication_name = request.publicationname
+        image = request.image
+
+        for topic in Topics:
+            if topic.name == topic_name:
+                micro_service_response = Topic()
+                print("Received response from other micro service")
+                topic.publications.append(
+                    Publication(
+                        name = publication_name,
+                        topicname = topic_name,
+                        content = Image(
+                            name = image.name,
+                            username = image.username,
+                        )
+                    )
+                )
+                 
+        print("Returning the response: " + publication_name)
+
+        return PublishInTopicResponse(publication_name)
     
     def Karma(self, request, context):
-        topic_name = request.topicname
-        user_id = request.userId
-
-        micro_service_response = Topic()
-        print("Received response from other micro service")
-        topic = micro_service_response
-
-        print("Returning the response: " + topic)
-
-        return KarmaResponse(topic)
-        
+        ...
 
 """
     def Recommend(self, request, context):
@@ -176,8 +243,8 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    add_TopicServicer_to_server(
-        PublishService(), server
+    add_TopicRepositoryServicer_to_server(
+        TopicService(), server
     )
 
     """
@@ -195,9 +262,9 @@ def serve():
     )
     """
 
-    server.add_insecure_port("[::]:50060")
+    server.add_insecure_port("[::]:50061")
     server.start()
-    print('Topic Repository server running on port 50060')
+    print('Topic Repository server running on port 50061')
     server.wait_for_termination()
 
 if __name__ == "__main__":
