@@ -33,7 +33,11 @@ class user_statistics(user_statistics_pb2_grpc.user_statisticsServicer):
         dict_list = dict(zip(user.anime_watched_score, user.animes_watched))
         sorted_dict = sorted(dict_list)[:10]
 
-        return Top10_Response(sorted_dict[:10])
+        responseList = self.anime_stub.MultipleAnimeByName(ar_pb2.multiple_anime_by_name_Request(anime_names=sorted_dict))
+        if responseList is None:
+            return NotFound("Anime list not found")
+
+        return Top10_Response(responseList)
 
         
 
