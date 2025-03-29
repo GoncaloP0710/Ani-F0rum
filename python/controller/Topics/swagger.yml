@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+  title: "ANI-F0RUN REST API"
+  description: "An API about anime and anime-related topics"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  # Schemas used in the API 
+  schemas:
+    Topic: # Topic schema that represents a Topic
+      type: "object"
+      required: 
+        - name
+        - subscribers
+        - publications
+      properties:
+        name:
+          type: "string"
+        subscribers:
+          type: "array"
+          items:
+            type: "string"
+        publications: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Publication"
+    Publication: # Publication schema that represents a Publication
+      type: "object"
+      required: 
+        - name
+        - topic_name
+      properties:
+        name:
+          type: "string"
+        topic_name:
+          type: "string"
+        message:
+          $ref: "#/components/schemas/Message"
+        images: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Image"
+    Image: # Image schema that represents a Image
+      type: "object"
+      required: 
+        - name
+      properties:
+        name:
+          type: "string"
+    Message: # Message schema that represents a message
+      type: "object"
+      required:
+        - username
+        - content
+      properties:
+        username:
+          type: "string"
+        content:
+          type: "string"
+
+
+  # Parameters for paths 
+  parameters:
+    user_name:
+      name: "user_name"
+      description: "Name of the user in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    topic_name:
+      name: "topic_name"
+      description: "Name of the topic"
+      in: path
+      required: True
+      schema:
+        type: "string"
+          
+paths:
+
+  # =====================================================
+  # ======================= Topic =======================
+  # =====================================================
+
+  /topics:
+    get:
+      operationId: "topics.all_topics"
+      tags:
+        - Topic
+      summary: "Show a partial part of the topcis list"
+      responses:
+        "200":
+          description: "Successfully show partial topics list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Topic"
+    post:
+      operationId: "topics.create"
+      tags:
+        - Topic
+      summary: "Create a new topic"
+      requestBody:
+          description: "Topic to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+      responses:
+        "201":
+          description: "Successfully created a topic"
+  /topics/{topic_name}:
+    parameters:
+      - name: "topic_name"
+        in: path
+        required: true
+        description: "Name of the topic"
+        schema:
+          type: "string"
+    get:
+      operationId: "topics.get_topic"
+      tags:
+        - Topic
+      summary: "Show a specific topic if it exists"
+      responses:
+        "200":
+          description: "Successfully show the topic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+        "404":
+          description: "Topic not found"
+    post:
+      operationId: "topics.publish"
+      tags:
+        - Topic
+      summary: "Create a publication in the topic"
+      requestBody:
+          description: "Publition to publish"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
+      responses:
+        "201":
+          description: "Successfully submitted a publication"
+
+  /topics/{user_name}: 
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of a user"
+        schema:
+          type: "string"
+    get:
+      operationId: "topics.get_user_personalized"
+      tags:
+        - Topic
+      summary: "Get a personalized topic list for the user"
+      responses:
+        "200":
+          description: "Successfully show the topic list"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+        "404":
+          description: "User not found"
+  
+  /topics/{user_name}/feed: 
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of a user"
+        schema:
+          type: "string"
+    get:
+      operationId: "topics.get_user_personalized_feed"
+      tags:
+        - Topic
+      summary: "Get a personalized publication list for the user"
+      responses:
+        "200":
+          description: "Successfully show the publication list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Publication"
+        "404":
+          description: "User not found"

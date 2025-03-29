@@ -7,6 +7,8 @@ import pathlib
 
 basedir = pathlib.Path(__file__).parent.resolve()
 
+print(basedir)
+
 connex_app = connexion.App(__name__, specification_dir=basedir)
 connex_app.add_api(basedir / "swagger.yml")
 

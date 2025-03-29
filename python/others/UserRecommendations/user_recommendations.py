@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 from concurrent import futures
@@ -85,9 +86,25 @@ class UserRecommendations_Service(UserRecommendationsServicer):
         pass
 
     def GetRecomendedAnimeListByTopics(self, request, context):
-        # TODO: create a method to get recomended anime list by topics
-        pass
+        try:
+            topics = request.topicsnames_submitted
 
+            response = self.stub.GetAllAnime(
+                UserRepository_pb2.get_all_anime_Request()
+            )
+
+            recommended_anime_list = []
+            for anime in response.anime_list:
+                if anime.name in topics or anime.genre in topics:
+                    recommended_anime_list.append(anime)
+
+            if len(recommended_anime_list) > 10:
+                recommended_anime_list = random.sample(recommended_anime_list, 10)
+
+            return recomended_animeList_by_topics_Response(anime_list=recommended_anime_list)
+        
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

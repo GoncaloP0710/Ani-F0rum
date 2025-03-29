@@ -40,7 +40,7 @@ from python.repository.Topic import TopicRepository_pb2_grpc
 class PublishService(publisher_pb2_grpc.PublisherServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50060')  # Create a channel to the TopicRepository
+        self.channel = grpc.insecure_channel('localhost:50062')  # Create a channel to the TopicRepository
         self.stub = TopicRepository_pb2_grpc.PublisherStub(self.channel)
 
     def GetTopics(self, request, context):

@@ -262,9 +262,9 @@ def serve():
     )
     """
 
-    server.add_insecure_port("[::]:50061")
+    server.add_insecure_port("[::]:50062")
     server.start()
-    print('Topic Repository server running on port 50061')
+    print('Topic Repository server running on port 50062')
     server.wait_for_termination()
 
 if __name__ == "__main__":

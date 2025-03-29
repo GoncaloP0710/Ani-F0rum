@@ -1,24 +1,9 @@
 syntax = "proto3";
 import "Common/User.proto";
-
-
-message Publication {
-    string name = 1;
-    string topicname = 2;
-    oneof content {
-        Message message = 3;
-        Image images = 4;
-    }
-}
-
-message Topic {
-    string topicname = 1;
-    repeated Subscriber subscribers = 2;
-    repeated Publication publications = 3;
-}
+import "Common/Topic.proto";
 
 message FeedRequest{
-    User user = 1;
+    string user_name = 1;
 }
 
 message FeedResponse{
@@ -26,7 +11,7 @@ message FeedResponse{
 }
 
 message TopicFeedRequest{
-    User user = 1;
+    string user_name = 1;
 }
 
 message TopicFeedResponse{

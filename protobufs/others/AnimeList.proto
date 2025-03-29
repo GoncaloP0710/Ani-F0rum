@@ -35,7 +35,7 @@ message get_multiple_anime_by_name_Response {
 
 // Used when user wants to get recommendations of similar animes to the one he specifies
 message get_similar_anime_Request { // -------------> REQUEST FOR GETTING A LIST OF ANIMES SIMILAR TO THE ONE PROVIDED
-    repeated string anime_name = 1;
+    string anime_name = 1;
 }
 
 message get_similar_anime_Response {

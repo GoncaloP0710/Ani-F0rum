@@ -42,6 +42,7 @@ class AnimeList_Service(AnimeListServicer):
     def GetAllAnimes(self, request, context):
         try:
             response = self.stub.Animes(AnimeRepository_pb2.animes_Request())
+            print (response)
             return get_all_animes_Response(animes=response.animes)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
@@ -57,8 +58,12 @@ class AnimeList_Service(AnimeListServicer):
     # Used when user wants to get all the information on multiple animes that he specifies
     def GetMultipleAnimeByName(self, request, context):
         try:
-            response = self.stub.MultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_name=request.anime_name))
-            return get_multiple_anime_by_name_Response(anime=response.animes)
+            # Call the AnimeRepository service
+            response = self.stub.MultipleAnimeByName(
+                AnimeRepository_pb2.multiple_anime_by_name_Request(anime_names=request.anime_names)
+            )
+            # Use the correct field name "animes"
+            return get_multiple_anime_by_name_Response(animes=response.animes)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
 
@@ -73,24 +78,30 @@ class AnimeList_Service(AnimeListServicer):
             genres_conbinations = self.get_combination_of_genres(anime.genres)
 
             # Get animes related by genre
-            animeList = set()  # Use a set to avoid duplicates
+            animeList = []  # Use a list instead of a set
             for genres in genres_conbinations:
-                response = self.stub.GetAnimeByGenre(AnimeRepository_pb2.anime_by_genre_Request(anime_genre=genres))
+                response = self.stub.AnimeRelatedByGenre(
+                    AnimeRepository_pb2.anime_by_genre_Request(anime_genres=genres)
+                )
                 for anime in response.animes:
-                    animeList.add(anime)  # Add anime to the set
+                    animeList.append(anime)  # Add anime to the list
 
-            # Convert the set to a list and randomize the selection, limiting to 10 elements
-            animeList = list(animeList)
+            # Remove duplicates by using a dictionary with the anime name as the key
+            animeList = list({anime.name: anime for anime in animeList}.values())
+
+            # Randomize the selection, limiting to 10 elements
             if len(animeList) > 10:
                 animeList = random.sample(animeList, 10)  # Randomly select 10 elements
 
             return get_similar_anime_Response(animes=animeList)
+
         
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
 
     # Used when user wants to get animes recommended to him based on his watched animes and the rankings he gave them
     # It should be called after getting the most liked animes by the user
+    # TODO: Try the method once the getter for the most liked animes by the user is 100% functional
     def GetRecomendedAnimeList(self, request, context):
         try:
             animes_recommendation = set()  # Use a set to avoid duplicates
@@ -120,9 +131,11 @@ class AnimeList_Service(AnimeListServicer):
     # ==================== auxiliary methods ====================
 
     # get combination of genres of an anime
+    @staticmethod
     def get_combination_of_genres(anime_genres):
+
         # Calculate the target size (60% of the original list size)
-        target_size = max(1, int(len(anime_genres) * 0.6))  # Ensure at least 1 genre is included
+        target_size = max(1, int(len(anime_genres) * 0.8))  # Ensure at least 1 genre is included
 
         # Get all possible combinations of genres
         genre_combinations = list(combinations(anime_genres, target_size))
@@ -141,6 +154,28 @@ def serve():
     server.add_insecure_port('[::]:50052')
     server.start()
     print('AnimeList server running on port 50052')
+
+    # Test functions
+    print("===========================================")
+    print ("Test GetAllAnimes")
+    print (AnimeList_Service().GetAllAnimes(None, None))
+    print("===========================================")
+
+    print("===========================================")
+    print ("Test GetAnimeByName")
+    print (AnimeList_Service().GetAnimeByName(AnimeRepository_pb2.anime_by_name_Request(anime_name="Naruto"), None))
+    print("===========================================")
+
+    print("===========================================")
+    print ("Test GetMultipleAnimeByName")
+    print (AnimeList_Service().GetMultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_names=["Naruto", "One Piece"]), None))
+    print("===========================================")
+
+    print("===========================================")
+    print ("Test GetSimilarAnime")
+    print (AnimeList_Service().GetSimilarAnime(get_similar_anime_Request(anime_name="Naruto"), None))
+    print("===========================================")
+
     server.wait_for_termination()
 
 if __name__ == '__main__':

@@ -1,11 +1,10 @@
-import random
 from concurrent import futures
 
 import grpc
-import user_statistics_pb2_grpc
+import UserStatistics_pb2_grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from user_statistics_pb2 import (
+from utatistics_pb2 import (
     Top10_Request,
     Top10_Response,
     MostUsedTopics_Request,
@@ -17,14 +16,14 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 from python.repository.Anime import AnimeRepository_pb2_grpc as ar_grpc
 from python.repository.Anime import AnimeRepository_pb2 as ar_pb2
 
-class user_statistics(user_statistics_pb2_grpc.user_statisticsServicer):
+class userUserSttics(userUserSstics_pb2_grpc.userUserSsticsServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
-        self.user_stub = user_statistics_pb2_grpc.UserStatisticsService(self.user_channel)
+        self.user_stub = UserStatistics_pb2_grpcr.StatisticsService(self.user_channel)
 
         self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
-        self.anime_stub = user_statistics_pb2_grpc.UserStatisticsService(self.anime_channel)
+        self.anime_stub = UserStatistics_pb2_grpcr.StatisticsService(self.anime_channel)
 
     def GetTop10(self, request, context):
         
@@ -56,7 +55,7 @@ class user_statistics(user_statistics_pb2_grpc.user_statisticsServicer):
         posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
         if not posts:
             context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
-            
+
         # Count the usage of each topic
         topic_usage = {}
         for post in posts:
@@ -82,7 +81,7 @@ def serve():
     )
 
    
-    server.add_insecure_port("[::]:443")
+    server.add_insecure_port("[::]:50060")
     server.start()
     server.wait_for_termination()
 

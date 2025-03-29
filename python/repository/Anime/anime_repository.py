@@ -28,7 +28,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
 
     # TODO: Implement database connection and queries to retrieve anime data
 
-    Animes = [
+    Animes_Objects = [
         Anime(
             name="Naruto",
             genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.DRAMA],
@@ -106,34 +106,42 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
     # Returns all animes
     def Animes(self, request, context):
         print("Searching for all animes")
-        return animes_Response(animes=self.Animes)
+        return animes_Response(animes=self.Animes_Objects)
     
     # Returns an anime by name
     def AnimeByName(self, request, context):
         AnimeName = request.anime_name
         print("Searching for anime with name: ", AnimeName)
         # Create an Anime object TODO: Remove this part after testing
-        for anime in self.Animes:
+        for anime in self.Animes_Objects:
             if anime.name == AnimeName:
                 return anime_by_name_Response(anime=anime)
         raise NotFound("Anime not found")
     
     def MultipleAnimeByName(self, request, context):
         print("Searching for multiple animes by name")
-        result = set()
-        for anime in self.Animes:
-            if anime.name in request.anime_name:
-                result.add(anime)
-        return multiple_anime_by_name_Response(animes=list(result))
+        result = []
+        for anime in self.Animes_Objects:
+            if anime.name in request.anime_names:
+                result.append(anime)  # Use a list instead of a set
+        return multiple_anime_by_name_Response(animes=result)
     
     # Returns all animes that belong to some of the given genres
     def AnimeRelatedByGenre(self, request, context):
         print("Searching for animes by genre")
-        result = set()
-        for anime in self.Animes:
-            if request.anime_genres in anime.genres:
-                result.add(anime)
-        return anime_by_genre_Response(animes=list(result))
+        result = []  # Use a list instead of a set
+        print("--------------------------------")
+        print(request.anime_genres)
+        print("--------------------------------")
+        
+        for anime in self.Animes_Objects:
+            print(anime.genres)
+            # Check if any genre in request.anime_genres matches a genre in anime.genres
+            if any(genre in anime.genres for genre in request.anime_genres):
+                result.append(anime)  # Add to the list
+        print("--------------------------------")
+        print(result)
+        return anime_by_genre_Response(animes=result)
     
 
 def serve():
