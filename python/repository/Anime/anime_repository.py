@@ -27,32 +27,55 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
 
     # TODO: Implement database connection and queries to retrieve anime data
 
-    # Returns all animes of the given genre
-    # TODO: Change it to recive a list of genres
-    def GetAnimeRelatedByGenre(self, request, context):
-        AnimeGenre = request.anime_genre
-        print("Searching for anime with genre: ", AnimeGenre)
-        return anime_by_genre_Response(animes=[])
-
-    # Returns all animes
-    def GetAnimes(self, request, context):
-        print("Searching for all animes")
-        return get_animes_Response(animes=[])
-    
-    # Returns an anime by name
-    def GetAnimeByName(self, request, context):
-        AnimeName = request.anime_name
-        print("Searching for anime with name: ", AnimeName)
-        # Create an Anime object TODO: Remove this part after testing
-        anime = Anime(
+    Animes = [
+        Anime(
             name="Naruto",
-            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],  # Example genres
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
             episodes=220,
             score=8.5,
             aired="2002-2007",
             synopsis="A young ninja strives to become the Hokage."
-        )
-        return anime_by_name_Response(anime=anime)
+        ),
+        Anime(
+            name="One Piece",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+            episodes=1000,
+            score=9.0,
+            aired="1999-",
+            synopsis="A young pirate strives to become the Pirate King."
+        ),
+        Anime(
+            name="Dragon Ball",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+            episodes=153,
+            score=8.5,
+            aired="1986-1989",
+            synopsis="A young warrior strives to become the strongest fighter."
+        ),
+    ]
+
+
+    # Returns all animes
+    def Animes(self, request, context):
+        print("Searching for all animes")
+        return get_animes_Response(animes=self.Animes)
+    
+    # Returns an anime by name
+    def AnimeByName(self, request, context):
+        AnimeName = request.anime_name
+        print("Searching for anime with name: ", AnimeName)
+        # Create an Anime object TODO: Remove this part after testing
+        for anime in self.Animes:
+            if anime.name == AnimeName:
+                return anime_by_name_Response(anime=anime)
+        raise NotFound("Anime not found")
+    
+    def MultipleAnimeByName(self, request, context):
+        return NotFound("Not implemented yet")
+    
+    # Returns all animes that belong to some of the given genres
+    def AnimeRelatedByGenre(self, request, context):
+        return NotFound("Not implemented yet")
     
 
 def serve():

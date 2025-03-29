@@ -28,7 +28,7 @@ message User {
 }
 
 message AchievementListRequest {
-    string query = 0;
+    string username = 0;
 }
 
 message AchievementListResponse {
@@ -38,6 +38,7 @@ message AchievementListResponse {
 
 message AchievementRequest{
     string name = 1;
+    string username = 2;
 }
 
 message AchievementResponse{

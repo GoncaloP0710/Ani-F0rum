@@ -1,16 +1,20 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
 import random
 from concurrent import futures
 
 import grpc
-import publisher_pb2_grpc
-from grpc_interceptor import ExceptionToStatusInterceptor
-from grpc_interceptor.exceptions import NotFound, BadRequest
-from publisher_pb2 import (
-    Subscriber,
-    Message,
-    Image,
-    Publication,
-    Topic,
+
+from python.others.Publisher.Publisher_pb2_grpc import (
+    PublisherServicer,
+    PublisherStub,
+    add_PublisherServicer_to_server,
+)
+
+from python.others.Publisher.Publisher_pb2 import (
+    # Responses
     GetTopicsResponse,
     CreateTopicResponse,
     GetTopicResponse,
@@ -18,10 +22,22 @@ from publisher_pb2 import (
     KarmaResponse
 )
 
+from grpc_interceptor import ExceptionToStatusInterceptor
+from grpc_interceptor.exceptions import NotFound
+
+from python.repository.Topic import TopicRepository_pb2
+from python.repository.Topic import TopicRepository_pb2_grpc   
+
 class PublishService(publisher_pb2_grpc.PublisherServicer):
+
+    def __init__(self):
+        self.channel = grpc.insecure_channel('localhost:50060')  # Create a channel to the AnimeRepository
+        self.stub = TopicRepository_pb2_grpc.PublisherStub(self.channel)
+
     def GetTopics(self, request, context):
 
-        micro_service_response = []
+        micro_service_response = self.stub.GetTopics(TopicRepository_pb2.GetTopicsRequest())
+        print("Micro service response: " + micro_service_response)
         topics = [Topic(n) for n in micro_service_response] # interagir com o próximo microserviço
 
         return GetTopicsResponse(topics)
@@ -59,7 +75,7 @@ class PublishService(publisher_pb2_grpc.PublisherServicer):
             topic = micro_service_response
     
         else:
-            raise BadRequest("Invalid content of publication")
+            raise "Invalid content of publication"
 
         return PublishInTopicResponse(topic)
     
@@ -83,7 +99,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    publisher_pb2_grpc.add_PublisherServicer_to_server(
+    add_PublisherServicer_to_server(
         PublishService(), server
     )
 
@@ -102,7 +118,7 @@ def serve():
     )
     """
 
-    server.add_insecure_port("[::]:50051")
+    server.add_insecure_port("[::]:50061")
     server.start()
     server.wait_for_termination()
 

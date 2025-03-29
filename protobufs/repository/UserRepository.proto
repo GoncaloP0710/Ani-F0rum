@@ -2,6 +2,11 @@ syntax = "proto3";
 
 import "Common/User.proto";
 
+// ===========================> USERREPOSITORY PROTO FILE <===========================
+// This file contains the proto file for the UserRepository service.
+// The UserRepository service is responsible for asking the DataBase for user data,
+// ====================================================================================
+
 message get_user_Request { // --------------------------> REQUEST FOR GETTING USER BY NAME
     string user_name = 1;
 }
@@ -24,7 +29,7 @@ message get_users_that_watched_anime_Response {
     repeated User users = 1;
 }
 
-service UserRepository {
+service UserRepository { // --------------------------> SERVICE FOR USERREPOSITORY
     rpc GetUser (get_user_Request) returns (get_user_Response);
     rpc GetAllUsers (get_all_users_Request) returns (get_all_users_Response);
     rpc GetUsersThatWatchedAnime (get_users_that_watched_anime_Request) returns (get_users_that_watched_anime_Response);

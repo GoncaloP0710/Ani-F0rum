@@ -1,6 +1,10 @@
 syntax = "proto3";
 
-enum Rarity {
+// ===========================> USER PROTO FILE <===========================
+// This file contains the proto file for the User Related Objects.
+// ==========================================================================
+
+enum Rarity { // --------------------------> ENUM FOR THE RARITY OF THE ACHIEVEMENT
     COMMON = 0;
     RARE = 1;
     EPIC = 2;
@@ -8,14 +12,14 @@ enum Rarity {
     MYTHIC = 4;
 }
 
-message Achievement {
+message Achievement { // --------------------------> MESSAGE FOR ACHIEVEMENT
     string title = 1;
     string description = 2;
     string date = 3;
     Rarity rarity = 4;
 }
 
-message User {
+message User { // --------------------------> MESSAGE FOR USER
     string username = 1;
     string password = 2;
     optional string location = 3;

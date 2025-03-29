@@ -16,20 +16,30 @@ from achievements_pb2 import (
     UpdateResponse,
 )
 
+from python.repository.User import UserRepository_pb2_grpc as ur_grpc
+from python.repository.User import UserRepository_pb2 as ur_pb2
+
 class Achievements(achievements_pb2_grpc.AchievementsServicer):
+
+    def __init__(self):
+        self.channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
+        self.stub = achievements_pb2_grpc.AchievementsController(self.channel)
+
     def GetAchivementList(self, request, context):
 
-        micro_service_response = []
-        achievementList = [Achievement(n) for n in micro_service_response] # interagir com o próximo microserviço
+        user = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.username))
 
-        return AchievementListResponse(achievementList)
+        # micro_service_response = []
+        # achievementList = [Achievement(n) for n in micro_service_response] # interagir com o próximo microserviço
+
+        return AchievementListResponse(user.achievements)
     
     def GetAchievement(self, request, context):
 
-        name = request.name
+        user = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.username))
+        achievementList = user.achievements
+        rq_name = request.name
 
-        micro_service_response = Achievement()
-        achievement = micro_service_response
 
         return AchievementResponse(achievement)
     
@@ -43,22 +53,11 @@ def serve():
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
     achievements_pb2_grpc.add_AchievementsServicer_to_server(
-        RecommendationService(), server
+        Achievements(), server
     )
 
-    with open("server.key", "rb") as fp:
-        server_key = fp.read()
-    with open("server.pem", "rb") as fp:
-        server_cert = fp.read()
-    with open("ca.pem", "rb") as fp:
-        ca_cert = fp.read()
-
-    creds = grpc.ssl_server_credentials(
-        [(server_key, server_cert)],
-        root_certificates=ca_cert,
-        require_client_auth=True,
-    )
-    server.add_secure_port("[::]:443", creds)
+   
+    server.add_insecure_port("[::]:443")
     server.start()
     server.wait_for_termination()
 

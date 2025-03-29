@@ -1,6 +1,10 @@
 syntax = "proto3";
 
-enum AnimeGenre {
+// ===========================> ANIME PROTO FILE <===========================
+// This file contains the proto file for the Anime Related Objects.
+// ==========================================================================
+
+enum AnimeGenre { // --------------------------> ENUM FOR THE GENRES OF THE ANIME
     ACTION = 0;
     ADVENTURE = 1;
     COMEDY = 2;
@@ -13,7 +17,7 @@ enum AnimeGenre {
     THRILLER = 9;
 }
 
-message Anime {
+message Anime { // --------------------------> MESSAGE FOR ANIME
     string name = 1;
     repeated AnimeGenre genres = 2;
     int32 episodes = 3;

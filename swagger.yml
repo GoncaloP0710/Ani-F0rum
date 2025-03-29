@@ -724,7 +724,14 @@ paths:
 # =================== Achievements ====================
 # =====================================================
 
-  /achievements:
+  /achievements/{user_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
     get:
       operationId: "achievements.all_achievements"
       tags:
@@ -740,8 +747,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/Achievement"
   
-  /achievements/{achievement_name}:
+  /achievements/{user_name}/{achievement_name}:
     parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
       - name: "achievement_name"
         in: path
         required: true

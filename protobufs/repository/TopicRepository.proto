@@ -64,14 +64,6 @@ message GetTopicsResponse {
     repeated Topic topics = 1;
 }
 
-message CreateTopicRequest {
-    string topicname = 1;
-}
-
-message CreateTopicResponse {
-    string topicname = 1;
-}
-
 message GetTopicRequest {
     string topicname = 1;
 }
@@ -93,7 +85,7 @@ message PublishInTopicResponse {
     string publicationname = 1;
 }
 
-service Publisher {
+service TopicRepository {
     rpc MostUsedTopics (MostUsedTopicsRequest) returns (MostUsedTopicsResponse);
     rpc TopicSubscribers (TopicSubscribersRequest) returns (TopicSubscribersResponse);
     rpc Recomendation (RecomendationRequest) returns (RecomendationResponse);
@@ -101,5 +93,5 @@ service Publisher {
     rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
     rpc GetTopic (GetTopicRequest) returns (GetTopicResponse);
     rpc Publish (PublishInTopicRequest) returns (PublishInTopicResponse);
-    rpc Karma (KarmaRequest) returns (KarmaResponse);
+    // rpc Karma (KarmaRequest) returns (KarmaResponse);
 }

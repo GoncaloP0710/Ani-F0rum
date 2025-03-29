@@ -28,10 +28,19 @@ from python.services.Anime import AnimeService_pb2_grpc
 class AnimeList_Service(AnimeListServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50051')  # Create a channel to the AnimeRepository
+        self.channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
         self.stub = AnimeService_pb2_grpc.AnimeServiceStub(self.channel)
 
-    def GetAnimeRelatedByGenre(self, request, context):
+    def GetAllAnimes(self, request, context):
+        return NotFound("Not implemented yet")
+    
+    def GetAnimeByName(self, request, context):
+        return NotFound("Not implemented yet")
+    
+    def GetMultipleAnimeByName(self, request, context):
+        return NotFound("Not implemented yet")
+
+    def GetSimilarAnime(self, request, context):
         try:
             # Get the Anime objects from the AnimeService
             response_getAnime = self.stub.GetAnimeByName(AnimeService_pb2.anime_by_name_Request(anime_name=request.anime_name))
@@ -52,13 +61,6 @@ class AnimeList_Service(AnimeListServicer):
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
 
-    # Call GetMultipleAnime method of the AnimeService to get animes watched by a user
-    def GetUserWatchedAnime(self, request, context):
-        try:
-            response = self.stub.GetMultipleAnime(AnimeService_pb2.get_multiple_anime_Request(anime_names=request.user.animes_watched))
-            return user_watched_anime_Response(animes=response.animes)
-        except grpc.RpcError as e:
-            context.abort(grpc.StatusCode.INTERNAL, str(e))
 
     # ==================== auxiliary methods ====================
 
