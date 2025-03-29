@@ -24,17 +24,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x43ommon/User.proto\"X\n\x0b\x41\x63hievement\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x17\n\x06rarity\x18\x04 \x01(\x0e\x32\x07.Rarity\"\xd1\x01\n\x04User\x12\x10\n\x08username\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x15\n\x08location\x18\x03 \x01(\tH\x00\x88\x01\x01\x12\x16\n\x0e\x61nimes_watched\x18\x04 \x03(\t\x12\x1b\n\x13\x61nime_watched_score\x18\x05 \x03(\x05\x12\x19\n\x11topics_subscribed\x18\x06 \x03(\t\x12\r\n\x05karma\x18\x08 \x01(\x05\x12\"\n\x0c\x61\x63hievements\x18\t \x03(\x0b\x32\x0c.AchievementB\x0b\n\t_location*C\n\x06Rarity\x12\n\n\x06\x43OMMON\x10\x00\x12\x08\n\x04RARE\x10\x01\x12\x08\n\x04\x45PIC\x10\x02\x12\r\n\tLEGENDARY\x10\x03\x12\n\n\x06MYTHIC\x10\x04\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x43ommon/User.proto\"X\n\x0b\x41\x63hievement\x12\r\n\x05title\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x17\n\x06rarity\x18\x04 \x01(\x0e\x32\x07.Rarity\"\xd2\x01\n\x04User\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x15\n\x08location\x18\x03 \x01(\tH\x00\x88\x01\x01\x12\x16\n\x0e\x61nimes_watched\x18\x04 \x03(\t\x12\x1b\n\x13\x61nime_watched_score\x18\x05 \x03(\x05\x12\x19\n\x11topics_subscribed\x18\x06 \x03(\t\x12\r\n\x05karma\x18\x08 \x01(\x05\x12\"\n\x0c\x61\x63hievements\x18\t \x03(\x0b\x32\x0c.AchievementB\x0b\n\t_location*C\n\x06Rarity\x12\n\n\x06\x43OMMON\x10\x00\x12\x08\n\x04RARE\x10\x01\x12\x08\n\x04\x45PIC\x10\x02\x12\r\n\tLEGENDARY\x10\x03\x12\n\n\x06MYTHIC\x10\x04\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'Common.User_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_RARITY']._serialized_start=323
-  _globals['_RARITY']._serialized_end=390
+  _globals['_RARITY']._serialized_start=324
+  _globals['_RARITY']._serialized_end=391
   _globals['_ACHIEVEMENT']._serialized_start=21
   _globals['_ACHIEVEMENT']._serialized_end=109
   _globals['_USER']._serialized_start=112
-  _globals['_USER']._serialized_end=321
+  _globals['_USER']._serialized_end=322
 # @@protoc_insertion_point(module_scope)

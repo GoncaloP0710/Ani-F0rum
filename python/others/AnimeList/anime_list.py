@@ -3,6 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 from concurrent import futures
+from itertools import combinations
 
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
@@ -13,50 +14,70 @@ from python.others.AnimeList.AnimeList_pb2_grpc import (
     add_AnimeListServicer_to_server,
 )
 from python.others.AnimeList.AnimeList_pb2 import (
-    user_watched_anime_Response,
-    anime_related_by_genre_Response,
+    get_all_animes_Response,
+    get_anime_by_name_Response,
+    get_multiple_anime_by_name_Response,
+    get_similar_anime_Response,
 )
 
 from python.Common.Anime_pb2 import (
     Anime,
     AnimeGenre,
-)
+) 
 
-from python.services.Anime import AnimeService_pb2
-from python.services.Anime import AnimeService_pb2_grpc
+from python.repository.Anime import AnimeRepository_pb2
+from python.repository.Anime import AnimeRepository_pb2_grpc
 
 class AnimeList_Service(AnimeListServicer):
 
-    def __init__(self):
+    # Create a channel and a stub to the AnimeRepository microservice so we can call its methods
+    def __init__(self): 
         self.channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
-        self.stub = AnimeService_pb2_grpc.AnimeServiceStub(self.channel)
+        self.stub = AnimeRepository_pb2_grpc.AnimeRepositoryStub(self.channel)
 
+    # Used when user wants to list all animes
     def GetAllAnimes(self, request, context):
-        return NotFound("Not implemented yet")
+        try:
+            response = self.stub.Animes(AnimeRepository_pb2.animes_Request())
+            return get_all_animes_Response(animes=response.animes)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
     
+    # Used when user wants to get all the information on a specific anime
     def GetAnimeByName(self, request, context):
-        return NotFound("Not implemented yet")
+        try:
+            response = self.stub.AnimeByName(AnimeRepository_pb2.anime_by_name_Request(anime_name=request.anime_name))
+            return get_anime_by_name_Response(anime=response.anime)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
     
+    # Used when user wants to get all the information on multiple animes that he specifies
     def GetMultipleAnimeByName(self, request, context):
-        return NotFound("Not implemented yet")
+        try:
+            response = self.stub.MultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_name=request.anime_name))
+            return get_multiple_anime_by_name_Response(anime=response.animes)
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
 
+    # Used when user wants to get animes similar to the one he specifies
     def GetSimilarAnime(self, request, context):
         try:
             # Get the Anime objects from the AnimeService
-            response_getAnime = self.stub.GetAnimeByName(AnimeService_pb2.anime_by_name_Request(anime_name=request.anime_name))
+            response_getAnime = self.stub.AnimeByName(AnimeRepository_pb2.anime_by_name_Request(anime_name=request.anime_name))
             anime = response_getAnime.anime
 
             # Get combination of genres related to the anime
-            genres_conbinations = []
-            # TODO: create a method to get combination of genres of an anime
+            genres_conbinations = self.get_combination_of_genres(anime.genres)
 
             # Get animes related by genre
-            animeList = []
+            animeList = set()  # Use a set to avoid duplicates
             for genres in genres_conbinations:
-                response = self.stub.GetAnimeByGenre(AnimeService_pb2.anime_by_genre_Request(anime_genre=genres))
+                response = self.stub.GetAnimeByGenre(AnimeRepository_pb2.anime_by_genre_Request(anime_genre=genres))
                 for anime in response.animes:
-                    animeList.append(anime)
-            return anime_related_by_genre_Response(animes=animeList)
+                    animeList.add(anime)  # Add anime to the set
+
+            # Convert the set back to a list before returning
+            return get_similar_anime_Response(animes=list(animeList))
 
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
@@ -65,9 +86,15 @@ class AnimeList_Service(AnimeListServicer):
     # ==================== auxiliary methods ====================
 
     # get combination of genres of an anime
-    def get_combination_of_genres(self, anime_genres):
-        # TODO: Finish this method
-        return []
+    def get_combination_of_genres(anime_genres):
+        # Calculate the target size (60% of the original list size)
+        target_size = max(1, int(len(anime_genres) * 0.6))  # Ensure at least 1 genre is included
+
+        # Get all possible combinations of genres
+        genre_combinations = list(combinations(anime_genres, target_size))
+
+        # Convert tuples to lists (if needed)
+        return [list(combination) for combination in genre_combinations]
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]

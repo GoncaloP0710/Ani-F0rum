@@ -35,20 +35,25 @@ class AnimeRepositoryStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAnimeRelatedByGenre = channel.unary_unary(
-                '/AnimeRepository/GetAnimeRelatedByGenre',
-                request_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
-                response_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
+        self.Animes = channel.unary_unary(
+                '/AnimeRepository/Animes',
+                request_serializer=repository_dot_AnimeRepository__pb2.animes_Request.SerializeToString,
+                response_deserializer=repository_dot_AnimeRepository__pb2.animes_Response.FromString,
                 _registered_method=True)
-        self.GetAnimes = channel.unary_unary(
-                '/AnimeRepository/GetAnimes',
-                request_serializer=repository_dot_AnimeRepository__pb2.get_animes.SerializeToString,
-                response_deserializer=repository_dot_AnimeRepository__pb2.get_animes_Response.FromString,
-                _registered_method=True)
-        self.GetAnimeByName = channel.unary_unary(
-                '/AnimeRepository/GetAnimeByName',
+        self.AnimeByName = channel.unary_unary(
+                '/AnimeRepository/AnimeByName',
                 request_serializer=repository_dot_AnimeRepository__pb2.anime_by_name_Request.SerializeToString,
                 response_deserializer=repository_dot_AnimeRepository__pb2.anime_by_name_Response.FromString,
+                _registered_method=True)
+        self.MultipleAnimeByName = channel.unary_unary(
+                '/AnimeRepository/MultipleAnimeByName',
+                request_serializer=repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Request.SerializeToString,
+                response_deserializer=repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Response.FromString,
+                _registered_method=True)
+        self.AnimeRelatedByGenre = channel.unary_unary(
+                '/AnimeRepository/AnimeRelatedByGenre',
+                request_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
+                response_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
                 _registered_method=True)
 
 
@@ -56,19 +61,25 @@ class AnimeRepositoryServicer(object):
     """--------------------------> SERVICE FOR ANIMEREPOSITORY
     """
 
-    def GetAnimeRelatedByGenre(self, request, context):
+    def Animes(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimes(self, request, context):
+    def AnimeByName(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetAnimeByName(self, request, context):
+    def MultipleAnimeByName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AnimeRelatedByGenre(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -77,20 +88,25 @@ class AnimeRepositoryServicer(object):
 
 def add_AnimeRepositoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeRelatedByGenre,
-                    request_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.FromString,
-                    response_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.SerializeToString,
+            'Animes': grpc.unary_unary_rpc_method_handler(
+                    servicer.Animes,
+                    request_deserializer=repository_dot_AnimeRepository__pb2.animes_Request.FromString,
+                    response_serializer=repository_dot_AnimeRepository__pb2.animes_Response.SerializeToString,
             ),
-            'GetAnimes': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimes,
-                    request_deserializer=repository_dot_AnimeRepository__pb2.get_animes.FromString,
-                    response_serializer=repository_dot_AnimeRepository__pb2.get_animes_Response.SerializeToString,
-            ),
-            'GetAnimeByName': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeByName,
+            'AnimeByName': grpc.unary_unary_rpc_method_handler(
+                    servicer.AnimeByName,
                     request_deserializer=repository_dot_AnimeRepository__pb2.anime_by_name_Request.FromString,
                     response_serializer=repository_dot_AnimeRepository__pb2.anime_by_name_Response.SerializeToString,
+            ),
+            'MultipleAnimeByName': grpc.unary_unary_rpc_method_handler(
+                    servicer.MultipleAnimeByName,
+                    request_deserializer=repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Request.FromString,
+                    response_serializer=repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Response.SerializeToString,
+            ),
+            'AnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
+                    servicer.AnimeRelatedByGenre,
+                    request_deserializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Request.FromString,
+                    response_serializer=repository_dot_AnimeRepository__pb2.anime_by_genre_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -105,7 +121,7 @@ class AnimeRepository(object):
     """
 
     @staticmethod
-    def GetAnimeRelatedByGenre(request,
+    def Animes(request,
             target,
             options=(),
             channel_credentials=None,
@@ -118,9 +134,9 @@ class AnimeRepository(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeRepository/GetAnimeRelatedByGenre',
-            repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
-            repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
+            '/AnimeRepository/Animes',
+            repository_dot_AnimeRepository__pb2.animes_Request.SerializeToString,
+            repository_dot_AnimeRepository__pb2.animes_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -132,7 +148,7 @@ class AnimeRepository(object):
             _registered_method=True)
 
     @staticmethod
-    def GetAnimes(request,
+    def AnimeByName(request,
             target,
             options=(),
             channel_credentials=None,
@@ -145,36 +161,63 @@ class AnimeRepository(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeRepository/GetAnimes',
-            repository_dot_AnimeRepository__pb2.get_animes.SerializeToString,
-            repository_dot_AnimeRepository__pb2.get_animes_Response.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetAnimeByName(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/AnimeRepository/GetAnimeByName',
+            '/AnimeRepository/AnimeByName',
             repository_dot_AnimeRepository__pb2.anime_by_name_Request.SerializeToString,
             repository_dot_AnimeRepository__pb2.anime_by_name_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def MultipleAnimeByName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeRepository/MultipleAnimeByName',
+            repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Request.SerializeToString,
+            repository_dot_AnimeRepository__pb2.multiple_anime_by_name_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AnimeRelatedByGenre(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeRepository/AnimeRelatedByGenre',
+            repository_dot_AnimeRepository__pb2.anime_by_genre_Request.SerializeToString,
+            repository_dot_AnimeRepository__pb2.anime_by_genre_Response.FromString,
             options,
             channel_credentials,
             insecure,

@@ -28,25 +28,29 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from python.Common import Anime_pb2 as Common_dot_Anime__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n repository/AnimeRepository.proto\x1a\x12\x43ommon/Anime.proto\"\x0c\n\nget_animes\"-\n\x13get_animes_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\":\n\x16\x61nime_by_genre_Request\x12 \n\x0b\x61nime_genre\x18\x01 \x03(\x0e\x32\x0b.AnimeGenre\"1\n\x17\x61nime_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"+\n\x15\x61nime_by_name_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"/\n\x16\x61nime_by_name_Response\x12\x15\n\x05\x61nime\x18\x01 \x01(\x0b\x32\x06.Anime2\xd1\x01\n\x0f\x41nimeRepository\x12K\n\x16GetAnimeRelatedByGenre\x12\x17.anime_by_genre_Request\x1a\x18.anime_by_genre_Response\x12.\n\tGetAnimes\x12\x0b.get_animes\x1a\x14.get_animes_Response\x12\x41\n\x0eGetAnimeByName\x12\x16.anime_by_name_Request\x1a\x17.anime_by_name_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n repository/AnimeRepository.proto\x1a\x12\x43ommon/Anime.proto\"\x10\n\x0e\x61nimes_Request\")\n\x0f\x61nimes_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"+\n\x15\x61nime_by_name_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"/\n\x16\x61nime_by_name_Response\x12\x15\n\x05\x61nime\x18\x01 \x01(\x0b\x32\x06.Anime\"5\n\x1emultiple_anime_by_name_Request\x12\x13\n\x0b\x61nime_names\x18\x01 \x03(\t\"9\n\x1fmultiple_anime_by_name_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\";\n\x16\x61nime_by_genre_Request\x12!\n\x0c\x61nime_genres\x18\x01 \x03(\x0e\x32\x0b.AnimeGenre\"1\n\x17\x61nime_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\xa2\x02\n\x0f\x41nimeRepository\x12+\n\x06\x41nimes\x12\x0f.animes_Request\x1a\x10.animes_Response\x12>\n\x0b\x41nimeByName\x12\x16.anime_by_name_Request\x1a\x17.anime_by_name_Response\x12X\n\x13MultipleAnimeByName\x12\x1f.multiple_anime_by_name_Request\x1a .multiple_anime_by_name_Response\x12H\n\x13\x41nimeRelatedByGenre\x12\x17.anime_by_genre_Request\x1a\x18.anime_by_genre_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'repository.AnimeRepository_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_GET_ANIMES']._serialized_start=56
-  _globals['_GET_ANIMES']._serialized_end=68
-  _globals['_GET_ANIMES_RESPONSE']._serialized_start=70
-  _globals['_GET_ANIMES_RESPONSE']._serialized_end=115
-  _globals['_ANIME_BY_GENRE_REQUEST']._serialized_start=117
-  _globals['_ANIME_BY_GENRE_REQUEST']._serialized_end=175
-  _globals['_ANIME_BY_GENRE_RESPONSE']._serialized_start=177
-  _globals['_ANIME_BY_GENRE_RESPONSE']._serialized_end=226
-  _globals['_ANIME_BY_NAME_REQUEST']._serialized_start=228
-  _globals['_ANIME_BY_NAME_REQUEST']._serialized_end=271
-  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_start=273
-  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_end=320
-  _globals['_ANIMEREPOSITORY']._serialized_start=323
-  _globals['_ANIMEREPOSITORY']._serialized_end=532
+  _globals['_ANIMES_REQUEST']._serialized_start=56
+  _globals['_ANIMES_REQUEST']._serialized_end=72
+  _globals['_ANIMES_RESPONSE']._serialized_start=74
+  _globals['_ANIMES_RESPONSE']._serialized_end=115
+  _globals['_ANIME_BY_NAME_REQUEST']._serialized_start=117
+  _globals['_ANIME_BY_NAME_REQUEST']._serialized_end=160
+  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_start=162
+  _globals['_ANIME_BY_NAME_RESPONSE']._serialized_end=209
+  _globals['_MULTIPLE_ANIME_BY_NAME_REQUEST']._serialized_start=211
+  _globals['_MULTIPLE_ANIME_BY_NAME_REQUEST']._serialized_end=264
+  _globals['_MULTIPLE_ANIME_BY_NAME_RESPONSE']._serialized_start=266
+  _globals['_MULTIPLE_ANIME_BY_NAME_RESPONSE']._serialized_end=323
+  _globals['_ANIME_BY_GENRE_REQUEST']._serialized_start=325
+  _globals['_ANIME_BY_GENRE_REQUEST']._serialized_end=384
+  _globals['_ANIME_BY_GENRE_RESPONSE']._serialized_start=386
+  _globals['_ANIME_BY_GENRE_RESPONSE']._serialized_end=435
+  _globals['_ANIMEREPOSITORY']._serialized_start=438
+  _globals['_ANIMEREPOSITORY']._serialized_end=728
 # @@protoc_insertion_point(module_scope)

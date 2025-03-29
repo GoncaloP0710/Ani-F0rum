@@ -13,9 +13,10 @@ from python.repository.Anime.AnimeRepository_pb2_grpc import (
     add_AnimeRepositoryServicer_to_server,
 )
 from python.repository.Anime.AnimeRepository_pb2 import (
-    anime_by_genre_Response,
+    animes_Response,
     anime_by_name_Response,
-    get_animes_Response,
+    multiple_anime_by_name_Response,
+    anime_by_genre_Response,
 )
 
 from python.Common.Anime_pb2 import (
@@ -30,7 +31,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
     Animes = [
         Anime(
             name="Naruto",
-            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.DRAMA],
             episodes=220,
             score=8.5,
             aired="2002-2007",
@@ -38,27 +39,74 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         ),
         Anime(
             name="One Piece",
-            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.COMEDY],
             episodes=1000,
             score=9.0,
-            aired="1999-",
+            aired="1999-present",
             synopsis="A young pirate strives to become the Pirate King."
         ),
         Anime(
             name="Dragon Ball",
-            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE],
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.FANTASY],
             episodes=153,
             score=8.5,
             aired="1986-1989",
             synopsis="A young warrior strives to become the strongest fighter."
         ),
+        Anime(
+            name="Attack on Titan",
+            genres=[AnimeGenre.ACTION, AnimeGenre.THRILLER, AnimeGenre.DRAMA],
+            episodes=75,
+            score=9.2,
+            aired="2013-present",
+            synopsis="Humanity fights for survival against giant humanoid Titans."
+        ),
+        Anime(
+            name="Demon Slayer",
+            genres=[AnimeGenre.ACTION, AnimeGenre.FANTASY, AnimeGenre.DRAMA],
+            episodes=26,
+            score=8.7,
+            aired="2019",
+            synopsis="A young boy becomes a demon slayer to avenge his family."
+        ),
+        Anime(
+            name="My Hero Academia",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.COMEDY],
+            episodes=113,
+            score=8.6,
+            aired="2016-present",
+            synopsis="A boy born without superpowers in a world where they are common."
+        ),
+        Anime(
+            name="Death Note",
+            genres=[AnimeGenre.MYSTERY, AnimeGenre.THRILLER, AnimeGenre.DRAMA],
+            episodes=37,
+            score=9.0,
+            aired="2006-2007",
+            synopsis="A high school student discovers a supernatural notebook."
+        ),
+        Anime(
+            name="Bleach",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.FANTASY],
+            episodes=366,
+            score=8.1,
+            aired="2004-2012",
+            synopsis="A teenager becomes a Soul Reaper to protect the living and the dead."
+        ),
+        Anime(
+            name="Fullmetal Alchemist: Brotherhood",
+            genres=[AnimeGenre.ACTION, AnimeGenre.ADVENTURE, AnimeGenre.FANTASY],
+            episodes=64,
+            score=9.1,
+            aired="2009-2010",
+            synopsis="Two brothers use alchemy in their quest to restore their bodies."
+        )
     ]
-
 
     # Returns all animes
     def Animes(self, request, context):
         print("Searching for all animes")
-        return get_animes_Response(animes=self.Animes)
+        return animes_Response(animes=self.Animes)
     
     # Returns an anime by name
     def AnimeByName(self, request, context):
@@ -71,11 +119,21 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         raise NotFound("Anime not found")
     
     def MultipleAnimeByName(self, request, context):
-        return NotFound("Not implemented yet")
+        print("Searching for multiple animes by name")
+        result = set()
+        for anime in self.Animes:
+            if anime.name in request.anime_name:
+                result.add(anime)
+        return multiple_anime_by_name_Response(animes=list(result))
     
     # Returns all animes that belong to some of the given genres
     def AnimeRelatedByGenre(self, request, context):
-        return NotFound("Not implemented yet")
+        print("Searching for animes by genre")
+        result = set()
+        for anime in self.Animes:
+            if request.anime_genres in anime.genres:
+                result.add(anime)
+        return anime_by_genre_Response(animes=list(result))
     
 
 def serve():

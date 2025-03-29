@@ -10,7 +10,8 @@ import "Common/User.proto";
 
 // Used when user wants to get a list of users that may like the same anime as him
 message users_related_by_anime_Request { // -------------> REQUEST FOR GETTING USERS THAT MAY LIKE THE SAME ANIME
-    string user_name = 1; 
+    repeated Anime animes_watched = 1;
+    repeated Anime animes_similar = 2;
 }
 
 message users_related_by_anime_Response {
@@ -28,7 +29,7 @@ message users_related_by_message_Response {
 
 // Used when user wants to get a list of animes that he may like
 message recomended_animeList_Request { // -------------> REQUEST FOR GETTING RECOMENDED ANIMES FOR A USER
-    string user_name = 1; 
+    repeated Anime animes_most_liked = 1;
 }
 
 message recomended_animeList_Response {

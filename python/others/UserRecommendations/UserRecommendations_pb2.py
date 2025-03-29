@@ -29,7 +29,7 @@ from python.Common import Anime_pb2 as Common_dot_Anime__pb2
 from python.Common import User_pb2 as Common_dot_User__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n others/UserRecommendations.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\"3\n\x1eusers_related_by_anime_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"7\n\x1fusers_related_by_anime_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"5\n users_related_by_message_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"9\n!users_related_by_message_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"4\n\x1fusers_related_by_topics_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"8\n users_related_by_topics_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"1\n\x1crecomended_animeList_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"7\n\x1drecomended_animeList_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"G\n&recomended_animeList_by_topics_Request\x12\x1d\n\x15topicnames_subscribed\x18\x01 \x03(\t\"A\n\'recomended_animeList_by_topics_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\x83\x04\n\x13UserRecommendations\x12[\n\x16GetUsersRelatedByAnime\x12\x1f.users_related_by_anime_Request\x1a .users_related_by_anime_Response\x12\x61\n\x18GetUsersRelatedByMessage\x12!.users_related_by_message_Request\x1a\".users_related_by_message_Response\x12^\n\x17GetUsersRelatedByTopics\x12 .users_related_by_topics_Request\x1a!.users_related_by_topics_Response\x12W\n\x16GetRecomendedAnimeList\x12\x1d.recomended_animeList_Request\x1a\x1e.recomended_animeList_Response\x12s\n\x1eGetRecomendedAnimeListByTopics\x12\'.recomended_animeList_by_topics_Request\x1a(.recomended_animeList_by_topics_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n others/UserRecommendations.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\"3\n\x1eusers_related_by_anime_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"7\n\x1fusers_related_by_anime_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"5\n users_related_by_message_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"9\n!users_related_by_message_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"1\n\x1crecomended_animeList_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"7\n\x1drecomended_animeList_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"4\n\x1fusers_related_by_topics_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"8\n users_related_by_topics_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"G\n&recomended_animeList_by_topics_Request\x12\x1d\n\x15topicnames_subscribed\x18\x01 \x03(\t\"A\n\'recomended_animeList_by_topics_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\x83\x04\n\x13UserRecommendations\x12[\n\x16GetUsersRelatedByAnime\x12\x1f.users_related_by_anime_Request\x1a .users_related_by_anime_Response\x12\x61\n\x18GetUsersRelatedByMessage\x12!.users_related_by_message_Request\x1a\".users_related_by_message_Response\x12^\n\x17GetUsersRelatedByTopics\x12 .users_related_by_topics_Request\x1a!.users_related_by_topics_Response\x12W\n\x16GetRecomendedAnimeList\x12\x1d.recomended_animeList_Request\x1a\x1e.recomended_animeList_Response\x12s\n\x1eGetRecomendedAnimeListByTopics\x12\'.recomended_animeList_by_topics_Request\x1a(.recomended_animeList_by_topics_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -44,14 +44,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERS_RELATED_BY_MESSAGE_REQUEST']._serialized_end=238
   _globals['_USERS_RELATED_BY_MESSAGE_RESPONSE']._serialized_start=240
   _globals['_USERS_RELATED_BY_MESSAGE_RESPONSE']._serialized_end=297
-  _globals['_USERS_RELATED_BY_TOPICS_REQUEST']._serialized_start=299
-  _globals['_USERS_RELATED_BY_TOPICS_REQUEST']._serialized_end=351
-  _globals['_USERS_RELATED_BY_TOPICS_RESPONSE']._serialized_start=353
-  _globals['_USERS_RELATED_BY_TOPICS_RESPONSE']._serialized_end=409
-  _globals['_RECOMENDED_ANIMELIST_REQUEST']._serialized_start=411
-  _globals['_RECOMENDED_ANIMELIST_REQUEST']._serialized_end=460
-  _globals['_RECOMENDED_ANIMELIST_RESPONSE']._serialized_start=462
-  _globals['_RECOMENDED_ANIMELIST_RESPONSE']._serialized_end=517
+  _globals['_RECOMENDED_ANIMELIST_REQUEST']._serialized_start=299
+  _globals['_RECOMENDED_ANIMELIST_REQUEST']._serialized_end=348
+  _globals['_RECOMENDED_ANIMELIST_RESPONSE']._serialized_start=350
+  _globals['_RECOMENDED_ANIMELIST_RESPONSE']._serialized_end=405
+  _globals['_USERS_RELATED_BY_TOPICS_REQUEST']._serialized_start=407
+  _globals['_USERS_RELATED_BY_TOPICS_REQUEST']._serialized_end=459
+  _globals['_USERS_RELATED_BY_TOPICS_RESPONSE']._serialized_start=461
+  _globals['_USERS_RELATED_BY_TOPICS_RESPONSE']._serialized_end=517
   _globals['_RECOMENDED_ANIMELIST_BY_TOPICS_REQUEST']._serialized_start=519
   _globals['_RECOMENDED_ANIMELIST_BY_TOPICS_REQUEST']._serialized_end=590
   _globals['_RECOMENDED_ANIMELIST_BY_TOPICS_RESPONSE']._serialized_start=592

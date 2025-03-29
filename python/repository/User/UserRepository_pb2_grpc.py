@@ -26,7 +26,8 @@ if _version_not_supported:
 
 
 class UserRepositoryStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR USERREPOSITORY
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -52,7 +53,8 @@ class UserRepositoryStub(object):
 
 
 class UserRepositoryServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR USERREPOSITORY
+    """
 
     def GetUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -99,7 +101,8 @@ def add_UserRepositoryServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class UserRepository(object):
-    """Missing associated documentation comment in .proto file."""
+    """--------------------------> SERVICE FOR USERREPOSITORY
+    """
 
     @staticmethod
     def GetUser(request,

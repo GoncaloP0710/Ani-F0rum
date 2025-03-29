@@ -22,28 +22,32 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-from python.Common import Anime_pb2 as Common_dot_Anime__pb2
-from python.Common import User_pb2 as Common_dot_User__pb2
+from Common import Anime_pb2 as Common_dot_Anime__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/AnimeList.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\"4\n\x1e\x61nime_related_by_genre_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"9\n\x1f\x61nime_related_by_genre_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"1\n\x1auser_watched_anime_Request\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"5\n\x1buser_watched_anime_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\xba\x01\n\tAnimeList\x12[\n\x16GetAnimeRelatedByGenre\x12\x1f.anime_related_by_genre_Request\x1a .anime_related_by_genre_Response\x12P\n\x13GetUserWatchedAnime\x12\x1b.user_watched_anime_Request\x1a\x1c.user_watched_anime_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16others/AnimeList.proto\x1a\x12\x43ommon/Anime.proto\"\x10\n\x0eget_all_animes\"1\n\x17get_all_animes_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"/\n\x19get_anime_by_name_Request\x12\x12\n\nanime_name\x18\x01 \x01(\t\"3\n\x1aget_anime_by_name_Response\x12\x15\n\x05\x61nime\x18\x01 \x01(\x0b\x32\x06.Anime\"9\n\"get_multiple_anime_by_name_Request\x12\x13\n\x0b\x61nime_names\x18\x01 \x03(\t\"=\n#get_multiple_anime_by_name_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"/\n\x19get_similar_anime_Request\x12\x12\n\nanime_name\x18\x01 \x03(\t\"4\n\x1aget_similar_anime_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime2\xc2\x02\n\tAnimeList\x12\x39\n\x0cGetAllAnimes\x12\x0f.get_all_animes\x1a\x18.get_all_animes_Response\x12I\n\x0eGetAnimeByName\x12\x1a.get_anime_by_name_Request\x1a\x1b.get_anime_by_name_Response\x12\x63\n\x16GetMultipleAnimeByName\x12#.get_multiple_anime_by_name_Request\x1a$.get_multiple_anime_by_name_Response\x12J\n\x0fGetSimilarAnime\x12\x1a.get_similar_anime_Request\x1a\x1b.get_similar_anime_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'others.AnimeList_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_start=65
-  _globals['_ANIME_RELATED_BY_GENRE_REQUEST']._serialized_end=117
-  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_start=119
-  _globals['_ANIME_RELATED_BY_GENRE_RESPONSE']._serialized_end=176
-  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_start=178
-  _globals['_USER_WATCHED_ANIME_REQUEST']._serialized_end=227
-  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_start=229
-  _globals['_USER_WATCHED_ANIME_RESPONSE']._serialized_end=282
-  _globals['_ANIMELIST']._serialized_start=285
-  _globals['_ANIMELIST']._serialized_end=471
+  _globals['_GET_ALL_ANIMES']._serialized_start=46
+  _globals['_GET_ALL_ANIMES']._serialized_end=62
+  _globals['_GET_ALL_ANIMES_RESPONSE']._serialized_start=64
+  _globals['_GET_ALL_ANIMES_RESPONSE']._serialized_end=113
+  _globals['_GET_ANIME_BY_NAME_REQUEST']._serialized_start=115
+  _globals['_GET_ANIME_BY_NAME_REQUEST']._serialized_end=162
+  _globals['_GET_ANIME_BY_NAME_RESPONSE']._serialized_start=164
+  _globals['_GET_ANIME_BY_NAME_RESPONSE']._serialized_end=215
+  _globals['_GET_MULTIPLE_ANIME_BY_NAME_REQUEST']._serialized_start=217
+  _globals['_GET_MULTIPLE_ANIME_BY_NAME_REQUEST']._serialized_end=274
+  _globals['_GET_MULTIPLE_ANIME_BY_NAME_RESPONSE']._serialized_start=276
+  _globals['_GET_MULTIPLE_ANIME_BY_NAME_RESPONSE']._serialized_end=337
+  _globals['_GET_SIMILAR_ANIME_REQUEST']._serialized_start=339
+  _globals['_GET_SIMILAR_ANIME_REQUEST']._serialized_end=386
+  _globals['_GET_SIMILAR_ANIME_RESPONSE']._serialized_start=388
+  _globals['_GET_SIMILAR_ANIME_RESPONSE']._serialized_end=440
+  _globals['_ANIMELIST']._serialized_start=443
+  _globals['_ANIMELIST']._serialized_end=765
 # @@protoc_insertion_point(module_scope)

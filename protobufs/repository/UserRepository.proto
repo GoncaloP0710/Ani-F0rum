@@ -29,8 +29,17 @@ message get_users_that_watched_anime_Response {
     repeated User users = 1;
 }
 
+message update_user_Request{ // ----------------------------> REQUEST FOR UPDATING A USER
+    User user = 1;
+}
+
+message update_user_Response{
+    bool success = 1;
+}
+
 service UserRepository { // --------------------------> SERVICE FOR USERREPOSITORY
     rpc GetUser (get_user_Request) returns (get_user_Response);
     rpc GetAllUsers (get_all_users_Request) returns (get_all_users_Response);
     rpc GetUsersThatWatchedAnime (get_users_that_watched_anime_Request) returns (get_users_that_watched_anime_Response);
+    rpc UpdateUser (update_user_Request) returns (update_user_Response);
 }

@@ -35,15 +35,25 @@ class AnimeListStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAnimeRelatedByGenre = channel.unary_unary(
-                '/AnimeList/GetAnimeRelatedByGenre',
-                request_serializer=others_dot_AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
-                response_deserializer=others_dot_AnimeList__pb2.anime_related_by_genre_Response.FromString,
+        self.GetAllAnimes = channel.unary_unary(
+                '/AnimeList/GetAllAnimes',
+                request_serializer=others_dot_AnimeList__pb2.get_all_animes.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.get_all_animes_Response.FromString,
                 _registered_method=True)
-        self.GetUserWatchedAnime = channel.unary_unary(
-                '/AnimeList/GetUserWatchedAnime',
-                request_serializer=others_dot_AnimeList__pb2.user_watched_anime_Request.SerializeToString,
-                response_deserializer=others_dot_AnimeList__pb2.user_watched_anime_Response.FromString,
+        self.GetAnimeByName = channel.unary_unary(
+                '/AnimeList/GetAnimeByName',
+                request_serializer=others_dot_AnimeList__pb2.get_anime_by_name_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.get_anime_by_name_Response.FromString,
+                _registered_method=True)
+        self.GetMultipleAnimeByName = channel.unary_unary(
+                '/AnimeList/GetMultipleAnimeByName',
+                request_serializer=others_dot_AnimeList__pb2.get_multiple_anime_by_name_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.get_multiple_anime_by_name_Response.FromString,
+                _registered_method=True)
+        self.GetSimilarAnime = channel.unary_unary(
+                '/AnimeList/GetSimilarAnime',
+                request_serializer=others_dot_AnimeList__pb2.get_similar_anime_Request.SerializeToString,
+                response_deserializer=others_dot_AnimeList__pb2.get_similar_anime_Response.FromString,
                 _registered_method=True)
 
 
@@ -51,13 +61,25 @@ class AnimeListServicer(object):
     """--------------------------> SERVICE FOR ANIMELIST
     """
 
-    def GetAnimeRelatedByGenre(self, request, context):
+    def GetAllAnimes(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetUserWatchedAnime(self, request, context):
+    def GetAnimeByName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMultipleAnimeByName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSimilarAnime(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -66,15 +88,25 @@ class AnimeListServicer(object):
 
 def add_AnimeListServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAnimeRelatedByGenre': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAnimeRelatedByGenre,
-                    request_deserializer=others_dot_AnimeList__pb2.anime_related_by_genre_Request.FromString,
-                    response_serializer=others_dot_AnimeList__pb2.anime_related_by_genre_Response.SerializeToString,
+            'GetAllAnimes': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllAnimes,
+                    request_deserializer=others_dot_AnimeList__pb2.get_all_animes.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.get_all_animes_Response.SerializeToString,
             ),
-            'GetUserWatchedAnime': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetUserWatchedAnime,
-                    request_deserializer=others_dot_AnimeList__pb2.user_watched_anime_Request.FromString,
-                    response_serializer=others_dot_AnimeList__pb2.user_watched_anime_Response.SerializeToString,
+            'GetAnimeByName': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAnimeByName,
+                    request_deserializer=others_dot_AnimeList__pb2.get_anime_by_name_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.get_anime_by_name_Response.SerializeToString,
+            ),
+            'GetMultipleAnimeByName': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMultipleAnimeByName,
+                    request_deserializer=others_dot_AnimeList__pb2.get_multiple_anime_by_name_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.get_multiple_anime_by_name_Response.SerializeToString,
+            ),
+            'GetSimilarAnime': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSimilarAnime,
+                    request_deserializer=others_dot_AnimeList__pb2.get_similar_anime_Request.FromString,
+                    response_serializer=others_dot_AnimeList__pb2.get_similar_anime_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -89,7 +121,7 @@ class AnimeList(object):
     """
 
     @staticmethod
-    def GetAnimeRelatedByGenre(request,
+    def GetAllAnimes(request,
             target,
             options=(),
             channel_credentials=None,
@@ -102,9 +134,9 @@ class AnimeList(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeList/GetAnimeRelatedByGenre',
-            others_dot_AnimeList__pb2.anime_related_by_genre_Request.SerializeToString,
-            others_dot_AnimeList__pb2.anime_related_by_genre_Response.FromString,
+            '/AnimeList/GetAllAnimes',
+            others_dot_AnimeList__pb2.get_all_animes.SerializeToString,
+            others_dot_AnimeList__pb2.get_all_animes_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -116,7 +148,7 @@ class AnimeList(object):
             _registered_method=True)
 
     @staticmethod
-    def GetUserWatchedAnime(request,
+    def GetAnimeByName(request,
             target,
             options=(),
             channel_credentials=None,
@@ -129,9 +161,63 @@ class AnimeList(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/AnimeList/GetUserWatchedAnime',
-            others_dot_AnimeList__pb2.user_watched_anime_Request.SerializeToString,
-            others_dot_AnimeList__pb2.user_watched_anime_Response.FromString,
+            '/AnimeList/GetAnimeByName',
+            others_dot_AnimeList__pb2.get_anime_by_name_Request.SerializeToString,
+            others_dot_AnimeList__pb2.get_anime_by_name_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetMultipleAnimeByName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeList/GetMultipleAnimeByName',
+            others_dot_AnimeList__pb2.get_multiple_anime_by_name_Request.SerializeToString,
+            others_dot_AnimeList__pb2.get_multiple_anime_by_name_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetSimilarAnime(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AnimeList/GetSimilarAnime',
+            others_dot_AnimeList__pb2.get_similar_anime_Request.SerializeToString,
+            others_dot_AnimeList__pb2.get_similar_anime_Response.FromString,
             options,
             channel_credentials,
             insecure,
