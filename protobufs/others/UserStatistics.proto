@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Common/Anime.proto";
+
 message Empty {}
 
 message User {
@@ -23,6 +25,15 @@ message MostUsedTopics {
     repeated Topic most_used_topics = 1;
 }
 
+message Top10_Request{
+    string user_name = 1;
+}
+
+message Top10_Response{
+    repeated Anime animes = 1;
+}
+
 service UserStatisticsService {
-    rpc GetMostUsedTopics (Empty) returns (MostUsedTopics);
+    rpc GetMostUsedTopics (Empty) returns (MostUsedTopics); //Prob broken
+    rpc GetTop10 (Top10_Request) returns (Top10_Response);
 }

@@ -16,7 +16,6 @@ from python.others.UserRecommendations.UserRecommendations_pb2 import (
     users_related_by_anime_Response,
     users_related_by_message_Response,
     users_related_by_topics_Response,
-    recomended_animeList_Response,
     recomended_animeList_by_topics_Response,
 )
 
@@ -77,16 +76,12 @@ class UserRecommendations_Service(UserRecommendationsServicer):
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
         
-
     def GetUsersRelatedByMessage(self, request, context):
         # TODO: create a method to get users related by message
         pass
 
     def GetUsersRelatedByTopics(self, request, context):
         # TODO: create a method to get users related by topics
-        pass
-
-    def GetRecomendedAnimeList(self, request, context):
         pass
 
     def GetRecomendedAnimeListByTopics(self, request, context):

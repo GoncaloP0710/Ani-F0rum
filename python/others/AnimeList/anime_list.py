@@ -1,3 +1,4 @@
+import random
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
@@ -18,6 +19,8 @@ from python.others.AnimeList.AnimeList_pb2 import (
     get_anime_by_name_Response,
     get_multiple_anime_by_name_Response,
     get_similar_anime_Response,
+    recomended_animeList_Response,
+    get_similar_anime_Request,
 )
 
 from python.Common.Anime_pb2 import (
@@ -76,12 +79,43 @@ class AnimeList_Service(AnimeListServicer):
                 for anime in response.animes:
                     animeList.add(anime)  # Add anime to the set
 
-            # Convert the set back to a list before returning
-            return get_similar_anime_Response(animes=list(animeList))
+            # Convert the set to a list and randomize the selection, limiting to 10 elements
+            animeList = list(animeList)
+            if len(animeList) > 10:
+                animeList = random.sample(animeList, 10)  # Randomly select 10 elements
 
+            return get_similar_anime_Response(animes=animeList)
+        
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
 
+    # Used when user wants to get animes recommended to him based on his watched animes and the rankings he gave them
+    # It should be called after getting the most liked animes by the user
+    def GetRecomendedAnimeList(self, request, context):
+        try:
+            animes_recommendation = set()  # Use a set to avoid duplicates
+
+            # Loop through the most liked animes
+            for anime in request.animes_most_liked:
+                # Call GetSimilarAnime for each anime
+                similar_anime_response = self.GetSimilarAnime(
+                    get_similar_anime_Request(anime_name=[anime.name]),
+                    context
+                )
+                for similar_anime in similar_anime_response.animes:
+                    animes_recommendation.add(similar_anime)
+
+            # Convert the set to a list and randomize the selection, limiting to 15 elements
+            animes_recommendation = list(animes_recommendation)
+            if len(animes_recommendation) > 15:
+                animes_recommendation = random.sample(animes_recommendation, 15)  # Randomly select 15 elements
+
+            # Return the response
+            return recomended_animeList_Response(animes=animes_recommendation)
+
+        except grpc.RpcError as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
+            
 
     # ==================== auxiliary methods ====================
 

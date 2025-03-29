@@ -42,9 +42,19 @@ message get_similar_anime_Response {
     repeated Anime animes = 1;
 }
 
+// Used when user wants to get a list of animes that he may like
+message recomended_animeList_Request { // -------------> REQUEST FOR GETTING RECOMENDED ANIMES FOR A USER
+    repeated Anime animes_most_liked = 1;
+}
+
+message recomended_animeList_Response {
+    repeated Anime animes = 1;
+}
+
 service AnimeList { // --------------------------> SERVICE FOR ANIMELIST
     rpc GetAllAnimes (get_all_animes) returns (get_all_animes_Response);
     rpc GetAnimeByName (get_anime_by_name_Request) returns (get_anime_by_name_Response);
     rpc GetMultipleAnimeByName (get_multiple_anime_by_name_Request) returns (get_multiple_anime_by_name_Response);
     rpc GetSimilarAnime (get_similar_anime_Request) returns (get_similar_anime_Response);
+    rpc GetRecomendedAnimeList (recomended_animeList_Request) returns (recomended_animeList_Response);
 }

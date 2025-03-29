@@ -1,29 +1,14 @@
 syntax = "proto3";
+import "Common/User.proto";
 
-service FeedGenerator{
-
-    rpc GetFeed (FeedRequest) returns (FeedResponse);
-
-    rpc GetTopicFeed (TopicFeedRequest) returns (TopicFeedResponse);
-}
-
-message User {
-    required string username = 1;
-    required string password = 2;
-    optional string location = 3;
-    repeated Anime animes_watched = 4; 
-    repeated int32 anime_watched_score = 5;
-    repeated string topics_subscribed = 6;
-    repeated Message messages_sent = 7;
-    required int32 karma = 8;
-    repeated Achievement achievements = 9;
-}
 
 message Publication {
     string name = 1;
     string topicname = 2;
-    optional Message message = 3;
-    optional repated Image images = 4;
+    oneof content {
+        Message message = 3;
+        Image images = 4;
+    }
 }
 
 message Topic {
@@ -46,4 +31,9 @@ message TopicFeedRequest{
 
 message TopicFeedResponse{
     repeated Topic topic_feed = 1;
+}
+
+service FeedGeneratorService{
+    rpc GetFeed (FeedRequest) returns (FeedResponse);
+    rpc GetTopicFeed (TopicFeedRequest) returns (TopicFeedResponse);
 }
