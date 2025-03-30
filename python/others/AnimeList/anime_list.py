@@ -104,7 +104,7 @@ class AnimeList_Service(AnimeListServicer):
     # TODO: Try the method once the getter for the most liked animes by the user is 100% functional
     def GetRecomendedAnimeList(self, request, context):
         try:
-            animes_recommendation = set()  # Use a set to avoid duplicates
+            animes_recommendation = []  # Use a list instead of a set
 
             # Loop through the most liked animes
             for anime in request.animes_most_liked:
@@ -114,10 +114,11 @@ class AnimeList_Service(AnimeListServicer):
                     context
                 )
                 for similar_anime in similar_anime_response.animes:
-                    animes_recommendation.add(similar_anime)
+                    # Add anime to the list only if it's not already present
+                    if similar_anime not in animes_recommendation:
+                        animes_recommendation.append(similar_anime)
 
-            # Convert the set to a list and randomize the selection, limiting to 15 elements
-            animes_recommendation = list(animes_recommendation)
+            # Randomize the selection, limiting to 15 elements
             if len(animes_recommendation) > 15:
                 animes_recommendation = random.sample(animes_recommendation, 15)  # Randomly select 15 elements
 
