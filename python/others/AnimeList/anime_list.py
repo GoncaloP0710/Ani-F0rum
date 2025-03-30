@@ -89,9 +89,9 @@ class AnimeList_Service(AnimeListServicer):
             # Remove duplicates by using a dictionary with the anime name as the key
             animeList = list({anime.name: anime for anime in animeList}.values())
 
-            # Randomize the selection, limiting to 10 elements
-            if len(animeList) > 10:
-                animeList = random.sample(animeList, 10)  # Randomly select 10 elements
+            # Randomize the selection, limiting to 5 elements
+            if len(animeList) > 5:
+                animeList = random.sample(animeList, 5)  # Randomly select 10 elements
 
             return get_similar_anime_Response(animes=animeList)
 

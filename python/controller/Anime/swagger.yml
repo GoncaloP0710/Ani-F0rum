@@ -74,3 +74,51 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Anime"
+
+  /anime/anime_name/{anime_name}:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
+    get:
+      operationId: "anime_controller.get_anime"
+      tags:
+        - Anime
+      summary: "Show a specific anime if it exists"
+      responses:
+        "200":
+          description: "Successfully show the anime"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+
+  /anime/anime_name/{anime_name}/related:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
+    get:
+      operationId: "anime_controller.get_similar_anime"
+      tags:
+        - Anime
+      summary: "Show related anime to the specific anime"
+      responses:
+        "200":
+          description: "Successfully show related anime"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
