@@ -9,6 +9,7 @@ from UserStatistics_pb2 import (
     Top10_Response,
     MostUsedTopics_Request,
     MostUsedTopics_Response,
+    KarmaResponse,
 )
 
 from python.repository.User import UserRepository_pb2_grpc as ur_grpc
@@ -40,23 +41,16 @@ class UserSttics(UserStatistics_pb2_grpcr.UserStatisticsServicer):
 
         return Top10_Response(responseList)
 
-    #TODO: AINDA NAO SEI COMO FUNCIONA O GETUSERPOSTS
     def GetMostUsedTopics(self, request, context):
-        # Fetch the user making the request
+
         user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
         if not user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
 
-        # TODO: Nao sei se preciso de usar este ou não
-        user_topics = user.topics_subscribed
-
-        #TODO: Descobrir como obter os posts do utilizador
-        # Fetch the posts made by the user
         posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
         if not posts:
             context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
 
-        # Count the usage of each topic
         topic_usage = {}
         for post in posts:
             for topic in post.topics:
@@ -67,6 +61,30 @@ class UserSttics(UserStatistics_pb2_grpcr.UserStatisticsServicer):
         sorted_topics = sorted(topic_usage.items(), key=lambda x: x[1], reverse=True)
 
         return MostUsedTopics_Response(sorted_topics[:10])
+    
+    def GetUserKarma(self, request, context):
+
+        user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        if not user:
+            context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
+
+        user_posts = self.user_stub.GetUserPosts(ur_pb2.get_user_posts_Request(user_name=request.user_name))
+        if not user_posts:
+            context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
+
+        topic_popularity = set()
+        for post in user_posts.posts:
+            topic_name = post.topic_name
+            if topic_name not in topic_popularity:
+                topic_details = self.topic_stub.GetTopic(ur_pb2.get_topic_Request(topic_name=topic_name))
+                topic_popularity[topic_name] = len(topic_details.subscribers)
+
+        karma = 0
+        for post in user_posts.posts:
+            topic_name = post.topic_name
+            karma += 1 * topic_popularity.get(topic_name, 1) 
+
+        return KarmaResponse(karma_Value=karma)
         
         
 

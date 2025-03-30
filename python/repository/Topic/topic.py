@@ -21,7 +21,6 @@ from python.repository.Topic.TopicRepository_pb2 import (
     CreateTopicResponse,
     GetTopicResponse,
     PublishInTopicResponse,
-    #KarmaResponse
 )
 
 from python.Common.Topic_pb2 import (
@@ -221,9 +220,6 @@ class TopicService(TopicRepositoryServicer):
         print("Returning the response: " + publication_name)
 
         return PublishInTopicResponse(publicationname = publication_name)
-    
-    def Karma(self, request, context):
-        ...
 
 """
     def Recommend(self, request, context):

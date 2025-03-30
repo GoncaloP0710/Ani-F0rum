@@ -70,5 +70,4 @@ service TopicRepository {
     rpc GetTopic (GetTopicRequest) returns (GetTopicResponse);
     rpc PublishMessage (PublishMessageInTopicRequest) returns (PublishInTopicResponse);
     rpc PublishImage (PublishImageInTopicRequest) returns (PublishInTopicResponse);
-    // rpc Karma (KarmaRequest) returns (KarmaResponse);
 }

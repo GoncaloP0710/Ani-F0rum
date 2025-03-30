@@ -33,7 +33,12 @@ message Top10_Response{
     repeated Anime animes = 1;
 }
 
+message KarmaResponse {
+    int karma_Value = 1;
+}
+
 service UserStatisticsService {
     rpc GetMostUsedTopics (Empty) returns (MostUsedTopics); //Prob broken
     rpc GetTop10 (Top10_Request) returns (Top10_Response);
+    rpc GetUserKarma (Empty) returns (KarmaResponse);
 }
