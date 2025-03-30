@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: "USER REST API"
+  description: "An API about users"
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  # Schemas used in the API 
+  schemas:
+    User: # User schema that represents a user
+      type: "object"
+      required:
+        - username
+        - password
+        - location
+        - anime_watched
+        - anime_watched_score
+        - topics_subscribed
+        - messages_sent
+        - karma
+        - achievements
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        location:
+          type: "string"
+        anime_watched:
+          type: "array"
+          items:
+            type: "string"
+        anime_watched_score:
+          type: "array"
+          items:
+            type: "integer"
+        topics_subscribed:
+          type: "array"
+          items:
+            type: "string"
+        karma:
+          type: "integer"
+        achievements:
+          type: "array"
+          items:
+             $ref: "#/components/schemas/Achievement"
+    Achievement: # Achievement schema that represents a Achievement
+      type: "object"
+      required: 
+        - name
+        - description
+        - date
+        - rarity
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        date:
+          type: "string"
+        rarity:
+          type: "string"
+          enum: [common, rare, epic, legendary, mythic]
+
+  # Parameters for paths 
+  parameters:
+    user_name:
+      name: "user_name"
+      description: "Name of the user in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    achievement_name:
+      name: "achievement_name"
+      description: "Name of the achievement"
+      in: path
+      required: True
+      schema:
+        type: "string"
+
+paths:
+
+  # ====================================================
+  # ======================= User =======================
+  # ====================================================
+
+  /user/{user_name}/related_by_anime:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user_controller.get_related_by_anime"
+      tags:
+        - User
+      summary: "Show related users to the specific user based on anime watched"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"

@@ -131,9 +131,9 @@ def serve():
     add_UserRepositoryServicer_to_server(
         UserRepository_Service(), server
     )
-    server.add_insecure_port('[::]:50063')
+    server.add_insecure_port('[::]:50043')
     server.start()
-    print("UserRepository server running on port 50063")
+    print("UserRepository server running on port 50043")
     server.wait_for_termination()
 
 if __name__ == '__main__':

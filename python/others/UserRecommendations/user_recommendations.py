@@ -37,7 +37,7 @@ from python.repository.User import UserRepository_pb2_grpc
 class UserRecommendations_Service(UserRecommendationsServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50063')  # Create a channel to the UserRepository
+        self.channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
         self.stub = UserRepository_pb2_grpc.UserRepositoryStub(self.channel)
 
     # Used when user wants to get other users related by anime
@@ -128,9 +128,9 @@ def serve():
     add_UserRecommendationsServicer_to_server(
         UserRecommendations_Service(), server
     )
-    server.add_insecure_port('[::]:50062')
+    server.add_insecure_port('[::]:50042')
     server.start()
-    print('UserRecommendations server running on port 50062')
+    print('UserRecommendations server running on port 50042')
 
 
     # ==================== Test functions ====================
