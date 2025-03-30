@@ -10,6 +10,9 @@ from UserStatistics_pb2 import (
     MostUsedTopics_Request,
     MostUsedTopics_Response,
     KarmaResponse,
+    GetAllUsersResponse,
+    GetUserByNameRequest,
+    GetUserByNameResponse,
 )
 
 from python.repository.User import UserRepository_pb2_grpc as ur_grpc
@@ -17,14 +20,14 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 from python.repository.Anime import AnimeRepository_pb2_grpc as ar_grpc
 from python.repository.Anime import AnimeRepository_pb2 as ar_pb2
 
-class UserSttics(UserStatistics_pb2_grpcr.UserStatisticsServicer):
+class UserStatistics(UserStatistics_pb2_grpc.UserStatisticsServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
-        self.user_stub = UserStatistics_pb2_grpcr.StatisticsService(self.user_channel)
+        self.user_stub = UserStatistics_pb2_grpc.StatisticsService(self.user_channel)
 
         self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
-        self.anime_stub = UserStatistics_pb2_grpcr.StatisticsService(self.anime_channel)
+        self.anime_stub = UserStatistics_pb2_grpc.StatisticsService(self.anime_channel)
 
     def GetTop10(self, request, context):
         
@@ -86,7 +89,19 @@ class UserSttics(UserStatistics_pb2_grpcr.UserStatisticsServicer):
 
         return KarmaResponse(karma_Value=karma)
         
-        
+    def GetAllUsers(self, request, context):
+        user = self.user_stub.GetAllUsers(ur_pb2.get_all_users_Request())
+        if not user:
+            context.abort(grpc.StatusCode.NOT_FOUND, "No users found")
+
+        return GetAllUsersResponse(users=user.users)
+    
+    def GetUserByName(self, request, context):
+        user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        if not user:
+            context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
+
+        return GetUserByNameResponse(user=user)
 
 #TODO
 def serve():
@@ -94,7 +109,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    UserStatistics_pb2_grpcr.add_UserStatisticsServicer_to_server(
+    UserStatistics_pb2_grpc.add_UserStatisticsServicer_to_server(
         UserStatistics(), server
     )
 

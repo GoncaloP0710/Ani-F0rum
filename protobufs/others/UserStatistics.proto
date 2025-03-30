@@ -1,25 +1,9 @@
 syntax = "proto3";
-
-import "Common/Anime.proto";
+import "protobufs/Common/Anime.proto";
+import "protobufs/Common/User.proto";
+import "protobufs/Common/Topic.proto";
 
 message Empty {}
-
-message User {
-    string username = 1;
-    string password = 2;
-    optional string location = 3;
-    repeated string animes_watched = 4;
-    repeated int32 anime_watched_score = 5;
-    repeated string topics_subscribed = 6;
-    int32 karma = 8;
-    repeated Achievement achievements = 9;
-}
-
-message Topic {
-    string topicname = 1;
-    repeated Subscriber subscribers = 2;
-    repeated Publication publications = 3;
-}
 
 message MostUsedTopics {
     repeated Topic most_used_topics = 1;
@@ -34,11 +18,25 @@ message Top10_Response{
 }
 
 message KarmaResponse {
-    int karma_Value = 1;
+    int32 karma_Value = 1;
+}
+
+message GetUserByNameResponse {
+    User user = 1;
+}
+
+message GetUserByNameRequest {
+    string user_name = 1;
+}
+
+message GetAllUsersResponse {
+    repeated User users = 1;
 }
 
 service UserStatisticsService {
     rpc GetMostUsedTopics (Empty) returns (MostUsedTopics); //Prob broken
     rpc GetTop10 (Top10_Request) returns (Top10_Response);
     rpc GetUserKarma (Empty) returns (KarmaResponse);
+    rpc GetAllUsers (Empty) returns (GetAllUsersResponse);
+    rpc GetUserByName (GetUserByNameRequest) returns (GetUserByNameResponse);
 }

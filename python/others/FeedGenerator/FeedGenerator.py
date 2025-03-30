@@ -19,7 +19,7 @@ class FeedGenerator(FeedGenerator_pb2_grpc.AchievementsServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
-        self.user_stub = FeedGenerator_pb2_grpcr.FeedGeneratorService(self.user_channel)
+        self.user_stub = FeedGenerator_pb2_grpc.FeedGeneratorService(self.user_channel)
 
 
     def GetFeed(self, request, context):
@@ -46,7 +46,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    FeedGenerator_pb2_grpcr.add_FeedGeneratorServicer_to_server(
+    FeedGenerator_pb2_grpc.add_FeedGeneratorServicer_to_server(
         FeedGenerator(), server
     )
 

@@ -2,10 +2,10 @@ import random
 from concurrent import futures
 
 import grpc
-import achievements_pb2_grpc
+import Achievements_pb2_grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from achievements_pb2 import (
+from Achievements_pb2 import (
     Achievement,
     User,
     AchievementListRequest,
@@ -19,11 +19,11 @@ from achievements_pb2 import (
 from python.repository.User import UserRepository_pb2_grpc as ur_grpc
 from python.repository.User import UserRepository_pb2 as ur_pb2
 
-class Achievements(achievements_pb2_grpc.AchievementsServicer):
+class achievements(Achievements_pb2_grpc.AchievementsServicer):
 
     def __init__(self):
         self.channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
-        self.stub = achievements_pb2_grpc.AchievementsController(self.channel)
+        self.stub = Achievements_pb2_grpc.AchievementsController(self.channel)
 
     def GetAchivementList(self, request, context):
         
@@ -69,8 +69,8 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    achievements_pb2_grpc.add_AchievementsServicer_to_server(
-        Achievements(), server
+    Achievements_pb2_grpc.add_AchievementsServicer_to_server(
+        Achievement(), server
     )
 
    

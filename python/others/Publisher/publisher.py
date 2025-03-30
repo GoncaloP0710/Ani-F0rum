@@ -18,8 +18,7 @@ from python.others.Publisher.Publisher_pb2 import (
     GetTopicsResponsePub,
     CreateTopicResponsePub,
     GetTopicResponsePub,
-    PublishInTopicResponsePub,
-    KarmaResponsePub
+    PublishInTopicResponsePub
 )
 
 from python.repository.Topic.TopicRepository_pb2_grpc import (
@@ -107,9 +106,6 @@ class PublishService(PublisherServicer):
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
     
-    def Karma(self, request, context):
-        ...
-
 """
     def Recommend(self, request, context):
         if request.category not in books_by_category:

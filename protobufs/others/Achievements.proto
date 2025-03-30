@@ -1,5 +1,5 @@
 syntax = "proto3";
-import "Common/User.proto";
+import "protobufs/Common/User.proto";
 
 message AchievementListRequest {
     string user_name = 1;

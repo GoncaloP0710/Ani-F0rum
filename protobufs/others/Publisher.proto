@@ -36,16 +36,9 @@ message PublishInTopicResponse {
     string publicationname = 1;
 }
 
-message KarmaRequest {}
-
-message KarmaResponse {
-    int32 karma_points = 1;
-}
-
 service Publisher {
     rpc GetTopics (GetTopicsRequest) returns (GetTopicsResponse);
     rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
     rpc GetTopic (GetTopicRequest) returns (GetTopicResponse);
     rpc Publish (PublishInTopicRequest) returns (PublishInTopicResponse);
-    rpc Karma (KarmaRequest) returns (KarmaResponse);
 }

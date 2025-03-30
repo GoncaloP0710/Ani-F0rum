@@ -16,6 +16,7 @@ import grpc
 from python.others.UserRecommendations import UserRecommendations_pb2_grpc, UserRecommendations_pb2
 from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
 from python.Common import User_pb2 as Common_dot_User__pb2
+from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
 
 def users_related_by_anime(user_name):
 
@@ -68,3 +69,99 @@ def users_related_by_anime(user_name):
 
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50041)
+
+
+def all_users():
+    with grpc.insecure_channel('localhost:50060') as channel:  # Connect to the user_statistics server
+        stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+        request = UserStatistics_pb2.Empty()  # Create an empty request
+        
+        try:  # Make the request
+            response = stub.GetAllUsers(request)
+            # Convert User objects to JSON-serializable dictionaries
+            return [
+                {
+                    "user_name": user.user_name,
+                    "location": user.location if user.HasField("location") else None,
+                    "animes_watched": list(user.animes_watched),
+                    "anime_watched_score": list(user.anime_watched_score),
+                    "topics_subscribed": list(user.topics_subscribed),
+                    "karma": user.karma,
+                    "achievements": [
+                        {
+                            "title": achievement.title,
+                            "description": achievement.description,
+                            "date": achievement.date,
+                            "rarity": achievement.rarity,
+                        }
+                        for achievement in user.achievements
+                    ],
+                }
+                for user in response.users
+            ]
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def get_user(user_name):
+    with grpc.insecure_channel('localhost:50060') as channel:  # Connect to the user_statistics server
+        stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+        request = UserStatistics_pb2.GetUserByNameRequest(user_name=user_name)  # Create a request
+        
+        try:  # Make the request
+            response = stub.GetUserByName(request)
+            user = response.user
+            return {
+                "user_name": user.user_name,
+                "location": user.location if user.HasField("location") else None,
+                "animes_watched": list(user.animes_watched),
+                "anime_watched_score": list(user.anime_watched_score),
+                "topics_subscribed": list(user.topics_subscribed),
+                "karma": user.karma,
+                "achievements": [
+                    {
+                        "title": achievement.title,
+                        "description": achievement.description,
+                        "date": achievement.date,
+                        "rarity": achievement.rarity,
+                    }
+                    for achievement in user.achievements
+                ],
+            }
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def get_karma():
+    with grpc.insecure_channel('localhost:50060') as channel:  # Connect to the user_statistics server
+        stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+        request = UserStatistics_pb2.Empty()  # Create an empty request
+        
+        try:  # Make the request
+            response = stub.GetUserKarma(request)
+            return [karma for karma in response.karma]
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+        
+def top10Anime(user_name):
+    with grpc.insecure_channel('localhost:50060') as channel:  # Connect to the user_statistics server
+        stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+        request = UserStatistics_pb2.Top10_Request(user_name=user_name)  # Create an empty request
+        
+        try:  # Make the request
+            response = stub.GetTop10(request)
+            return [anime for anime in response.anime]
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def list_topics():
+    with grpc.insecure_channel('localhost:50060') as channel:  # Connect to the user_statistics server
+        stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+        request = UserStatistics_pb2.Empty()  # Create an empty request
+        
+        try:  # Make the request
+            response = stub.GetMostUsedTopics(request)
+            return [topic for topic in response.topics]
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+if __name__ == "__main__":
+    connex_app.run(host="0.0.0.0", port=50052)
