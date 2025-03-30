@@ -23,7 +23,7 @@ from python.repository.Anime import AnimeRepository_pb2 as ar_pb2
 class UserStatistics(UserStatistics_pb2_grpc.UserStatisticsServicer):
 
     def __init__(self):
-        self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
+        self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
         self.user_stub = UserStatistics_pb2_grpc.StatisticsService(self.user_channel)
 
         self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository

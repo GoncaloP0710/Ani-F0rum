@@ -82,11 +82,28 @@ components:
       schema:
         type: "string"
 
-paths:
 
   # ====================================================
   # ======================= User =======================
   # ====================================================
+paths:
+
+  /user:
+    post:
+      operationId: "user.create"
+      tags:
+        - User
+      summary: "Create a new user"
+      requestBody:
+          description: "User to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "Successfully created a user"
 
   /user/{user_name}/related_by_anime:
     parameters:
@@ -97,7 +114,7 @@ paths:
         schema:
           type: "string"
     get:
-      operationId: "user_controller.get_related_by_anime"
+      operationId: "user.get_related_by_anime"
       tags:
         - User
       summary: "Show related users to the specific user based on anime watched"
@@ -110,5 +127,184 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/related_by_message:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_related_by_message"
+      tags:
+        - User
+      summary: "Show related users to the specific user based on messages sent"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/achievements:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_achievements"
+      tags:
+        - User
+      summary: "Show user achievements"
+      responses:
+        "200":
+          description: "Successfully show user achievements"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+  /user/{user_name}/{achievement_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "achievement_name"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
+    post:
+      operationId: "user.add_achievement"
+      tags:
+        - User
+      summary: "Add an achievement to a user"
+      requestBody:
+          description: "User and achievement to add"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "Successfully added achievement"
+
+  /user/{user_name}/karma:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_karma"
+      tags:
+        - User
+      summary: "Show user karma"
+      responses:
+        "200":
+          description: "Successfully show user karma"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/track_records:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_track_records"
+      tags:
+        - User
+      summary: "Show user track records"
+      responses:
+        "200":
+          description: "Successfully show user track records"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/messages:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_messages"
+      tags:
+        - User
+      summary: "Show user messages"
+      responses:
+        "200":
+          description: "Successfully show user messages"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/recomended_animeList:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user.get_recomended_animeList"
+      tags:
+        - User
+      summary: "Show recomended anime list for the user"
+      responses:
+        "200":
+          description: "Successfully show recomended anime list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
         "404":
           description: "User not found"

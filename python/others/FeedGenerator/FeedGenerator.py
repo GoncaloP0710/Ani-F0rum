@@ -18,7 +18,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 class FeedGenerator(FeedGenerator_pb2_grpc.AchievementsServicer):
 
     def __init__(self):
-        self.user_channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
+        self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
         self.user_stub = FeedGenerator_pb2_grpc.FeedGeneratorService(self.user_channel)
 
 

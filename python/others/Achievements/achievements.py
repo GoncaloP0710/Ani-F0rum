@@ -22,7 +22,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 class achievements(Achievements_pb2_grpc.AchievementsServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50054')  # Create a channel to the UserRepository
+        self.channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
         self.stub = Achievements_pb2_grpc.AchievementsController(self.channel)
 
     def GetAchivementList(self, request, context):
