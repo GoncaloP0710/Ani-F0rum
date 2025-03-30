@@ -17,15 +17,26 @@ from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
 from python.Common import User_pb2 as Common_dot_User__pb2
 
 def all_anime():
-    with grpc.insecure_channel('localhost:50052') as channel: # Connect to the anime_list server
+    with grpc.insecure_channel('localhost:50052') as channel:  # Connect to the anime_list server
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
-        request = AnimeList_pb2.get_all_animes() # Create a request
+        request = AnimeList_pb2.get_all_animes()  # Create a request
         
         try:  # Make the request
             response = stub.GetAllAnimes(request)
-            return [anime for anime in response.animes]  # Return the list of animes as JSON
+            # Convert Anime objects to JSON-serializable dictionaries
+            return [
+                {
+                    "name": anime.name,
+                    "genres": list(anime.genres),  # Convert genres to a list
+                    "episodes": anime.episodes,
+                    "score": anime.score,
+                    "aired": anime.aired,
+                    "synopsis": anime.synopsis,
+                }
+                for anime in response.animes
+            ]
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
 if __name__ == "__main__":
-    connex_app.run(host="0.0.0.0", port=50051, debug=True)
+    connex_app.run(host="0.0.0.0", port=50051)
