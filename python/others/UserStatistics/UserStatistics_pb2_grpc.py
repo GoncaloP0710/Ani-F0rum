@@ -3,10 +3,11 @@
 import grpc
 import warnings
 
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-import python.others.UserStatistics.UserStatistics_pb2 as protobufs_dot_others_dot_UserStatistics__pb2
+import python.others.UserStatistics.UserStatistics_pb2 as others_dot_UserStatistics__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -21,7 +22,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in protobufs/others/UserStatistics_pb2_grpc.py depends on'
+        + f' but the generated code in others/UserStatistics_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -39,28 +40,28 @@ class UserStatisticsServiceStub(object):
         """
         self.GetMostUsedTopics = channel.unary_unary(
                 '/UserStatisticsService/GetMostUsedTopics',
-                request_serializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
                 _registered_method=True)
         self.GetTop10 = channel.unary_unary(
                 '/UserStatisticsService/GetTop10',
-                request_serializer=protobufs_dot_others_dot_UserStatistics__pb2.Top10_Request.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.Top10_Response.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.Top10_Request.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.Top10_Response.FromString,
                 _registered_method=True)
         self.GetUserKarma = channel.unary_unary(
                 '/UserStatisticsService/GetUserKarma',
-                request_serializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.KarmaResponse.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.KarmaResponse.FromString,
                 _registered_method=True)
         self.GetAllUsers = channel.unary_unary(
                 '/UserStatisticsService/GetAllUsers',
-                request_serializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.GetAllUsersResponse.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.GetAllUsersResponse.FromString,
                 _registered_method=True)
         self.GetUserByName = channel.unary_unary(
                 '/UserStatisticsService/GetUserByName',
-                request_serializer=protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameResponse.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.GetUserByNameRequest.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.GetUserByNameResponse.FromString,
                 _registered_method=True)
 
 
@@ -103,28 +104,28 @@ def add_UserStatisticsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetMostUsedTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMostUsedTopics,
-                    request_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.FromString,
-                    response_serializer=protobufs_dot_others_dot_UserStatistics__pb2.MostUsedTopics.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.Empty.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.MostUsedTopics.SerializeToString,
             ),
             'GetTop10': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTop10,
-                    request_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.Top10_Request.FromString,
-                    response_serializer=protobufs_dot_others_dot_UserStatistics__pb2.Top10_Response.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.Top10_Request.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.Top10_Response.SerializeToString,
             ),
             'GetUserKarma': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUserKarma,
-                    request_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.FromString,
-                    response_serializer=protobufs_dot_others_dot_UserStatistics__pb2.KarmaResponse.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.Empty.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.KarmaResponse.SerializeToString,
             ),
             'GetAllUsers': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAllUsers,
-                    request_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.Empty.FromString,
-                    response_serializer=protobufs_dot_others_dot_UserStatistics__pb2.GetAllUsersResponse.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.Empty.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.GetAllUsersResponse.SerializeToString,
             ),
             'GetUserByName': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUserByName,
-                    request_deserializer=protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameResponse.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.GetUserByNameRequest.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.GetUserByNameResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -152,8 +153,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetMostUsedTopics',
-            protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-            protobufs_dot_others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
+            others_dot_UserStatistics__pb2.Empty.SerializeToString,
+            others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
             options,
             channel_credentials,
             insecure,
@@ -179,8 +180,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetTop10',
-            protobufs_dot_others_dot_UserStatistics__pb2.Top10_Request.SerializeToString,
-            protobufs_dot_others_dot_UserStatistics__pb2.Top10_Response.FromString,
+            others_dot_UserStatistics__pb2.Top10_Request.SerializeToString,
+            others_dot_UserStatistics__pb2.Top10_Response.FromString,
             options,
             channel_credentials,
             insecure,
@@ -206,8 +207,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetUserKarma',
-            protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-            protobufs_dot_others_dot_UserStatistics__pb2.KarmaResponse.FromString,
+            others_dot_UserStatistics__pb2.Empty.SerializeToString,
+            others_dot_UserStatistics__pb2.KarmaResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -233,8 +234,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetAllUsers',
-            protobufs_dot_others_dot_UserStatistics__pb2.Empty.SerializeToString,
-            protobufs_dot_others_dot_UserStatistics__pb2.GetAllUsersResponse.FromString,
+            others_dot_UserStatistics__pb2.Empty.SerializeToString,
+            others_dot_UserStatistics__pb2.GetAllUsersResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -260,8 +261,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetUserByName',
-            protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameRequest.SerializeToString,
-            protobufs_dot_others_dot_UserStatistics__pb2.GetUserByNameResponse.FromString,
+            others_dot_UserStatistics__pb2.GetUserByNameRequest.SerializeToString,
+            others_dot_UserStatistics__pb2.GetUserByNameResponse.FromString,
             options,
             channel_credentials,
             insecure,

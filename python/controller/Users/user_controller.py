@@ -2,19 +2,19 @@ import sys
 import os
 import connexion
 import pathlib
-import grpc
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-from python.others.UserRecommendations import UserRecommendations_pb2_grpc, UserRecommendations_pb2
-from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
-from python.Common import User_pb2 as Common_dot_User__pb2
-from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
 
 basedir = pathlib.Path(__file__).parent.resolve()
 
 connex_app = connexion.App(__name__, specification_dir=basedir)
 connex_app.add_api(basedir / "swagger.yml")
 
+import grpc
+from python.others.UserRecommendations import UserRecommendations_pb2_grpc, UserRecommendations_pb2
+from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
+from python.Common import User_pb2 as Common_dot_User__pb2
+from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
 
 def users_related_by_anime(user_name):
     animes_name_watched = ["Naruto", "One Piece"]

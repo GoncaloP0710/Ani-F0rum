@@ -1,17 +1,20 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from concurrent import futures
 
 import grpc
-import UserStatistics_pb2_grpc
+from python.others.UserStatistics.UserStatistics_pb2_grpc import(
+    UserStatisticsService,
+    add_UserStatisticsServiceServicer_to_server,
+)
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 from UserStatistics_pb2 import (
-    Top10_Request,
     Top10_Response,
-    MostUsedTopics_Request,
-    MostUsedTopics_Response,
+    #MostUsedTopics_Response,
     KarmaResponse,
     GetAllUsersResponse,
-    GetUserByNameRequest,
     GetUserByNameResponse,
 )
 
@@ -20,7 +23,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 from python.repository.Anime import AnimeRepository_pb2_grpc as ar_grpc
 from python.repository.Anime import AnimeRepository_pb2 as ar_pb2
 
-class UserStatistics(UserStatistics_pb2_grpc.UserStatisticsServicer):
+class UserStatistics(UserStatisticsService):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
@@ -109,7 +112,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    UserStatistics_pb2_grpc.add_UserStatisticsServicer_to_server(
+    add_UserStatisticsServiceServicer_to_server(
         UserStatistics(), server
     )
 

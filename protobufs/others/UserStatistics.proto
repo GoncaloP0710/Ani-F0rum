@@ -1,7 +1,7 @@
 syntax = "proto3";
-import "protobufs/Common/Anime.proto";
-import "protobufs/Common/User.proto";
-import "protobufs/Common/Topic.proto";
+import "Common/Anime.proto";
+import "Common/User.proto";
+import "Common/Topic.proto";
 
 message Empty {}
 
