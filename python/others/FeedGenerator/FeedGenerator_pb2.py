@@ -22,8 +22,8 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from protobufs.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
-from protobufs.Common import Topic_pb2 as protobufs_dot_Common_dot_Topic__pb2
+from python.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
+from python.Common import Topic_pb2 as protobufs_dot_Common_dot_Topic__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n$protobufs/others/FeedGenerator.proto\x1a\x1bprotobufs/Common/User.proto\x1a\x1cprotobufs/Common/Topic.proto\" \n\x0b\x46\x65\x65\x64Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"*\n\x0c\x46\x65\x65\x64Response\x12\x1a\n\x04\x66\x65\x65\x64\x18\x01 \x03(\x0b\x32\x0c.Publication\"%\n\x10TopicFeedRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"/\n\x11TopicFeedResponse\x12\x1a\n\ntopic_feed\x18\x01 \x03(\x0b\x32\x06.Topic2u\n\x14\x46\x65\x65\x64GeneratorService\x12&\n\x07GetFeed\x12\x0c.FeedRequest\x1a\r.FeedResponse\x12\x35\n\x0cGetTopicFeed\x12\x11.TopicFeedRequest\x1a\x12.TopicFeedResponseb\x06proto3')

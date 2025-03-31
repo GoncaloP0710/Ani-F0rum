@@ -22,7 +22,7 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from protobufs.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
+from python.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#protobufs/others/Achievements.proto\x1a\x1bprotobufs/Common/User.proto\"+\n\x16\x41\x63hievementListRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"=\n\x17\x41\x63hievementListResponse\x12\"\n\x0c\x61\x63hievements\x18\x01 \x03(\x0b\x32\x0c.Achievement\"6\n\x12\x41\x63hievementRequest\x12\r\n\x05title\x18\x01 \x01(\t\x12\x11\n\tuser_name\x18\x02 \x01(\t\"1\n\x13\x41\x63hievementResponse\x12\x1a\n\x04item\x18\x01 \x01(\x0b\x32\x0c.Achievement\"I\n\rUpdateRequest\x12\x1d\n\x0euser_to_update\x18\x01 \x01(\x0b\x32\x05.User\x12\x19\n\x03new\x18\x02 \x01(\x0b\x32\x0c.Achievement\"!\n\x0eUpdateResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xd3\x01\n\x16\x41\x63hievementsController\x12\x46\n\x11GetAchivementList\x12\x17.AchievementListRequest\x1a\x18.AchievementListResponse\x12;\n\x0eGetAchievement\x12\x13.AchievementRequest\x1a\x14.AchievementResponse\x12\x34\n\x11UpdateAchievement\x12\x0e.UpdateRequest\x1a\x0f.UpdateResponseb\x06proto3')

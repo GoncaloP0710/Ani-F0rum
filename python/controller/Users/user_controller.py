@@ -3,12 +3,13 @@ import os
 import connexion
 import pathlib
 import grpc
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from python.others.UserRecommendations import UserRecommendations_pb2_grpc, UserRecommendations_pb2
 from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
 from python.Common import User_pb2 as Common_dot_User__pb2
 from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 basedir = pathlib.Path(__file__).parent.resolve()
 
 connex_app = connexion.App(__name__, specification_dir=basedir)

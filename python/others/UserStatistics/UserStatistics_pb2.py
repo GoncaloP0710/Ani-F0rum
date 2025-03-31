@@ -22,9 +22,9 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from protobufs.Common import Anime_pb2 as protobufs_dot_Common_dot_Anime__pb2
-from protobufs.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
-from protobufs.Common import Topic_pb2 as protobufs_dot_Common_dot_Topic__pb2
+from python.Common import Anime_pb2 as protobufs_dot_Common_dot_Anime__pb2
+from python.Common import User_pb2 as protobufs_dot_Common_dot_User__pb2
+from python.Common import Topic_pb2 as protobufs_dot_Common_dot_Topic__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%protobufs/others/UserStatistics.proto\x1a\x1cprotobufs/Common/Anime.proto\x1a\x1bprotobufs/Common/User.proto\x1a\x1cprotobufs/Common/Topic.proto\"\x07\n\x05\x45mpty\"2\n\x0eMostUsedTopics\x12 \n\x10most_used_topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\"\n\rTop10_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x0eTop10_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"$\n\rKarmaResponse\x12\x13\n\x0bkarma_Value\x18\x01 \x01(\x05\",\n\x15GetUserByNameResponse\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\")\n\x14GetUserByNameRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"+\n\x13GetAllUsersResponse\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\x87\x02\n\x15UserStatisticsService\x12,\n\x11GetMostUsedTopics\x12\x06.Empty\x1a\x0f.MostUsedTopics\x12+\n\x08GetTop10\x12\x0e.Top10_Request\x1a\x0f.Top10_Response\x12&\n\x0cGetUserKarma\x12\x06.Empty\x1a\x0e.KarmaResponse\x12+\n\x0bGetAllUsers\x12\x06.Empty\x1a\x14.GetAllUsersResponse\x12>\n\rGetUserByName\x12\x15.GetUserByNameRequest\x1a\x16.GetUserByNameResponseb\x06proto3')
