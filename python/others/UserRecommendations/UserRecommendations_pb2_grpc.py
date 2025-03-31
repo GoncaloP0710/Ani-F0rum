@@ -3,7 +3,10 @@
 import grpc
 import warnings
 
-import UserRecommendations_pb2 as others_dot_UserRecommendations__pb2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+import python.others.UserRecommendations.UserRecommendations_pb2 as others_dot_UserRecommendations__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__

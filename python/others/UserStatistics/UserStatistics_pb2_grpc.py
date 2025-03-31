@@ -3,7 +3,10 @@
 import grpc
 import warnings
 
-from protobufs.others import UserStatistics_pb2 as protobufs_dot_others_dot_UserStatistics__pb2
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+import python.others.UserStatistics.UserStatistics_pb2 as protobufs_dot_others_dot_UserStatistics__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__

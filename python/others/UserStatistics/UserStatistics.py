@@ -24,10 +24,10 @@ class UserStatistics(UserStatistics_pb2_grpc.UserStatisticsServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
-        self.user_stub = UserStatistics_pb2_grpc.StatisticsService(self.user_channel)
+        self.user_stub = ur_grpc.UserRepositoryStub(self.user_channel)
 
         self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
-        self.anime_stub = UserStatistics_pb2_grpc.StatisticsService(self.anime_channel)
+        self.anime_stub = ar_grpc.AnimeRepositoryStub(self.anime_channel)
 
     def GetTop10(self, request, context):
         
