@@ -48,7 +48,7 @@ class UserRecommendations_Service(UserRecommendationsServicer):
             weight_watched = 1.7  # Higher weight for animes_watched
             weight_similar = 1  # Lower weight for animes_similar
 
-            print("Processing animes_watched...")
+            print("===================== Processing animes_watched =====================")
             # Extract anime names from animes_watched
             anime_names_watched = [anime.name for anime in request.animes_watched]
             response = self.stub.GetUsersThatWatchedAnime(
@@ -66,6 +66,7 @@ class UserRecommendations_Service(UserRecommendationsServicer):
             response = self.stub.GetUsersThatWatchedAnime(
                 UserRepository_pb2.get_users_that_watched_anime_Request(anime_names=anime_names_similar)
             )
+            print(response.users)
             for user in response.users:
                 if user.user_name not in user_scores:
                     user_scores[user.user_name] = 0
@@ -81,6 +82,10 @@ class UserRecommendations_Service(UserRecommendationsServicer):
                     UserRepository_pb2.get_user_Request(user_name=user_name)
                 )
                 users.append(user_response.user)
+
+            print ("=================== Result =================")
+
+            print(users)
 
             # Return the response
             return users_related_by_anime_Response(users=users)

@@ -1,8 +1,25 @@
 import requests
 
 class UserStatisticsClient:
-    def __init__(self, base_url="http://localhost:50043/api"):
+    def __init__(self, base_url="http://localhost:50040/api"):
         self.base_url = base_url
+
+    def users_related_by_anime(self, user_name) :
+        try:
+            response = requests.get(f"{self.base_url}/user/{user_name}/related_by_anime")
+            
+            if response.status_code == 200:
+                return response.json()  # Return the karma value as JSON
+            elif response.status_code == 404:
+                print(f"User '{user_name}' not found.")
+                return None
+            else:
+                print(f"Failed to fetch user related list by animes watched for user '{user_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
 
     def get_user_karma(self, user_name):
         try:
@@ -89,36 +106,10 @@ class UserStatisticsClient:
 if __name__ == "__main__":
     client = UserStatisticsClient()
 
-    # ============================== Get user ==============================
-    user_name = "john_doe"
-    user = client.GetUserByName(user_name)
-    if user:
-        print(f"\nUser details for '{user_name}':")
-        print(user)
-        
-    # ============================== Get user list ==============================
-    user_list = client.GetAllUsers()
-    if user_list:
-        print("\nUser list:")
-        for user in user_list:
-            print(user)
+    # ============================= Related Users by Anime ============================
 
-    # ============================== Get user karma ==============================
-    user_name = "john_doe"
-    karma = client.get_user_karma(user_name)
-    if karma:
-        print(f"Karma for user '{user_name}': {karma}")
+    user_name = "JohnDoe"
+    user_list = client.users_related_by_anime(user_name)
+    print (user_list)
 
-    # ============================== Get most used topics ==============================
-    most_used_topics = client.get_most_used_topics(user_name)
-    if most_used_topics:
-        print(f"\nMost used topics for user '{user_name}':")
-        for topic in most_used_topics:
-            print(topic)
 
-    # ============================== Get top 10 animes ==============================
-    top10_animes = client.get_top10_animes(user_name)
-    if top10_animes:
-        print(f"\nTop 10 animes for user '{user_name}':")
-        for anime in top10_animes:
-            print(anime)
