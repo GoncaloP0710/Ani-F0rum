@@ -21,14 +21,45 @@ def all_topics():
         request = Publisher_pb2.GetTopicsRequestPub() # Create a request
         
         try:  # Make the request
+            print("Processing a GetTopics request")
             response = stub.GetTopics(request)
-            for topic in response.topics:
-                print("Topic: " + topic)
-            return [topic for topic in response.topics]  # Return the list of animes as JSON
+            print("Got the response")
+
+            print("Returning the response")
+            return [
+                {
+                    "name": topic.topicname,
+                    "subscribers": [
+                        {
+                            "name": subscriber.name
+                        }
+                        for subscriber in topic.subscribers
+                    ],
+                    "publications": [
+                        {
+                            "name": publication.name,
+                            "topic_name": publication.topicname,
+                            "message": {
+                                "username": publication.message.username,
+                                "content": publication.message.content
+                            },
+                            "images": {
+                                "name": publication.images.name,
+                                "username": publication.images.username
+                            }
+                        }
+                        for publication in topic.publications
+                    ]
+                }
+                for topic in response.topics
+            ]
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def create(topicname):
+def create(topic):
+
+    topicname = topic.get('name')
+    print(topicname)
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
