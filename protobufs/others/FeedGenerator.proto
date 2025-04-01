@@ -1,6 +1,6 @@
 syntax = "proto3";
-import "protobufs/Common/User.proto";
-import "protobufs/Common/Topic.proto";
+import "Common/User.proto";
+import "Common/Topic.proto";
 
 message FeedRequest{
     string user_name = 1;

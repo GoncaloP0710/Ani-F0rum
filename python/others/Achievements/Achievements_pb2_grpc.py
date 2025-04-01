@@ -6,7 +6,7 @@ import warnings
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-import python.others.Achievements.Achievements_pb2 as protobufs_dot_others_dot_Achievements__pb2
+import python.others.Achievements.Achievements_pb2 as others_dot_Achievements__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -21,7 +21,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in protobufs/others/Achievements_pb2_grpc.py depends on'
+        + f' but the generated code in others/Achievements_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -39,18 +39,18 @@ class AchievementsControllerStub(object):
         """
         self.GetAchivementList = channel.unary_unary(
                 '/AchievementsController/GetAchivementList',
-                request_serializer=protobufs_dot_others_dot_Achievements__pb2.AchievementListRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_Achievements__pb2.AchievementListResponse.FromString,
+                request_serializer=others_dot_Achievements__pb2.AchievementListRequest.SerializeToString,
+                response_deserializer=others_dot_Achievements__pb2.AchievementListResponse.FromString,
                 _registered_method=True)
         self.GetAchievement = channel.unary_unary(
                 '/AchievementsController/GetAchievement',
-                request_serializer=protobufs_dot_others_dot_Achievements__pb2.AchievementRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_Achievements__pb2.AchievementResponse.FromString,
+                request_serializer=others_dot_Achievements__pb2.AchievementRequest.SerializeToString,
+                response_deserializer=others_dot_Achievements__pb2.AchievementResponse.FromString,
                 _registered_method=True)
         self.UpdateAchievement = channel.unary_unary(
                 '/AchievementsController/UpdateAchievement',
-                request_serializer=protobufs_dot_others_dot_Achievements__pb2.UpdateRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_Achievements__pb2.UpdateResponse.FromString,
+                request_serializer=others_dot_Achievements__pb2.UpdateRequest.SerializeToString,
+                response_deserializer=others_dot_Achievements__pb2.UpdateResponse.FromString,
                 _registered_method=True)
 
 
@@ -80,18 +80,18 @@ def add_AchievementsControllerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAchivementList': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAchivementList,
-                    request_deserializer=protobufs_dot_others_dot_Achievements__pb2.AchievementListRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_Achievements__pb2.AchievementListResponse.SerializeToString,
+                    request_deserializer=others_dot_Achievements__pb2.AchievementListRequest.FromString,
+                    response_serializer=others_dot_Achievements__pb2.AchievementListResponse.SerializeToString,
             ),
             'GetAchievement': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAchievement,
-                    request_deserializer=protobufs_dot_others_dot_Achievements__pb2.AchievementRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_Achievements__pb2.AchievementResponse.SerializeToString,
+                    request_deserializer=others_dot_Achievements__pb2.AchievementRequest.FromString,
+                    response_serializer=others_dot_Achievements__pb2.AchievementResponse.SerializeToString,
             ),
             'UpdateAchievement': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateAchievement,
-                    request_deserializer=protobufs_dot_others_dot_Achievements__pb2.UpdateRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_Achievements__pb2.UpdateResponse.SerializeToString,
+                    request_deserializer=others_dot_Achievements__pb2.UpdateRequest.FromString,
+                    response_serializer=others_dot_Achievements__pb2.UpdateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -119,8 +119,8 @@ class AchievementsController(object):
             request,
             target,
             '/AchievementsController/GetAchivementList',
-            protobufs_dot_others_dot_Achievements__pb2.AchievementListRequest.SerializeToString,
-            protobufs_dot_others_dot_Achievements__pb2.AchievementListResponse.FromString,
+            others_dot_Achievements__pb2.AchievementListRequest.SerializeToString,
+            others_dot_Achievements__pb2.AchievementListResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -146,8 +146,8 @@ class AchievementsController(object):
             request,
             target,
             '/AchievementsController/GetAchievement',
-            protobufs_dot_others_dot_Achievements__pb2.AchievementRequest.SerializeToString,
-            protobufs_dot_others_dot_Achievements__pb2.AchievementResponse.FromString,
+            others_dot_Achievements__pb2.AchievementRequest.SerializeToString,
+            others_dot_Achievements__pb2.AchievementResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -173,8 +173,8 @@ class AchievementsController(object):
             request,
             target,
             '/AchievementsController/UpdateAchievement',
-            protobufs_dot_others_dot_Achievements__pb2.UpdateRequest.SerializeToString,
-            protobufs_dot_others_dot_Achievements__pb2.UpdateResponse.FromString,
+            others_dot_Achievements__pb2.UpdateRequest.SerializeToString,
+            others_dot_Achievements__pb2.UpdateResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -6,7 +6,7 @@ import warnings
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-import python.others.FeedGenerator.FeedGenerator_pb2 as protobufs_dot_others_dot_FeedGenerator__pb2
+import python.others.FeedGenerator.FeedGenerator_pb2 as others_dot_FeedGenerator__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -21,7 +21,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in protobufs/others/FeedGenerator_pb2_grpc.py depends on'
+        + f' but the generated code in others/FeedGenerator_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -39,13 +39,13 @@ class FeedGeneratorServiceStub(object):
         """
         self.GetFeed = channel.unary_unary(
                 '/FeedGeneratorService/GetFeed',
-                request_serializer=protobufs_dot_others_dot_FeedGenerator__pb2.FeedRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_FeedGenerator__pb2.FeedResponse.FromString,
+                request_serializer=others_dot_FeedGenerator__pb2.FeedRequest.SerializeToString,
+                response_deserializer=others_dot_FeedGenerator__pb2.FeedResponse.FromString,
                 _registered_method=True)
         self.GetTopicFeed = channel.unary_unary(
                 '/FeedGeneratorService/GetTopicFeed',
-                request_serializer=protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedRequest.SerializeToString,
-                response_deserializer=protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedResponse.FromString,
+                request_serializer=others_dot_FeedGenerator__pb2.TopicFeedRequest.SerializeToString,
+                response_deserializer=others_dot_FeedGenerator__pb2.TopicFeedResponse.FromString,
                 _registered_method=True)
 
 
@@ -69,13 +69,13 @@ def add_FeedGeneratorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetFeed': grpc.unary_unary_rpc_method_handler(
                     servicer.GetFeed,
-                    request_deserializer=protobufs_dot_others_dot_FeedGenerator__pb2.FeedRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_FeedGenerator__pb2.FeedResponse.SerializeToString,
+                    request_deserializer=others_dot_FeedGenerator__pb2.FeedRequest.FromString,
+                    response_serializer=others_dot_FeedGenerator__pb2.FeedResponse.SerializeToString,
             ),
             'GetTopicFeed': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTopicFeed,
-                    request_deserializer=protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedRequest.FromString,
-                    response_serializer=protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedResponse.SerializeToString,
+                    request_deserializer=others_dot_FeedGenerator__pb2.TopicFeedRequest.FromString,
+                    response_serializer=others_dot_FeedGenerator__pb2.TopicFeedResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -103,8 +103,8 @@ class FeedGeneratorService(object):
             request,
             target,
             '/FeedGeneratorService/GetFeed',
-            protobufs_dot_others_dot_FeedGenerator__pb2.FeedRequest.SerializeToString,
-            protobufs_dot_others_dot_FeedGenerator__pb2.FeedResponse.FromString,
+            others_dot_FeedGenerator__pb2.FeedRequest.SerializeToString,
+            others_dot_FeedGenerator__pb2.FeedResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -130,8 +130,8 @@ class FeedGeneratorService(object):
             request,
             target,
             '/FeedGeneratorService/GetTopicFeed',
-            protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedRequest.SerializeToString,
-            protobufs_dot_others_dot_FeedGenerator__pb2.TopicFeedResponse.FromString,
+            others_dot_FeedGenerator__pb2.TopicFeedRequest.SerializeToString,
+            others_dot_FeedGenerator__pb2.TopicFeedResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -1,25 +1,34 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
 import random
 from concurrent import futures
 
 import grpc
-import FeedGenerator_pb2_grpc
+from python.others.FeedGenerator.FeedGenerator_pb2_grpc import(
+    FeedGeneratorServiceStub,
+    FeedGeneratorServiceServicer,
+    add_FeedGeneratorServiceServicer_to_server
+)
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from FeedGenerator_pb2 import (
-    FeedRequest,
+from python.others.FeedGenerator.FeedGenerator_pb2 import (
     FeedResponse,
-    TopicFeedRequest,
     TopicFeedResponse,
+)
+from python.repository.User.UserRepository_pb2_grpc import (
+    UserRepositoryStub
 )
 
 from python.repository.User import UserRepository_pb2_grpc as ur_grpc
 from python.repository.User import UserRepository_pb2 as ur_pb2
 
-class FeedGenerator(FeedGenerator_pb2_grpc.AchievementsServicer):
+class FeedGenerator(FeedGeneratorServiceServicer):
 
     def __init__(self):
         self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
-        self.user_stub = FeedGenerator_pb2_grpc.FeedGeneratorService(self.user_channel)
+        self.user_stub = UserRepositoryStub(self.user_channel)
 
 
     def GetFeed(self, request, context):
@@ -46,7 +55,7 @@ def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10), interceptors=interceptors
     )
-    FeedGenerator_pb2_grpc.add_FeedGeneratorServicer_to_server(
+    add_FeedGeneratorServiceServicer_to_server(
         FeedGenerator(), server
     )
 
