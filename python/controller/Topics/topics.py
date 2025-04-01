@@ -18,7 +18,7 @@ def all_topics():
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
-        request = Publisher_pb2.GetTopicsRequest() # Create a request
+        request = Publisher_pb2.GetTopicsRequestPub() # Create a request
         
         try:  # Make the request
             response = stub.GetTopics(request)
@@ -27,6 +27,51 @@ def all_topics():
             return [topic for topic in response.topics]  # Return the list of animes as JSON
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
+
+def create(topicname):
+
+    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+        stub = Publisher_pb2_grpc.PublisherStub(channel)
+        request = Publisher_pb2.CreateTopicRequestPub(topicname=topicname) # Create a request
+        
+        try:  # Make the request
+            response = stub.CreateTopic(request)
+            print("Topic Created: " + response.topicname)
+            return response.topicname  # Return the list of animes as JSON
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def get_topic(topicname):
+
+    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+        stub = Publisher_pb2_grpc.PublisherStub(channel)
+        request = Publisher_pb2.GetTopicRequestPub(topicname=topicname) # Create a request
+        
+        try:  # Make the request
+            response = stub.GetTopic(request)
+            print("Topic: " + response.topic)
+            return response.topic  # Return the list of animes as JSON
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def publish(topicname, publicationname, username, content):
+
+    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+        stub = Publisher_pb2_grpc.PublisherStub(channel)
+        request = Publisher_pb2.PublishInTopicRequestPub() # Create a request
+        
+        try:  # Make the request
+            response = stub.Publish(request)
+            print("Published: " + respose.publicationname)
+            return respose.publicationname  # Return the list of animes as JSON
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+def get_user_personalized():
+    ...
+
+def get_user_personalized_feed():
+    ...
 
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50060)
