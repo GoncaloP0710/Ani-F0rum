@@ -327,7 +327,8 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 
 ---
 
-**Run Topic related operations**
+### **Run Topic related operations**
+
 Open the repository microservice for topics.
 ```python
   python python/repository/Topic/topic.py
@@ -348,8 +349,9 @@ Open the client that tests the topic controller.
   python python/Tests/TopicRelated/client.py
 ```
 
+---
 
-**Run Anime related operations**
+### **Run Anime related operations**
   
 Open the repository microservice for animes.
 ```python
@@ -369,4 +371,28 @@ Open the controller related to anime operations.
 Open the client that tests the anime controller.
 ```python
   python python/Tests/AnimeRelated/client.py
+```
+
+---
+
+### **Run User related operations**
+  
+Open the repository microservice for users.
+```python
+  python python/repository/User/user_repository.py
+```
+
+Open the user recommendations microservice. (connection between the controller and the repository)
+```python
+  python python/others/UserRecommendations/user_recommendations.py
+```
+
+Open the controller related to user operations.
+```python
+  python python/controller/Users/user_controller.py
+```
+
+Open the client that tests the user controller.
+```python
+  python python/Tests/UserRelated/client.py
 ```
