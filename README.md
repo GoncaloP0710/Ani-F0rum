@@ -251,8 +251,15 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 
 ## Tests Preview
 
-<img src="/README_Files/AnimeTests.png" alt="plot" width="400"/>
-<img src="/README_Files/User.png" alt="plot" width="400"/>
+<div align="center">
+  <img src="/README_Files/AnimeTests.png" alt="plot" width="500"/>
+  <p><em>Figure: Anime related Test Results</em></p>
+</div>
+
+<div align="center">
+  <img src="/README_Files/User.png" alt="plot" width="500"/>
+  <p><em>Figure: User related Test Results</em></p>
+</div>
 
 ---
 
