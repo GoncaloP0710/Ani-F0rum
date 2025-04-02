@@ -1,61 +1,151 @@
-# Cloud Computing Project
+# Ani-F-rum Project
 
-# Authors
+## Authors
 
 - André Reis - fc58192
 - Daniel Nunes - fc58257
 - Diogo Almeida - fc64854
 - Gonçalo Pinto - fc58178
 
-# Project overview
+## Overview
+
+Ani-F-rum is a cloud-based application designed to create an anime forum with a built-in social network. It provides REST and gRPC APIs for managing users, anime, topics, and recommendations. The project integrates multiple microservices to handle various functionalities such as user management, anime recommendations, topic discussions, and achievements.
+
+---
+
+## Architecture
+
+The project is built using a microservices architecture, with each service responsible for a specific domain. Communication between services is achieved using gRPC, while REST APIs are exposed for external interaction.
+
+---
+
+## REST APIs
+
+### User REST API
+- **File**: [`python/controller/Users/swagger.yml`](python/controller/Users/swagger.yml)
+- **Description**: Manages user-related operations such as creating users, retrieving user details, and managing achievements.
+- **Endpoints**:
+  - `/user`: Create a new user.
+  - `/user/{user_name}/related_by_anime`: Get users related by anime preferences.
+  - `/user/{user_name}/related_by_message`: Get users related by messages.
+  - `/user/{user_name}/achievements`: Retrieve user achievements.
+  - `/user/{user_name}/{achievement_name}`: Add an achievement to a user.
+  - `/user/{user_name}/karma`: Retrieve user karma.
+  - `/user/{user_name}/track_records`: Retrieve user track records.
+  - `/user/{user_name}/messages`: Retrieve user messages.
+  - `/user/{user_name}/recomended_animeList`: Get recommended anime for a user.
+
+### Anime REST API
+- **File**: [`python/controller/Anime/swagger.yml`](python/controller/Anime/swagger.yml)
+- **Description**: Manages anime-related operations such as retrieving anime details and recommendations.
+- **Endpoints**:
+  - `/anime`: Retrieve a list of all anime.
+  - `/anime/anime_name/{anime_name}`: Retrieve details of a specific anime.
+  - `/anime/anime_name/{anime_name}/related`: Retrieve related anime.
+
+---
+
+## gRPC Services
+
+### UserRecommendations Service
+- **File**: [`protobufs/others/UserRecommendations.proto`](protobufs/others/UserRecommendations.proto)
+- **Description**: Provides recommendations for users based on anime preferences, messages, and topics.
+- **Methods**:
+  - `GetUsersRelatedByAnime`: Retrieve users related by anime preferences.
+  - `GetUsersRelatedByMessage`: Retrieve users related by messages.
+  - `GetUsersRelatedByTopics`: Retrieve users related by topics.
+  - `GetRecomendedAnimeListByTopics`: Retrieve recommended anime based on topics.
+
+### AnimeList Service
+- **File**: [`protobufs/others/AnimeList.proto`](protobufs/others/AnimeList.proto)
+- **Description**: Handles anime data retrieval and recommendations.
+- **Methods**:
+  - `GetAllAnimes`: Retrieve all anime.
+  - `GetAnimeByName`: Retrieve details of a specific anime.
+  - `GetMultipleAnimeByName`: Retrieve details of multiple anime.
+  - `GetSimilarAnime`: Retrieve similar anime.
+  - `GetRecomendedAnimeList`: Retrieve recommended anime for a user.
+
+### AnimeRepository Service
+- **File**: [`protobufs/repository/AnimeRepository.proto`](protobufs/repository/AnimeRepository.proto)
+- **Description**: Interacts with the database to fetch anime data.
+- **Methods**:
+  - `Animes`: Retrieve all anime.
+  - `AnimeByName`: Retrieve details of a specific anime.
+  - `MultipleAnimeByName`: Retrieve details of multiple anime.
+  - `AnimeRelatedByGenre`: Retrieve anime by genre.
+
+### UserRepository Service
+- **File**: [`protobufs/repository/UserRepository.proto`](protobufs/repository/UserRepository.proto)
+- **Description**: Interacts with the database to fetch user data.
+- **Methods**:
+  - `GetUser`: Retrieve details of a specific user.
+  - `GetAllUsers`: Retrieve all users.
+  - `GetUsersThatWatchedAnime`: Retrieve users who watched specific anime.
+  - `UpdateUser`: Update user details.
+
+---
+
+## Common Protobuf Definitions
+
+### Anime
+- **File**: [`protobufs/Common/Anime.proto`](protobufs/Common/Anime.proto)
+- **Description**: Defines the structure of an anime object.
+- **Fields**:
+  - `name`: Name of the anime.
+  - `genres`: List of genres.
+  - `episodes`: Number of episodes.
+  - `score`: Rating score.
+  - `aired`: Airing date.
+  - `synopsis`: Synopsis of the anime.
+
+### User
+- **File**: [`protobufs/Common/User.proto`](protobufs/Common/User.proto)
+- **Description**: Defines the structure of a user object.
+- **Fields**:
+  - `user_name`: Username.
+  - `password`: Password.
+  - `location`: User location.
+  - `animes_watched`: List of watched anime.
+  - `anime_watched_score`: Scores for watched anime.
+  - `topics_subscribed`: Subscribed topics.
+  - `karma`: User karma points.
+  - `achievements`: List of achievements.
+
+---
+
+## Controllers
+
+### User Controller
+- **File**: [`python/controller/Users/user_controller.py`](python/controller/Users/user_controller.py)
+- **Description**: Implements the logic for user-related REST endpoints.
+- **Key Functions**:
+  - `get_related_by_anime`: Retrieves users related by anime preferences.
+  - `all_users`: Retrieves all users.
+  - `get_user`: Retrieves details of a specific user.
+  - `get_karma`: Retrieves user karma.
+  - `top10Anime`: Retrieves the top 10 anime for a user.
+  - `list_topics`: Retrieves the most used topics.
+
+### Anime Controller
+- **File**: [`python/controller/Anime/anime_controller.py`](python/controller/Anime/anime_controller.py)
+- **Description**: Implements the logic for anime-related REST endpoints.
+- **Key Functions**:
+  - `all_anime`: Retrieves all anime.
+  - `get_anime`: Retrieves details of a specific anime.
+  - `get_similar_anime`: Retrieves similar anime.
+
+---
 
 ## Dataset
 
-We will use the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmobile/myanimelist-dataset) for this project. This dataset contains comprehensive information about various anime, including titles, genres, ratings, and more.
+The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmobile/myanimelist-dataset) for anime-related data. The dataset includes titles, genres, ratings, and more.
 
-Each member of the group will work on different functionalities based on this dataset.
+---
 
-The dataset was created on 28/07/2023 and is composed by these next parts:
-- anime-filtered.csv(9.72 MB)
-- users-details-2023.csv(73.93 MB)
-- users-score-2023.csv(1.16 GB)
+## How to Run
 
-## Business capabilities
-
-- Create an anime forum with a built-in social network based on each user's topics of interest.
-- Recommendation system for both single animes and the entire profile of a user.
-
-## Use cases 
-
-### André Reis
-
-- account achievements.
-- post related track records (ex: Github contribution graphs).
-- general feed personalized by interests (ex: Twitter).
-- interest topic analisys for users.
-- Implement gRPC for efficient communication between microservices.
-
-### Daniel Nunes
-
-- Create a list of the most used topics for the user.
-- "Karma" system per user like the "Reddit" application in which you receive points according to your contribution to the forum.
-- Search anime by genre.
-- Recommendation of anime based on the user's topics of interest analisys. 
-- Implement authentication and authorization for secure access to the services.
-
-### Diogo Almeida
-
-- create topics that do not exist on the forum.
-- publish a message or image in a specific topic.
-- send the image for keyword generation.
-- search image by keyword.
-- dns lookup for the server.
-- implement elasticity in the server microservice and label generation microservice.
-
-### Goncalo Pinto
-
-- link users based on their anime preferences. Using the data from the dataset.
-- link users based on their messages. Using "keywords" to do such thing.
-- recomendation system for a specific anime. Based on a anime, the app will generate a list of other tv shows with the samme style.
-- notification system for different events of the application.
-- Set up a message queue (e.g., RabitMQ or Kafka) for asynchronous processing.
+1. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+```
