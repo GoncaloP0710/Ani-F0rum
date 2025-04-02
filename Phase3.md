@@ -34,12 +34,21 @@ Searching images by label
 ## Diogo Almeida
 
 ### create topics that do not exist on the forum
+- Add a new topic to the already existing topics
+- Get all the topics that exist
+- Get a specific topic by its name
 
 ### publish a message or image in a specific topic
+- Add the publication to a specific topic
+- Subscribe a user to a topic
+- Get all the subscribers from a specific topic
 
 ### send the image for keyword generation
+- Discover Vision API features
+- Use Vision API to generates keywords to a certain image
 
 ### search image by keyword
+- Get image names by using a keyword
 
 ## Goncalo Pinto
 
