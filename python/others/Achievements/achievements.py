@@ -14,7 +14,6 @@ from python.others.Achievements.Achievements_pb2_grpc import(
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 from python.others.Achievements.Achievements_pb2 import (
-    Achievement,
     AchievementListResponse,
     AchievementResponse,
     UpdateResponse,

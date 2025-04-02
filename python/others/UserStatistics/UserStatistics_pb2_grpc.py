@@ -3,7 +3,6 @@
 import grpc
 import warnings
 
-
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
@@ -40,8 +39,8 @@ class UserStatisticsServiceStub(object):
         """
         self.GetMostUsedTopics = channel.unary_unary(
                 '/UserStatisticsService/GetMostUsedTopics',
-                request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
-                response_deserializer=others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.MostUsedTopicsRequest.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.MostUsedTopicsResponse.FromString,
                 _registered_method=True)
         self.GetTop10 = channel.unary_unary(
                 '/UserStatisticsService/GetTop10',
@@ -50,7 +49,7 @@ class UserStatisticsServiceStub(object):
                 _registered_method=True)
         self.GetUserKarma = channel.unary_unary(
                 '/UserStatisticsService/GetUserKarma',
-                request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
+                request_serializer=others_dot_UserStatistics__pb2.KarmaRequest.SerializeToString,
                 response_deserializer=others_dot_UserStatistics__pb2.KarmaResponse.FromString,
                 _registered_method=True)
         self.GetAllUsers = channel.unary_unary(
@@ -104,8 +103,8 @@ def add_UserStatisticsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetMostUsedTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMostUsedTopics,
-                    request_deserializer=others_dot_UserStatistics__pb2.Empty.FromString,
-                    response_serializer=others_dot_UserStatistics__pb2.MostUsedTopics.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.MostUsedTopicsRequest.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.MostUsedTopicsResponse.SerializeToString,
             ),
             'GetTop10': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTop10,
@@ -114,7 +113,7 @@ def add_UserStatisticsServiceServicer_to_server(servicer, server):
             ),
             'GetUserKarma': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUserKarma,
-                    request_deserializer=others_dot_UserStatistics__pb2.Empty.FromString,
+                    request_deserializer=others_dot_UserStatistics__pb2.KarmaRequest.FromString,
                     response_serializer=others_dot_UserStatistics__pb2.KarmaResponse.SerializeToString,
             ),
             'GetAllUsers': grpc.unary_unary_rpc_method_handler(
@@ -153,8 +152,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetMostUsedTopics',
-            others_dot_UserStatistics__pb2.Empty.SerializeToString,
-            others_dot_UserStatistics__pb2.MostUsedTopics.FromString,
+            others_dot_UserStatistics__pb2.MostUsedTopicsRequest.SerializeToString,
+            others_dot_UserStatistics__pb2.MostUsedTopicsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -207,7 +206,7 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetUserKarma',
-            others_dot_UserStatistics__pb2.Empty.SerializeToString,
+            others_dot_UserStatistics__pb2.KarmaRequest.SerializeToString,
             others_dot_UserStatistics__pb2.KarmaResponse.FromString,
             options,
             channel_credentials,

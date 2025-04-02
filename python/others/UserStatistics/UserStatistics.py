@@ -12,8 +12,10 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 from UserStatistics_pb2 import (
     Top10_Response,
-    MostUsedTopics,
+    MostUsedTopicsResponse,
+    MostUsedTopicsRequest,
     KarmaResponse,
+    KarmaRequest,
     GetAllUsersResponse,
     GetUserByNameResponse,
 )
@@ -66,7 +68,7 @@ class UserStatistics(UserStatisticsService):
 
         sorted_topics = sorted(topic_usage.items(), key=lambda x: x[1], reverse=True)
 
-        return MostUsedTopics(sorted_topics[:10])
+        return MostUsedTopicsResponse(sorted_topics[:10])
     
     def GetUserKarma(self, request, context):
 

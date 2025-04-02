@@ -24,12 +24,12 @@ _sym_db = _symbol_database.Default()
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-from python.Common import Anime_pb2 as Common_dot_Anime__pb2
-from python.Common import User_pb2 as Common_dot_User__pb2
+from python.Common import Anime_pb2 as Common_dot_Animepb2
+from python.Common import User_pb2 as Common_dot_Userpb2
 from python.Common import Topic_pb2 as Common_dot_Topic__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bothers/UserStatistics.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\x1a\x12\x43ommon/Topic.proto\"\x07\n\x05\x45mpty\"2\n\x0eMostUsedTopics\x12 \n\x10most_used_topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\"\n\rTop10_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x0eTop10_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"$\n\rKarmaResponse\x12\x13\n\x0bkarma_Value\x18\x01 \x01(\x05\",\n\x15GetUserByNameResponse\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\")\n\x14GetUserByNameRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"+\n\x13GetAllUsersResponse\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\x87\x02\n\x15UserStatisticsService\x12,\n\x11GetMostUsedTopics\x12\x06.Empty\x1a\x0f.MostUsedTopics\x12+\n\x08GetTop10\x12\x0e.Top10_Request\x1a\x0f.Top10_Response\x12&\n\x0cGetUserKarma\x12\x06.Empty\x1a\x0e.KarmaResponse\x12+\n\x0bGetAllUsers\x12\x06.Empty\x1a\x14.GetAllUsersResponse\x12>\n\rGetUserByName\x12\x15.GetUserByNameRequest\x1a\x16.GetUserByNameResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bothers/UserStatistics.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\x1a\x12\x43ommon/Topic.proto\"\x07\n\x05\x45mpty\"*\n\x15MostUsedTopicsRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\":\n\x16MostUsedTopicsResponse\x12 \n\x10most_used_topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\"\n\rTop10_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x0eTop10_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"!\n\x0cKarmaRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"$\n\rKarmaResponse\x12\x13\n\x0bkarma_Value\x18\x01 \x01(\x05\",\n\x15GetUserByNameResponse\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\")\n\x14GetUserByNameRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"+\n\x13GetAllUsersResponse\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\xa6\x02\n\x15UserStatisticsService\x12\x44\n\x11GetMostUsedTopics\x12\x16.MostUsedTopicsRequest\x1a\x17.MostUsedTopicsResponse\x12+\n\x08GetTop10\x12\x0e.Top10_Request\x1a\x0f.Top10_Response\x12-\n\x0cGetUserKarma\x12\r.KarmaRequest\x1a\x0e.KarmaResponse\x12+\n\x0bGetAllUsers\x12\x06.Empty\x1a\x14.GetAllUsersResponse\x12>\n\rGetUserByName\x12\x15.GetUserByNameRequest\x1a\x16.GetUserByNameResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,20 +38,24 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_EMPTY']._serialized_start=90
   _globals['_EMPTY']._serialized_end=97
-  _globals['_MOSTUSEDTOPICS']._serialized_start=99
-  _globals['_MOSTUSEDTOPICS']._serialized_end=149
-  _globals['_TOP10_REQUEST']._serialized_start=151
-  _globals['_TOP10_REQUEST']._serialized_end=185
-  _globals['_TOP10_RESPONSE']._serialized_start=187
-  _globals['_TOP10_RESPONSE']._serialized_end=227
-  _globals['_KARMARESPONSE']._serialized_start=229
-  _globals['_KARMARESPONSE']._serialized_end=265
-  _globals['_GETUSERBYNAMERESPONSE']._serialized_start=267
-  _globals['_GETUSERBYNAMERESPONSE']._serialized_end=311
-  _globals['_GETUSERBYNAMEREQUEST']._serialized_start=313
-  _globals['_GETUSERBYNAMEREQUEST']._serialized_end=354
-  _globals['_GETALLUSERSRESPONSE']._serialized_start=356
-  _globals['_GETALLUSERSRESPONSE']._serialized_end=399
-  _globals['_USERSTATISTICSSERVICE']._serialized_start=402
-  _globals['_USERSTATISTICSSERVICE']._serialized_end=665
+  _globals['_MOSTUSEDTOPICSREQUEST']._serialized_start=99
+  _globals['_MOSTUSEDTOPICSREQUEST']._serialized_end=141
+  _globals['_MOSTUSEDTOPICSRESPONSE']._serialized_start=143
+  _globals['_MOSTUSEDTOPICSRESPONSE']._serialized_end=201
+  _globals['_TOP10_REQUEST']._serialized_start=203
+  _globals['_TOP10_REQUEST']._serialized_end=237
+  _globals['_TOP10_RESPONSE']._serialized_start=239
+  _globals['_TOP10_RESPONSE']._serialized_end=279
+  _globals['_KARMAREQUEST']._serialized_start=281
+  _globals['_KARMAREQUEST']._serialized_end=314
+  _globals['_KARMARESPONSE']._serialized_start=316
+  _globals['_KARMARESPONSE']._serialized_end=352
+  _globals['_GETUSERBYNAMERESPONSE']._serialized_start=354
+  _globals['_GETUSERBYNAMERESPONSE']._serialized_end=398
+  _globals['_GETUSERBYNAMEREQUEST']._serialized_start=400
+  _globals['_GETUSERBYNAMEREQUEST']._serialized_end=441
+  _globals['_GETALLUSERSRESPONSE']._serialized_start=443
+  _globals['_GETALLUSERSRESPONSE']._serialized_end=486
+  _globals['_USERSTATISTICSSERVICE']._serialized_start=489
+  _globals['_USERSTATISTICSSERVICE']._serialized_end=783
 # @@protoc_insertion_point(module_scope)

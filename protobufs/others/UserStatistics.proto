@@ -5,7 +5,11 @@ import "Common/Topic.proto";
 
 message Empty {}
 
-message MostUsedTopics {
+message MostUsedTopicsRequest {
+    string user_name = 1;
+}
+
+message MostUsedTopicsResponse {
     repeated Topic most_used_topics = 1;
 }
 
@@ -15,6 +19,10 @@ message Top10_Request{
 
 message Top10_Response{
     repeated Anime animes = 1;
+}
+
+message KarmaRequest {
+    string user_name = 1;
 }
 
 message KarmaResponse {
@@ -34,9 +42,9 @@ message GetAllUsersResponse {
 }
 
 service UserStatisticsService {
-    rpc GetMostUsedTopics (Empty) returns (MostUsedTopics); //Prob broken
+    rpc GetMostUsedTopics (MostUsedTopicsRequest) returns (MostUsedTopicsResponse); //Prob broken
     rpc GetTop10 (Top10_Request) returns (Top10_Response);
-    rpc GetUserKarma (Empty) returns (KarmaResponse);
+    rpc GetUserKarma (KarmaRequest) returns (KarmaResponse);
     rpc GetAllUsers (Empty) returns (GetAllUsersResponse);
     rpc GetUserByName (GetUserByNameRequest) returns (GetUserByNameResponse);
 }
