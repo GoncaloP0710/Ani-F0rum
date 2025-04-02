@@ -208,6 +208,27 @@ This layered architecture ensures modularity, scalability, and maintainability b
   - `topics_subscribed`: Subscribed topics.
   - `karma`: User karma points.
   - `achievements`: List of achievements.
+
+### Topic
+- **File**: [`protobufs/Common/Topic.proto`](protobufs/Common/Topic.proto)
+- **Description**: Defines the structure of a Topic object.
+- **Fields**:
+  - `topicname`: The name of the topic.
+  - `subscribers`: A list of subscribers to the topic, represented as `Subscriber` objects.
+    - **Subscriber Fields**:
+      - `name`: The name of the subscriber.
+  - `publications`: A list of publications in the topic, represented as `Publication` objects.
+    - **Publication Fields**:
+      - `name`: The name of the publication.
+      - `topicname`: The name of the topic the publication belongs to.
+      - `content`: The content of the publication, which can be either:
+        - `Message`: A message object containing:
+          - `username`: The username of the message author.
+          - `content`: The content of the message.
+        - `Image`: An image object containing:
+          - `name`: The name of the image.
+          - `username`: The username of the image uploader.
+
 ---
 
 ## Controllers
