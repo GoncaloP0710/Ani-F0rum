@@ -39,6 +39,10 @@ def all_anime():
             return {"error": f"RPC failed: {e}"}, 500
         
 def get_anime(anime_name):
+
+    print("===================== Get Anime ====================")
+    print (anime_name)
+
     with grpc.insecure_channel('localhost:50052') as channel:  # Connect to the anime_list server
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
         request = AnimeList_pb2.get_anime_by_name_Request(anime_name=anime_name)  # Create a request

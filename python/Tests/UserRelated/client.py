@@ -112,15 +112,15 @@ if __name__ == "__main__":
     user_list = client.users_related_by_anime(user_name) 
     print (user_list)
 
-    # ============================== Karma ============================
-    user_name = "JohnDoe"
-    karma = client.get_user_karma(user_name)
-    print (karma)
+    # # ============================== Karma ============================
+    # user_name = "JohnDoe"
+    # karma = client.get_user_karma(user_name)
+    # print (karma)
 
-    # ============================== Most Used Topics ============================
-    user_name = "JohnDoe"
-    most_used_topics = client.get_most_used_topics(user_name)
-    print (most_used_topics)
+    # # ============================== Most Used Topics ============================
+    # user_name = "JohnDoe"
+    # most_used_topics = client.get_most_used_topics(user_name)
+    # print (most_used_topics)
 
     
 

@@ -145,6 +145,10 @@ def serve():
     server.add_insecure_port("[::]:50061")
     print('Publisher server running on port 50061')
     server.start()
+
+    print (PublishService().CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname="Test"), None))
+    print (PublishService().GetTopic(TopicRepository_pb2.GetTopicRequest(topicname="Test"), None))
+
     server.wait_for_termination()
 
 if __name__ == "__main__":

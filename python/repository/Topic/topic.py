@@ -97,7 +97,7 @@ class TopicService(TopicRepositoryServicer):
         counter = Counter(anime_names)
         most_used = counter.most_common(1)
         
-        print("Returning the response")
+        print("Returning the response: " + trending_topics)
 
         return MostUsedTopicsResponse(most_used[0][0]) if most_used else NotFound("No topics found")
     
@@ -137,7 +137,7 @@ class TopicService(TopicRepositoryServicer):
 
         print("Returning the response")
 
-        return GetTopicsResponse(topics = self.Topics)
+        return GetTopicsResponse(topics = self.Topics) #if len(topics > 0) else NotFound("No topics found")
     
     def CreateTopic(self, request, context):
 
@@ -147,7 +147,7 @@ class TopicService(TopicRepositoryServicer):
         print("Received response from other micro service")
         res = request.topicname
 
-        self.Topics.append(Topic(topic_name = res, subscribers = [], publications = []))
+        self.Topics.append(Topic(topicname = res, subscribers = [], publications = []))
 
         print("Returning the response")
 
@@ -161,7 +161,11 @@ class TopicService(TopicRepositoryServicer):
 
         micro_service_response = Topic()
         print("Received response from other micro service")
-        topic = self.Topics.get(topic_name)
+        topic = None
+        for t in self.Topics:
+            if t.topicname == topic_name:
+                topic = t
+                break
 
         print("Returning the response")
 
@@ -190,7 +194,7 @@ class TopicService(TopicRepositoryServicer):
                     )
                 )
                  
-        print("Returning the response")
+        print("Returning the response: " + publication_name)
 
         return PublishInTopicResponse(publicationname = publication_name)
     
@@ -217,7 +221,7 @@ class TopicService(TopicRepositoryServicer):
                     )
                 )
                  
-        print("Returning the response")
+        print("Returning the response: " + publication_name)
 
         return PublishInTopicResponse(publicationname = publication_name)
 

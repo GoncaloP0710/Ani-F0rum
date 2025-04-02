@@ -1,45 +1,45 @@
 # Requisitios funcionais
 
-Track users achievements
-Create topics
-Publish messages and images in topics
-Reddit type of karma implementation
-Personalized feed for user
-Recommend animes based on user interests or previously watched anime
-User recomendation based on anime preferences or publications
-Listing most used topics by a user
-Label generation from an image
-Searching images by label
-
 ## André Reis
-
 ### account achievements
-
 ### post related track records (ex: Github contribution graphs)
-
 ### general feed personalized by interests (ex: Twitter)
-
 ### interest topic analisys for users
 
 ## Daniel Nunes
 
 ### Create a list of the most used topics for the user
+- Analyze user activity to determine the most frequently discussed topics.
+- Generate a ranked list of topics based on usage metrics.
 
 ### "Karma" system per user like the "Reddit" application in which you receive points according to your contribution to the forum
+- Assign points to users based on their contributions (posts)
+- Display a user's total karma on their stats
 
 ### Search anime by genre
+- Allow users to filter anime by specific genres.
+- Retrieve a list of anime that matches the selected genre(s). 
 
 ### Recommendation of anime based on the user's topics of interest analisys
+- Analyze user activity to identify topics of interest.
+- Use the identified topics to recommend relevant anime.
 
 ## Diogo Almeida
 
 ### create topics that do not exist on the forum
 - Add a new topic to the already existing topics
+    - The system shall allow users to create a topic with a unique name.
+    - The system shall prevent duplicate topic creation.
+    - The system shall return an error if the topic name already exists.
 - Get all the topics that exist
 - Get a specific topic by its name
+    - The system shall allow users to retrieve details of a specific topic using its name.
+    - If the topic does not exist, the system shall return an appropriate error message.
 
 ### publish a message or image in a specific topic
 - Add the publication to a specific topic
+    - The system shall allow users to publish messages or images in a topic.
+    - The system shall associate each publication with the corresponding topic.
 - Subscribe a user to a topic
 - Get all the subscribers from a specific topic
 
