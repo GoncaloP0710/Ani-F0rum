@@ -58,7 +58,7 @@ class PublishService(PublisherServicer):
     def CreateTopic(self, request, context):
 
         try:
-            response = self.stub.CreateTopic(TopicRepository_pb2.CreateTopicRequest(request.topicname))
+            response = self.stub.CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname=request.topicname))
             return CreateTopicResponsePub(topicname=response.topicname)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
@@ -67,7 +67,7 @@ class PublishService(PublisherServicer):
     def GetTopic(self, request, context):
 
         try:
-            response = self.stub.GetTopic(TopicRepository_pb2.GetTopicRequest(request.topicname))
+            response = self.stub.GetTopic(TopicRepository_pb2.GetTopicRequest(topicname=request.topicname))
             return GetTopicResponsePub(topic=response.topic)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
@@ -145,9 +145,6 @@ def serve():
     server.add_insecure_port("[::]:50061")
     print('Publisher server running on port 50061')
     server.start()
-
-    print(PublishService().GetTopics(None, None))
-
     server.wait_for_termination()
 
 if __name__ == "__main__":

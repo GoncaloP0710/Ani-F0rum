@@ -100,16 +100,18 @@ if __name__ == "__main__":
         for topic in topics:
             print(topic)
 
-    # ============================== Post a new topic ==============================
-    response = client.create_topic()
-    if response:
-        print(f"\nCreated topic : '{topic_name}'")
-        print(response)
-
     # ============================== Get a topic ==============================
     topic = client.get_topic()
     if topic:
-        print('Topic: ' + topic)
+        print('Topic: ')
+        print(topic)
+
+    # From here it doesn't work due to the error identified in "/python/controller/Topics/topics.py"
+    # ============================== Post a new topic ==============================
+    response = client.create_topic()
+    if response:
+        print(f"\nCreated topic : '{response}'")
+        print(response)
     
     # ============================== Post a publication ==============================
     response = client.publish()

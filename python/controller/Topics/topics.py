@@ -23,7 +23,6 @@ def all_topics():
         try:  # Make the request
             print("Processing a GetTopics request")
             response = stub.GetTopics(request)
-            print("Got the response")
 
             print("Returning the response")
             return [
@@ -56,8 +55,13 @@ def all_topics():
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
+# having an error where it doesn't recognize the argument
+#    return function(*args, **kwargs)
+#           ^^^^^^^^^^^^^^^^^^^^^^^^^
+#TypeError: create() missing 1 required positional argument: 'topic'
 def create(topic):
 
+    request.get_data
     topicname = topic.get('name')
     print(topicname)
 
@@ -72,19 +76,47 @@ def create(topic):
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def get_topic(topicname):
+def get_topic(topic_name):
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
-        request = Publisher_pb2.GetTopicRequestPub(topicname=topicname) # Create a request
-        
+        request = Publisher_pb2.GetTopicRequestPub(topicname=topic_name) # Create a request
+
         try:  # Make the request
+            print("Processing a GetTopic request")
             response = stub.GetTopic(request)
-            print("Topic: " + response.topic)
-            return response.topic  # Return the list of animes as JSON
+            print("Returning the response")
+            print(response)
+            topic = response.topic
+            print(topic)
+            return {
+                "name": topic.topicname,
+                "subscribers": [
+                    {
+                        "name": subscriber.name
+                    }
+                    for subscriber in topic.subscribers
+                ],
+                "publications": [
+                    {
+                        "name": publication.name,
+                        "topic_name": publication.topicname,
+                        "message": {
+                            "username": publication.message.username,
+                            "content": publication.message.content
+                        },
+                        "images": {
+                            "name": publication.images.name,
+                            "username": publication.images.username
+                        }
+                    }
+                    for publication in topic.publications
+                ]
+            }
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
+# not tested, stuck in create_topic error
 def publish(topicname, publicationname, username, content):
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
@@ -93,8 +125,8 @@ def publish(topicname, publicationname, username, content):
         
         try:  # Make the request
             response = stub.Publish(request)
-            print("Published: " + respose.publicationname)
-            return respose.publicationname  # Return the list of animes as JSON
+            print("Published: " + response.publicationname)
+            return response.publicationname  # Return the list of animes as JSON
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 

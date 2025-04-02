@@ -97,7 +97,7 @@ class TopicService(TopicRepositoryServicer):
         counter = Counter(anime_names)
         most_used = counter.most_common(1)
         
-        print("Returning the response: " + trending_topics)
+        print("Returning the response")
 
         return MostUsedTopicsResponse(most_used[0][0]) if most_used else NotFound("No topics found")
     
@@ -137,7 +137,7 @@ class TopicService(TopicRepositoryServicer):
 
         print("Returning the response")
 
-        return GetTopicsResponse(topics = self.Topics) #if len(topics > 0) else NotFound("No topics found")
+        return GetTopicsResponse(topics = self.Topics)
     
     def CreateTopic(self, request, context):
 
@@ -149,7 +149,7 @@ class TopicService(TopicRepositoryServicer):
 
         self.Topics.append(Topic(topic_name = res, subscribers = [], publications = []))
 
-        print("Returning the response: " + res)
+        print("Returning the response")
 
         return CreateTopicResponse(topicname = res)
     
@@ -163,7 +163,7 @@ class TopicService(TopicRepositoryServicer):
         print("Received response from other micro service")
         topic = self.Topics.get(topic_name)
 
-        print("Returning the response: " + topic)
+        print("Returning the response")
 
         return GetTopicResponse(topic = topic)
     
@@ -190,7 +190,7 @@ class TopicService(TopicRepositoryServicer):
                     )
                 )
                  
-        print("Returning the response: " + publication_name)
+        print("Returning the response")
 
         return PublishInTopicResponse(publicationname = publication_name)
     
@@ -217,7 +217,7 @@ class TopicService(TopicRepositoryServicer):
                     )
                 )
                  
-        print("Returning the response: " + publication_name)
+        print("Returning the response")
 
         return PublishInTopicResponse(publicationname = publication_name)
 
