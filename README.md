@@ -307,21 +307,21 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 ## How to Run
 
 1. **Enter Venv workspace**
-  ```bash
+  ```python
    python -m venv venv
   ```
-  ```bash
+  ```python
    source venv/bin/activate
   ```
 
 2. **Install Dependencies**:
-  ```bash
+  ```python
    pip install -r requirements.txt
   ```
-  ```bash
+  ```python
    pip install "connexion[flask]"
   ```
-  ```bash
+  ```python
    pip install "connexion[uvicorn]" 
   ```
 
@@ -329,22 +329,22 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 
 **Run Topic related operations**
 Open the repository microservice for topics.
-```bash
+```python
   python python/repository/Topic/topic.py
 ```
 
 Open the publisher microservice. (connection between the controller and the repository)
-```bash
+```python
   python python/others/Publisher/publisher.py
 ```
 
 Open the controller related to topic operations.
-```bash
+```python
   python python/controller/Topics/topics.py
 ```
 
 Open the client that tests the topic controller.
-```bash
+```python
   python python/Tests/TopicRelated/client.py
 ```
 
@@ -352,21 +352,21 @@ Open the client that tests the topic controller.
 **Run Anime related operations**
   
 Open the repository microservice for animes.
-```bash
+```python
   python python/repository/Anime/anime_repository.py
 ```
 
 Open the anime list microservice. (connection between the controller and the repository)
-```bash
+```python
   python python/others/AnimeList/anime_list.py
 ```
 
 Open the controller related to anime operations.
-```bash
+```python
   python python/controller/Anime/anime_controller.py
 ```
 
 Open the client that tests the anime controller.
-```bash
+```python
   python python/Tests/AnimeRelated/client.py
 ```
