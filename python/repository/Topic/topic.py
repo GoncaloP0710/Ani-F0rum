@@ -179,22 +179,34 @@ class TopicService(TopicRepositoryServicer):
         publication_name = request.publicationname
         message = request.message
 
+        print(topic_name)
+        print(publication_name)
+        print(message.username)
+        print(message.content)
+        
+        print('size')
+        print(len(self.Topics))
+
         for topic in self.Topics:
-            if topic.name == topic_name:
+            print(topic.topicname)
+            print(topic_name)
+            if topic.topicname == topic_name:
                 micro_service_response = Topic()
                 print("Received response from other micro service")
                 topic.publications.append(
                     Publication(
                         name = publication_name,
                         topicname = topic_name,
-                        content = Message(
+                        message = Message(
                             username = message.username,
                             content = message.content,
                         )
                     )
                 )
+                break
                  
-        print("Returning the response: " + publication_name)
+        print("Returning the response: ")
+        print(publication_name)
 
         return PublishInTopicResponse(publicationname = publication_name)
     
@@ -214,7 +226,7 @@ class TopicService(TopicRepositoryServicer):
                     Publication(
                         name = publication_name,
                         topicname = topic_name,
-                        content = Image(
+                        images = Image(
                             name = image.name,
                             username = image.username,
                         )

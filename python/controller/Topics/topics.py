@@ -59,14 +59,18 @@ def all_topics():
 #    return function(*args, **kwargs)
 #           ^^^^^^^^^^^^^^^^^^^^^^^^^
 #TypeError: create() missing 1 required positional argument: 'topic'
-def create(topic):
+def create(body):
 
-    request.get_data
-    topicname = topic.get('name')
+    print('Handling a create request')
+
+    topicname = body.get('name')
+    
+    print('Received value')
     print(topicname)
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
+        print('Before request to other micro service')
         request = Publisher_pb2.CreateTopicRequestPub(topicname=topicname) # Create a request
         
         try:  # Make the request
@@ -117,7 +121,14 @@ def get_topic(topic_name):
             return {"error": f"RPC failed: {e}"}, 500
 
 # not tested, stuck in create_topic error
-def publish(topicname, publicationname, username, content):
+def publish(topic_name, body):
+ 
+    publicationname = body.get('name')
+    topicname = body.get('topic_name')
+    username = body.get('message')
+    content = body.get('images')
+
+    # TODO construir o json do lado do cliente
 
     with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)

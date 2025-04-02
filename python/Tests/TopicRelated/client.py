@@ -24,11 +24,19 @@ class TopicClient:
         try:
             topic_name = input('Qual o nome do tópico?\n')
 
+            print('make a create topic request to the controller')
             # Make a POST request to the /topics endpoint
-            response = requests.post(f"{self.base_url}/topics", json={"name": topic_name})
-            
+            response = requests.post(f"{self.base_url}/topics", json={
+                "topic": {
+                    "name": topic_name
+                }
+            })
+
+            print('Got the response:')
+            print(response)
+
             # Check if the response status code is 200 (OK)
-            if response.status_code == 201:
+            if response.status_code >= 200 or response.status_code < 300:
                 return response.json()  # Return the anime details as JSON
             
             # TODO adicionar caso de erro de criação (e.g. já existe)

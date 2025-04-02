@@ -18,7 +18,9 @@ from python.others.Publisher.Publisher_pb2 import (
     GetTopicsResponsePub,
     CreateTopicResponsePub,
     GetTopicResponsePub,
-    PublishInTopicResponsePub
+    PublishInTopicResponsePub,
+    # Requests
+    PublishInTopicRequestPub,
 )
 
 from python.repository.Topic.TopicRepository_pb2_grpc import (
@@ -77,29 +79,56 @@ class PublishService(PublisherServicer):
 
         topic_name = request.topicname
         publication_name = request.publicationname
-        content = request.content
+        message = request.message
+        image = request.image
+
+        print('topicname')
+        print(topic_name)
+        print('publication_name')
+        print(publication_name)
+
+        response = None
 
         try:
-            if isinstance(content, Message):
+            if message != None:
 
                 micro_service_response = Topic()
-                reponse = self.stub.PublishMessage(TopicRepository_pb2.PublishMessage(
-                    topic_name,
-                    publication_name,
-                    content
+    
+                print('message user')
+                print(message.username)
+                print('message content')
+                print(message.content)
+
+                response = self.stub.PublishMessage(TopicRepository_pb2.PublishMessageInTopicRequest(
+                    topicname=topic_name,
+                    publicationname=publication_name,
+                    message=Message(
+                        username=message.username,
+                        content=message.content
+                    )
                 ))
                 
-            elif isinstance(content, Image):
+            elif image != None:
+
+                print('image name')
+                print(image.name)
+                print('image username')
+                print(image.username)
 
                 micro_service_response = Topic()
-                reponse = self.stub.PublishImage(TopicRepository_pb2.PublishImage(
-                    topic_name,
-                    publication_name,
-                    content
+                response = self.stub.PublishImage(TopicRepository_pb2.PublishImageInTopicRequest(
+                    topicname=topic_name,
+                    publicationname=publication_name,
+                    image=Image(
+                        name=image.name,
+                        username=image.username
+                    )
                 ))
         
             else:
                 raise "Invalid content of publication"
+
+            print(response)
 
             return PublishInTopicResponsePub(publicationname=response.publicationname)
         except grpc.RpcError as e:
@@ -148,6 +177,14 @@ def serve():
 
     print (PublishService().CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname="Test"), None))
     print (PublishService().GetTopic(TopicRepository_pb2.GetTopicRequest(topicname="Test"), None))
+    print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Message", message=Message(
+        username="testUser1",
+        content="This is a test"
+    )), None))
+    print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Image", image=Image(
+        name="test image",
+        username="testUser1"
+    )), None))
 
     server.wait_for_termination()
 
