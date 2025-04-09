@@ -96,7 +96,10 @@ class UserRepository_Service(UserRepositoryServicer) :
     def GetUser(self, request, context):
         print("Searching for user with id: ", request.user_name)
         for user in self.Users:
+            print(user.user_name)
             if user.user_name == request.user_name:
+                print("entrou no if")
+                print(user.karma)
                 return get_user_Response(user=user)
         raise NotFound("User not found")
 

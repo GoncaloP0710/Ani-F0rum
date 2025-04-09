@@ -117,10 +117,14 @@ if __name__ == "__main__":
     # karma = client.get_user_karma(user_name)
     # print (karma)
 
-    # # ============================== Most Used Topics ============================
-    # user_name = "JohnDoe"
+    # # # ============================== Most Used Topics ============================
+    # # user_name = "JohnDoe"
     # most_used_topics = client.get_most_used_topics(user_name)
     # print (most_used_topics)
+
+    # ============================== User by name ============================
+    user = client.GetUserByName(user_name)
+    print(user)
 
     
 
