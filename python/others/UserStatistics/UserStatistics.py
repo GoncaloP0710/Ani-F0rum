@@ -12,23 +12,34 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 from UserStatistics_pb2 import (
     Top10_Response,
-    MostUsedTopicsResponse,
-    MostUsedTopicsRequest,
+    MostUsedTopics_Response,
+    MostUsedTopics_Request,
     KarmaResponse,
     KarmaRequest,
     GetAllUsersResponse,
     GetUserByNameResponse,
 )
+
 from python.Common.User_pb2 import (
     Rarity,
     Achievement,
     User
 )
 
+from python.Common.Topic_pb2 import (
+    Subscriber,
+    Message,
+    Image,
+    Publication,
+    Topic,
+)
+
 from python.repository.User import UserRepository_pb2_grpc
 from python.repository.User import UserRepository_pb2 
 from python.repository.Anime import AnimeRepository_pb2_grpc
 from python.repository.Anime import AnimeRepository_pb2 
+from python.repository.Topic import TopicRepository_pb2_grpc
+from python.repository.Topic import TopicRepository_pb2
 
 class UserStatistics(UserStatisticsService):
 
@@ -39,9 +50,13 @@ class UserStatistics(UserStatisticsService):
         self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
         self.anime_stub = AnimeRepository_pb2_grpc.AnimeRepositoryStub(self.anime_channel)
 
+        self.topic_channel = grpc.insecure_channel('localhost:50062')  # Create a channel to the TopicRepository
+        self.topic_stub = TopicRepository_pb2_grpc.TopicRepositoryStub(self.topic_channel)
+
     def GetTop10(self, request, context):
         
-        user = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        response = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
 
@@ -49,63 +64,56 @@ class UserStatistics(UserStatisticsService):
         sorted_dict = sorted(dict_list)[:10]
 
         responseList = self.anime_stub.MultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_names=sorted_dict.values()))
-        if responseList is None:
+        if responseList.animes is None:
             return NotFound("Anime list not found")
 
-        return Top10_Response(responseList)
+        return Top10_Response(animes = responseList.animes)
 
     def GetMostUsedTopics(self, request, context):
         print("GetMostUsedTopics")
 
-        user = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        response = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if not user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
 
-        posts = self.user_stub.GetUserPosts(UserRepository_pb2.get_user_posts_Request(user_name=request.user_name))
-        if not posts:
-            context.abort(grpc.StatusCode.NOT_FOUND, "No posts found for the user")
+         # Dicionário para contar a frequência de tópicos
+        topic_count = {}
 
-        topic_usage = {}
-        for post in posts:
-            for topic in post.topics:
-                if topic not in topic_usage:
-                    topic_usage[topic] = 0
-                topic_usage[topic] += 1
+        # Iterar pelos tópicos do usuário
+        for topic_name in user.topics:
 
-        sorted_topics = sorted(topic_usage.items(), key=lambda x: x[1], reverse=True)
+            response_topic = self.topic_stub.GetTopic(TopicRepository_pb2.GetTopicRequest(topicname=topic_name))
+            topic = response_topic.topic
+            if not topic:
+                context.abort(grpc.StatusCode.NOT_FOUND, "Topic not found")
 
-        return MostUsedTopicsResponse(sorted_topics[:10])
+            for publication in topic.publications:
+                # Verificar se a publicação foi feita pelo usuário
+                if publication.message.username == user.user_name:
+                    topic_name = topic.topicname
+                    if topic_name in topic_count:
+                        topic_count[topic_name] += 1
+                    else:
+                        topic_count[topic_name] = 1
+
+        sorted_topics = sorted(topic_count.items(), key=lambda x: x[1], reverse=True)
+
+        # Retornar os 10 tópicos mais usados
+        top_topics = [topic[0] for topic in sorted_topics[:10]]
+        return MostUsedTopics_Response(most_used_topics=top_topics)
     
     def GetUserKarma(self, request, context):
-        print("GetUserKarma")
-
-        user = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
-        if not user:
+        response = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        if not response.user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
-        print("tem user")
-        print(user.karma)
-        print("a")
-        print(user)
 
-        #user_posts = 
-
-        # topic_popularity = set()
-        # for post in user_posts.posts:
-        #     topic_name = post.topic_name
-        #     if topic_name not in topic_popularity:
-        #         topic_details = self.topic_stub.GetTopic(ur_pb2.get_topic_Request(topic_name=topic_name))
-        #         topic_popularity[topic_name] = len(topic_details.subscribers)
-
-        # karma = 0
-        # for post in user_posts.posts:
-        #     topic_name = post.topic_name
-        #     karma += 1 * topic_popularity.get(topic_name, 1) 
-
-        return KarmaResponse(karma_Value=user.karma)
+        return KarmaResponse(karma_Value=response.user.karma)
         
     def GetAllUsers(self, request, context):
         print("GetAllUsers")
-        user = self.user_stub.GetAllUsers(UserRepository_pb2.get_all_users_Request())
+        response = self.user_stub.GetAllUsers(UserRepository_pb2.get_all_users_Request())
+        user = response.user
         if not user:
             context.abort(grpc.StatusCode.NOT_FOUND, "No users found")
 
@@ -113,11 +121,11 @@ class UserStatistics(UserStatisticsService):
     
     def GetUserByName(self, request, context):
         print("GetUserByName")
-        user = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
-        if not user:
+        response = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
+        if not response.user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
 
-        return GetUserByNameResponse(user=user)
+        return GetUserByNameResponse(user=response.user)
 
 #TODO
 def serve():

@@ -39,8 +39,8 @@ class UserStatisticsServiceStub(object):
         """
         self.GetMostUsedTopics = channel.unary_unary(
                 '/UserStatisticsService/GetMostUsedTopics',
-                request_serializer=others_dot_UserStatistics__pb2.MostUsedTopicsRequest.SerializeToString,
-                response_deserializer=others_dot_UserStatistics__pb2.MostUsedTopicsResponse.FromString,
+                request_serializer=others_dot_UserStatistics__pb2.MostUsedTopics_Request.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.MostUsedTopics_Response.FromString,
                 _registered_method=True)
         self.GetTop10 = channel.unary_unary(
                 '/UserStatisticsService/GetTop10',
@@ -103,8 +103,8 @@ def add_UserStatisticsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetMostUsedTopics': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMostUsedTopics,
-                    request_deserializer=others_dot_UserStatistics__pb2.MostUsedTopicsRequest.FromString,
-                    response_serializer=others_dot_UserStatistics__pb2.MostUsedTopicsResponse.SerializeToString,
+                    request_deserializer=others_dot_UserStatistics__pb2.MostUsedTopics_Request.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.MostUsedTopics_Response.SerializeToString,
             ),
             'GetTop10': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTop10,
@@ -152,8 +152,8 @@ class UserStatisticsService(object):
             request,
             target,
             '/UserStatisticsService/GetMostUsedTopics',
-            others_dot_UserStatistics__pb2.MostUsedTopicsRequest.SerializeToString,
-            others_dot_UserStatistics__pb2.MostUsedTopicsResponse.FromString,
+            others_dot_UserStatistics__pb2.MostUsedTopics_Request.SerializeToString,
+            others_dot_UserStatistics__pb2.MostUsedTopics_Response.FromString,
             options,
             channel_credentials,
             insecure,

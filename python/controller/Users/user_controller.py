@@ -155,7 +155,7 @@ def get_karma(user_name):
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.KarmaRequest(user_name=user_name)
             response = stub.GetUserKarma(request)
-            return {"karma": list(response.karma)}
+            return {"karma": response.karma_Value}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 

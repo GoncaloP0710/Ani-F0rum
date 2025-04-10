@@ -26,6 +26,6 @@ message User { // --------------------------> MESSAGE FOR USER
     repeated string animes_watched = 4;
     repeated int32 anime_watched_score = 5;
     repeated string topics_subscribed = 6;
-    int32 karma = 8;
-    repeated Achievement achievements = 9;
+    int32 karma = 7;
+    repeated Achievement achievements = 8;
 }
