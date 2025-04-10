@@ -57,7 +57,7 @@ class UserStatisticsClient:
 
     def get_top10_animes(self, user_name):
         try:
-            response = requests.get(f"{self.base_url}/user/{user_name}/recomended_animeList")
+            response = requests.get(f"{self.base_url}/user/{user_name}/top10anime")
             
             if response.status_code == 200:
                 return response.json()  # Return the top 10 animes as JSON
@@ -74,7 +74,7 @@ class UserStatisticsClient:
 
     def GetAllUsers(self):
         try:
-            response = requests.get(f"{self.base_url}/user")
+            response = requests.get(f"{self.base_url}/user/all")
             
             if response.status_code == 200:
                 return response.json()  # Return the list of users as JSON
@@ -117,15 +117,23 @@ if __name__ == "__main__":
     karma = client.get_user_karma(user_name)
     print (karma)
 
-    # # # ============================== Most Used Topics ============================
-    # # user_name = "JohnDoe"
+    # ============================== Most Used Topics ============================
+    # user_name = "JohnDoe"
     # most_used_topics = client.get_most_used_topics(user_name)
     # print (most_used_topics)
 
     # ============================== User by name ============================
-    # user = client.GetUserByName(user_name)
-    # print(user)
+    user = client.GetUserByName(user_name)
+    print(user)
 
+    # # ============================== Get All Users ============================
+    user_list = client.GetAllUsers()
+    print(user_list)
+
+    # # ============================== Top 10 Animes ============================
+    # user_name = "JohnDoe"
+    top10_animes = client.get_top10_animes(user_name)
+    print(top10_animes)
     
 
 

@@ -166,7 +166,21 @@ def top10Anime(user_name):
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.Top10_Request(user_name=user_name)
             response = stub.GetTop10(request)
-            return {"top10_anime": list(response.anime)}
+           
+            # Retornar uma lista de animes hardcoded
+        return {
+            "top10_anime": [
+                {
+                    "name": anime.name,
+                    "genres": list(anime.genres),
+                    "episodes": anime.episodes,
+                    "score": anime.score,
+                    "aired": anime.aired,
+                    "synopsis": anime.synopsis,
+                }
+                for anime in response.animes
+            ]
+        }
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 

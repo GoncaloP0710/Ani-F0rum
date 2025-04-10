@@ -25,6 +25,10 @@ from python.Common.User_pb2 import (
     Achievement,
     User
 )
+from python.Common.Anime_pb2 import (
+    Anime,
+    AnimeGenre,
+)
 
 from python.Common.Topic_pb2 import (
     Subscriber,
@@ -61,11 +65,17 @@ class UserStatistics(UserStatisticsService):
             return NotFound("User not found")
 
         dict_list = dict(zip(user.anime_watched_score, user.animes_watched))
-        sorted_dict = sorted(dict_list)[:10]
+        #sorted_dict = sorted(dict_list)[:10]
+        sorted_values = [value for _, value in sorted(dict_list.items(), key=lambda item: item[0], reverse=True)]
+        sorted_values = sorted_values[:10]
+        print("sorted")
+        print(sorted_values)
 
-        responseList = self.anime_stub.MultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_names=sorted_dict.values()))
+        responseList = self.anime_stub.MultipleAnimeByName(AnimeRepository_pb2.multiple_anime_by_name_Request(anime_names=sorted_values))
         if responseList.animes is None:
             return NotFound("Anime list not found")
+        print("response")
+        print(responseList.animes)
 
         return Top10_Response(animes = responseList.animes)
 
@@ -81,7 +91,7 @@ class UserStatistics(UserStatisticsService):
         topic_count = {}
 
         # Iterar pelos tópicos do usuário
-        for topic_name in user.topics:
+        for topic_name in user.topics_subscribed:
 
             response_topic = self.topic_stub.GetTopic(TopicRepository_pb2.GetTopicRequest(topicname=topic_name))
             topic = response_topic.topic
@@ -113,11 +123,11 @@ class UserStatistics(UserStatisticsService):
     def GetAllUsers(self, request, context):
         print("GetAllUsers")
         response = self.user_stub.GetAllUsers(UserRepository_pb2.get_all_users_Request())
-        user = response.user
-        if not user:
+        user_list = response.users
+        if not user_list:
             context.abort(grpc.StatusCode.NOT_FOUND, "No users found")
 
-        return GetAllUsersResponse(users=user.users)
+        return GetAllUsersResponse(users=user_list)
     
     def GetUserByName(self, request, context):
         print("GetUserByName")
