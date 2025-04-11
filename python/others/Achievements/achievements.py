@@ -33,7 +33,8 @@ class achievements(AchievementsControllerServicer):
 
     def GetAchivementList(self, request, context):
         
-        user = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
 
@@ -44,7 +45,8 @@ class achievements(AchievementsControllerServicer):
     
     def GetAchievement(self, request, context):
 
-        user = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
         
@@ -57,7 +59,8 @@ class achievements(AchievementsControllerServicer):
     def UpdateAchievement(self, request, context):
         user2up = request.user_to_update
         ach = request.new
-        user = self.stub.GetUser(ur_pb2.get_user_Request(user_name=user2up.user_name))
+        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=user2up.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
         

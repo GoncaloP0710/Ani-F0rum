@@ -33,7 +33,8 @@ class FeedGenerator(FeedGeneratorServiceServicer):
 
     def GetFeed(self, request, context):
         
-        user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        response = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
         
@@ -44,7 +45,8 @@ class FeedGenerator(FeedGeneratorServiceServicer):
 
     def GetTopicFeed(self, request, context):
 
-        user = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        response = self.user_stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
+        user = response.user
         if user is None:
             return NotFound("User not found")
         return TopicFeedResponse(user.topics_subscribed)
