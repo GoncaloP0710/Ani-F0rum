@@ -87,30 +87,39 @@ class UserStatistics(UserStatisticsService):
         if not user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
 
-         # Dicionário para contar a frequência de tópicos
+        # Dicionário para contar a frequência de tópicos
         topic_count = {}
+        topic_objects = {}
 
         # Iterar pelos tópicos do usuário
         for topic_name in user.topics_subscribed:
-
+            # Buscar o objeto Topic do repositório
             response_topic = self.topic_stub.GetTopic(TopicRepository_pb2.GetTopicRequest(topicname=topic_name))
             topic = response_topic.topic
             if not topic:
                 context.abort(grpc.StatusCode.NOT_FOUND, "Topic not found")
 
+            # Salvar o objeto Topic no dicionário
+            topic_objects[topic_name] = topic
+
+            # Contar publicações feitas pelo usuário no tópico
             for publication in topic.publications:
-                # Verificar se a publicação foi feita pelo usuário
-                if publication.message.username == user.user_name:
-                    topic_name = topic.topicname
+                if publication.HasField("message") and publication.message.username == user.user_name:
+                    if topic_name in topic_count:
+                        topic_count[topic_name] += 1
+                    else:
+                        topic_count[topic_name] = 1
+                elif publication.HasField("images") and publication.images.username == user.user_name:
                     if topic_name in topic_count:
                         topic_count[topic_name] += 1
                     else:
                         topic_count[topic_name] = 1
 
+        # Ordenar os tópicos por frequência
         sorted_topics = sorted(topic_count.items(), key=lambda x: x[1], reverse=True)
 
-        # Retornar os 10 tópicos mais usados
-        top_topics = [topic[0] for topic in sorted_topics[:10]]
+        # Retornar os 10 tópicos mais usados como objetos Topic
+        top_topics = [topic_objects[topic[0]] for topic in sorted_topics[:10]]
         return MostUsedTopics_Response(most_used_topics=top_topics)
     
     def GetUserKarma(self, request, context):

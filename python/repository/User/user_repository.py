@@ -124,7 +124,30 @@ class UserRepository_Service(UserRepositoryServicer) :
                     rarity=Rarity.MYTHIC
                 )
             ]
-        )
+        ),
+        User(
+            user_name="Diogo",
+            password="password123",
+            location="Portugal",
+            animes_watched=["Naruto", "One Piece", "Attack on Titan"],
+            anime_watched_score=[9, 10, 8],
+            topics_subscribed=["Solo Leveling ep12", "Solo Leveling images"],
+            karma=150,
+            achievements=[
+                Achievement(
+                    title="Anime Enthusiast",
+                    description="Watched 100+ anime series",
+                    date="2025-03-26",
+                    rarity=Rarity.EPIC
+                ),
+                Achievement(
+                    title="Manga Collector",
+                    description="Collected 50+ manga volumes",
+                    date="2025-03-20",
+                    rarity=Rarity.RARE
+                )
+            ]
+        ),
     ]
 
     # Returns an user by name

@@ -189,9 +189,37 @@ def list_topics(user_name):
     try:
         with grpc.insecure_channel('localhost:50060') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
-            request = UserStatistics_pb2.MostUsedTopicsRequest(user_name=user_name)
+            request = UserStatistics_pb2.MostUsedTopics_Request(user_name=user_name)
             response = stub.GetMostUsedTopics(request)
-            return {"topics": list(response.topics)}
+
+            topics_list = [
+                {
+                "name": topic.topicname,
+                "subscribers": [
+                    {
+                        "name": subscriber.name
+                    }
+                    for subscriber in topic.subscribers
+                ],
+                "publications": [
+                    {
+                        "name": publication.name,
+                        "topic_name": publication.topicname,
+                        "message": {
+                            "username": publication.message.username,
+                            "content": publication.message.content
+                        },
+                        "images": {
+                            "name": publication.images.name,
+                            "username": publication.images.username
+                        }
+                    }
+                    for publication in topic.publications
+                ]
+                }
+                for topic in response.most_used_topics
+            ]
+            return {"topics": topics_list}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 

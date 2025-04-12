@@ -465,7 +465,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: "#/components/schemas/Topic"
         "404":
           description: "User not found"
   
