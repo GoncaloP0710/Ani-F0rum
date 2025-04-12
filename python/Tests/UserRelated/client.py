@@ -40,7 +40,7 @@ class UserStatisticsClient:
 
     def get_most_used_topics(self, user_name):
         try:
-            response = requests.get(f"{self.base_url}/user/{user_name}/most_used_topics")
+            response = requests.get(f"{self.base_url}/user/{user_name}/list_topics")
             
             if response.status_code == 200:
                 return response.json()  # Return the list of most used topics as JSON
