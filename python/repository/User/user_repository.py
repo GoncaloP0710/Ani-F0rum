@@ -154,7 +154,6 @@ class UserRepository_Service(UserRepositoryServicer) :
     def GetUser(self, request, context):
         print("Searching for user with id: ", request.user_name)
         for user in self.Users:
-            print(user.user_name)
             if user.user_name == request.user_name:
                 return get_user_Response(user=user)
         raise NotFound("User not found")
@@ -186,15 +185,31 @@ class UserRepository_Service(UserRepositoryServicer) :
     def GetAchievement(self, request, context):
         print("Searching for achievement with title: ", request.title)
         for achievement in self.Achievements:
-            print("aaaa")
             if achievement.title == request.title:
-                print("found: ", achievement)
                 return get_achievement_Response(achievement=achievement)
         raise NotFound("Achievement not found")
     
     def UpdateUserAchievement(self, request, context):
-        #TODO
-        ...
+        print("Updating user with user_name: ", request.user_name," and with title: ", request.title)
+
+        ach = None
+        err = True
+        for achievement in self.Achievements:
+            if achievement.title == request.title:
+                ach = achievement
+                err = False
+                break
+        
+        if err:
+            raise NotFound("Achievement not found")
+
+        for user in self.Users:
+            if user.user_name == request.user_name:
+                user.achievements.append(ach)
+                return update_user_achievement_Response(success=True)
+        
+        return update_user_achievement_Response(success=False)
+        
     
 
     # TODO: Remove comments when _pb2_grpc files are updated

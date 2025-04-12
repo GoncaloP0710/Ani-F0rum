@@ -38,10 +38,6 @@ class achievements(AchievementsControllerServicer):
         if achievements is None:
             return NotFound("User not found")
 
-        # micro_service_response = []
-        # achievementList = [Achievement(n) for n in micro_service_response] # interagir com o próximo microserviço
-        print("yolo")
-        print(list(achievements))
 
         return AchievementListResponse(achievements=achievements)
     
@@ -54,8 +50,11 @@ class achievements(AchievementsControllerServicer):
         return AchievementResponse(item=achievement)
     
     def UpdateAchievement(self, request, context):
-        #TODO
-        ...
+        response = self.stub.UpdateUserAchievement(ur_pb2.update_user_achievement_Request(title=request.title, user_name=request.user_name))
+        if response.success is None:
+            return NotFound("achievement not found")
+        
+        return UpdateResponse(success=response.success)
 
         
 

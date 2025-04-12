@@ -170,6 +170,23 @@ class UserStatisticsClient:
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
             return None
+        
+    def update_achievement(self, user_name, title):
+        try:
+            response = requests.post(f"{self.base_url}/user/{user_name}/achievement/{title}")
+
+            if response.status_code == 200:
+                return response.json()  # Return the updated achievement as JSON
+            elif response.status_code == 404:
+                print(f"User '{user_name}' or achievement '{title}' not found.")
+                return None
+            else:
+                print(f"Failed to update achievement for user '{user_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
 
 if __name__ == "__main__":
     client = UserStatisticsClient()
@@ -187,6 +204,7 @@ if __name__ == "__main__":
         print("9. Get users related by anime")
         print("10. Get user achievements")
         print("11. Get one achievement")
+        print("12. Update user achievement")
         print("69. Exit")
 
         choice = input("Enter your choice: ")
@@ -233,6 +251,11 @@ if __name__ == "__main__":
         elif choice == "11":
             title = input("Enter the achievement name: ")
             ach = client.get_achievement(title) 
+            print (ach)
+        elif choice == "12":
+            user_name = input("Enter the user name: ")
+            title = input("Enter the achievement name: ")
+            ach = client.update_achievement(user_name, title) 
             print (ach)
         elif choice == "69":
             print("Exiting...")

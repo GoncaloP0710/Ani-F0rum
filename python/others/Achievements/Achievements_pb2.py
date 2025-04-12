@@ -21,13 +21,14 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 
 _sym_db = _symbol_database.Default()
 
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from python.Common import User_pb2 as Common_dot_User__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19others/Achievements.proto\x1a\x11\x43ommon/User.proto\"+\n\x16\x41\x63hievementListRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"=\n\x17\x41\x63hievementListResponse\x12\"\n\x0c\x61\x63hievements\x18\x01 \x03(\x0b\x32\x0c.Achievement\"#\n\x12\x41\x63hievementRequest\x12\r\n\x05title\x18\x01 \x01(\t\"1\n\x13\x41\x63hievementResponse\x12\x1a\n\x04item\x18\x01 \x01(\x0b\x32\x0c.Achievement\"=\n\rUpdateRequest\x12\x1d\n\x0euser_to_update\x18\x01 \x01(\x0b\x32\x05.User\x12\r\n\x05title\x18\x02 \x01(\t\"!\n\x0eUpdateResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xd3\x01\n\x16\x41\x63hievementsController\x12\x46\n\x11GetAchivementList\x12\x17.AchievementListRequest\x1a\x18.AchievementListResponse\x12;\n\x0eGetAchievement\x12\x13.AchievementRequest\x1a\x14.AchievementResponse\x12\x34\n\x11UpdateAchievement\x12\x0e.UpdateRequest\x1a\x0f.UpdateResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19others/Achievements.proto\x1a\x11\x43ommon/User.proto\"+\n\x16\x41\x63hievementListRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"=\n\x17\x41\x63hievementListResponse\x12\"\n\x0c\x61\x63hievements\x18\x01 \x03(\x0b\x32\x0c.Achievement\"#\n\x12\x41\x63hievementRequest\x12\r\n\x05title\x18\x01 \x01(\t\"1\n\x13\x41\x63hievementResponse\x12\x1a\n\x04item\x18\x01 \x01(\x0b\x32\x0c.Achievement\"1\n\rUpdateRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\"!\n\x0eUpdateResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xd3\x01\n\x16\x41\x63hievementsController\x12\x46\n\x11GetAchivementList\x12\x17.AchievementListRequest\x1a\x18.AchievementListResponse\x12;\n\x0eGetAchievement\x12\x13.AchievementRequest\x1a\x14.AchievementResponse\x12\x34\n\x11UpdateAchievement\x12\x0e.UpdateRequest\x1a\x0f.UpdateResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -43,9 +44,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ACHIEVEMENTRESPONSE']._serialized_start=193
   _globals['_ACHIEVEMENTRESPONSE']._serialized_end=242
   _globals['_UPDATEREQUEST']._serialized_start=244
-  _globals['_UPDATEREQUEST']._serialized_end=305
-  _globals['_UPDATERESPONSE']._serialized_start=307
-  _globals['_UPDATERESPONSE']._serialized_end=340
-  _globals['_ACHIEVEMENTSCONTROLLER']._serialized_start=343
-  _globals['_ACHIEVEMENTSCONTROLLER']._serialized_end=554
+  _globals['_UPDATEREQUEST']._serialized_end=293
+  _globals['_UPDATERESPONSE']._serialized_start=295
+  _globals['_UPDATERESPONSE']._serialized_end=328
+  _globals['_ACHIEVEMENTSCONTROLLER']._serialized_start=331
+  _globals['_ACHIEVEMENTSCONTROLLER']._serialized_end=542
 # @@protoc_insertion_point(module_scope)

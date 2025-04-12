@@ -277,6 +277,21 @@ paths:
                   $ref: "#/components/schemas/Achievement"
         "404":
           description: "User not found"
+  /user/{user_name}/achievement/{title}:
+    post:
+      operationId: "user_controller.UpdateAchievement"
+      tags:
+        - User
+      summary: "Update user achievement"
+      responses:
+        "201":
+          description: "Successfully updated user"
+          content:
+            application/json:
+              schema:
+                type: "boolean"
+        "404":
+          description: "User or achievement not found"
           
   /user/achievement/{title}:
     parameters:
@@ -300,6 +315,8 @@ paths:
                 $ref: "#/components/schemas/Achievement"
         "404":
           description: "Achievement not found"
+
+  
 
   /user/{user_name}/karma:
     parameters:

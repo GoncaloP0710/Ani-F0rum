@@ -275,6 +275,25 @@ def GetAchievement(title):
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 
+def UpdateAchievement(user_name, title):
+    try:
+        with grpc.insecure_channel('localhost:50080') as channel: 
+            stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
+            request = Achievements_pb2.UpdateRequest(user_name=user_name, title=title)
+            print(request)
+            response = stub.UpdateAchievement(request)
+
+            if not response.success:
+                return {"error": "Failed to update achievement"}, 500
+
+            if(response.success):
+                return {"message": "Achievement updated successfully"}
+            else:
+                return {"message": "Unable to update achievement"}
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
+    
+
 
 def get_user_feed(user_name):
     try:
