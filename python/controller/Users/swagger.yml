@@ -88,6 +88,57 @@ components:
           type: "string"
         synopsis:
           type: "string"
+    Topic: # Topic schema that represents a Topic
+      type: "object"
+      required: 
+        - name
+        - subscribers
+        - publications
+      properties:
+        name:
+          type: "string"
+        subscribers:
+          type: "array"
+          items:
+            type: "string"
+        publications: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Publication"
+    Publication: # Publication schema that represents a Publication
+      type: "object"
+      required: 
+        - name
+        - topic_name
+      properties:
+        name:
+          type: "string"
+        topic_name:
+          type: "string"
+        message:
+          $ref: "#/components/schemas/Message"
+        images: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Image"
+    Image: # Image schema that represents a Image
+      type: "object"
+      required: 
+        - name
+      properties:
+        name:
+          type: "string"
+    Message: # Message schema that represents a message
+      type: "object"
+      required:
+        - username
+        - content
+      properties:
+        username:
+          type: "string"
+        content:
+          type: "string"
+
 
   # Parameters for paths 
   parameters:
@@ -421,6 +472,57 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+  
+
+  /user/{user_name}/get_feed:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user_controller.get_user_feed"
+      tags:
+        - User
+      summary: "Get all topic publications for a specific user"
+      responses:
+        "200":
+          description: "Successfully retrieved all topics publications"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Publication"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/get_topic_feed:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user_controller.get_user_topic_feed"
+      tags:
+        - User
+      summary: "Get all topics for a specific user"
+      responses:
+        "200":
+          description: "Successfully retrieved all topics"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Topic"
         "404":
           description: "User not found"
   

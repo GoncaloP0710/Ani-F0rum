@@ -242,15 +242,25 @@ def get_user_feed(user_name):
         with grpc.insecure_channel('localhost:50094') as channel:  # Connect to the FeedGenerator
             stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
             request = FeedGenerator_pb2.FeedRequest(user_name=user_name)
+            print("aaaaa")
             response = stub.GetFeed(request)
+            print("bbbbbbbbbb")
+
+            print("publication: ", response.feed[0].name)
 
             # Convert feed to JSON-serializable format
             feed = [
                 {
-                    "topic_name": publication.topic_name,
-                    "message": publication.message.content,
-                    "username": publication.message.username,
-                    "timestamp": publication.message.timestamp,
+                    "name": publication.name,
+                    "topic_name": publication.topicname,
+                        "message": {
+                            "username": publication.message.username,
+                            "content": publication.message.content
+                        },
+                        "images": {
+                            "name": publication.images.name,
+                            "username": publication.images.username
+                        }
                 }
                 for publication in response.feed
             ]
@@ -269,15 +279,28 @@ def get_user_topic_feed(user_name):
             # Convert topic feed to JSON-serializable format
             topic_feed = [
                 {
-                    "topic_name": topic.topic_name,
-                    "publications": [
-                        {
-                            "message": publication.message.content,
+                "name": topic.topicname,
+                "subscribers": [
+                    {
+                        "name": subscriber.name
+                    }
+                    for subscriber in topic.subscribers
+                ],
+                "publications": [
+                    {
+                        "name": publication.name,
+                        "topic_name": publication.topicname,
+                        "message": {
                             "username": publication.message.username,
-                            "timestamp": publication.message.timestamp,
+                            "content": publication.message.content
+                        },
+                        "images": {
+                            "name": publication.images.name,
+                            "username": publication.images.username
                         }
-                        for publication in topic.publications
-                    ],
+                    }
+                    for publication in topic.publications
+                ]
                 }
                 for topic in response.topic_feed
             ]

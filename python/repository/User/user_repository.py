@@ -39,7 +39,7 @@ class UserRepository_Service(UserRepositoryServicer) :
             location="USA",
             animes_watched=["Naruto", "One Piece", "Attack on Titan"],
             anime_watched_score=[9, 10, 8],
-            topics_subscribed=["Anime Discussions", "Manga Reviews"],
+            topics_subscribed=["Solo Leveling ep12", "Solo Leveling images"],
             karma=150,
             achievements=[
                 Achievement(
@@ -98,8 +98,6 @@ class UserRepository_Service(UserRepositoryServicer) :
         for user in self.Users:
             print(user.user_name)
             if user.user_name == request.user_name:
-                print("entrou no if")
-                print(dir(user))
                 return get_user_Response(user=user)
         raise NotFound("User not found")
 
