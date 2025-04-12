@@ -1,0 +1,81 @@
+# Defines the pods, resource requests/limits, and probes.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anime-controller
+  labels:
+    app: anime-controller
+spec:
+  replicas: 2 # Number of replicas - adjust latter after talking to the team
+  selector:
+    matchLabels:
+      app: anime-controller
+  template:
+    metadata:
+      labels:
+        app: anime-controller
+    spec:
+      containers:
+      - name: anime-controller
+
+        # If you're using Minikube, you can leave the image: anime-controller:latest as it is, but you need to ensure that the image is available to the Minikube cluster. Since Minikube runs a local Kubernetes cluster, it does not automatically have access to Docker images built on your host machine unless you configure it properly.
+        # Or just use the image from Docker Hub i think
+        image: goncalop0710/anime-controller:latest
+        # imagePullPolicy: Always
+        ports:
+        - containerPort: 50051
+
+        # TODO: Check if this is correct ----------------------------------------
+
+        # Resource Requests and Limits
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+
+        # The liveness probe checks if the container is still running and healthy.
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 50051
+          initialDelaySeconds: 5
+          periodSeconds: 60
+
+        # The readiness probe checks if the container is ready to serve traffic.
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 50051
+          initialDelaySeconds: 5
+          periodSeconds: 60
+
+        # The startup probe checks if the container has started successfully.
+        startupProbe:
+          httpGet:
+            path: /startup
+            port: 50051
+          initialDelaySeconds: 10
+          periodSeconds: 60
+
+---
+
+# Service YAML for anime-controller
+apiVersion: v1
+kind: Service
+metadata:
+  name: anime-controller
+  labels:
+    app: anime-controller
+spec:
+  type: ClusterIP # Internal service type
+  selector:
+    app: anime-controller # Matches the app label in the deployment
+  ports:
+    - name: http
+      protocol: TCP
+      port: 50051 # Exposed port
+      targetPort: 50051 # Port on the container
