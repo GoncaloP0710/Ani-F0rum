@@ -37,9 +37,35 @@ message update_user_Response{
     bool success = 1;
 }
 
+message update_user_achievement_Request{
+    string user_name = 1;
+    string title = 2;
+}
+
+message update_user_achievement_Response{
+    bool success = 1;
+}
+
+message get_achievement_Request{
+    string title = 1;
+}
+message get_achievement_Response{
+    Achievement achievement = 1;
+}
+
+message get_user_achievements_Request{
+    string user_name = 1;
+}
+message get_user_achievements_Response{
+    repeated Achievement achievements = 1;
+}
+
 service UserRepository { // --------------------------> SERVICE FOR USERREPOSITORY
     rpc GetUser (get_user_Request) returns (get_user_Response);
     rpc GetAllUsers (get_all_users_Request) returns (get_all_users_Response);
     rpc GetUsersThatWatchedAnime (get_users_that_watched_anime_Request) returns (get_users_that_watched_anime_Response);
     rpc UpdateUser (update_user_Request) returns (update_user_Response);
+    rpc UpdateUserAchievement (update_user_achievement_Request) returns (update_user_achievement_Response);
+    rpc GetAchievement (get_achievement_Request) returns (get_achievement_Response);
+    rpc GetUserAchievements (get_user_achievements_Request) returns (get_user_achievements_Response);
 }

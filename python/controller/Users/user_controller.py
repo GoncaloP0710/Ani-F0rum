@@ -194,45 +194,56 @@ def list_topics(user_name):
             return {"topics": list(response.topics)}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
-    
-def get_user_achievements_list(user_name):
+
+def GetAchivementList(user_name):
     try:
-        with grpc.insecure_channel('localhost:50080') as channel:  # Connect to the UserRepository
+        with grpc.insecure_channel('localhost:50080') as channel:  
             stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
-            request = Achievements_pb2.GetAchievementListRequest(user_name=user_name)
+            request = Achievements_pb2.AchievementListRequest(user_name=user_name)
+            print(request)
             response = stub.GetAchivementList(request)
+            achievements = response.achievements
+
+            if not achievements:
+                return {"error": "User not found"}, 404
 
             # Convert achievements to JSON-serializable format
-            achievements = [
+            achievement_list = [
                 {
                     "title": achievement.title,
                     "description": achievement.description,
                     "date": achievement.date,
                     "rarity": achievement.rarity,
                 }
-                for achievement in response.achievements
+                for achievement in achievements
             ]
 
-            return {"achievements": achievements}
+            return {"achievements": achievement_list}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
-    
-def get_user_achievement(user_name, title):
+
+
+def GetAchievement(title):
     try:
-        with grpc.insecure_channel('localhost:50080') as channel:  # Connect to the UserRepository
+        with grpc.insecure_channel('localhost:50080') as channel:  
             stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
-            request = Achievements_pb2.GetAchievementRequest(user_name=user_name, title=title)
+            request = Achievements_pb2.AchievementRequest(title=title)
+            print(request)
             response = stub.GetAchievement(request)
+            achievement = response.item
+
+            if not achievement:
+                return {"error": "Achievement not found"}, 404
 
             # Convert achievement to JSON-serializable format
-            achievement = {
-                "title": response.achievement.title,
-                "description": response.achievement.description,
-                "date": response.achievement.date,
-                "rarity": response.achievement.rarity,
+            achievement_data = {
+                "title": achievement.title,
+                "description": achievement.description,
+                "date": achievement.date,
+                "rarity": achievement.rarity,
             }
 
-            return {"achievement": achievement}
+            return {"achievement": achievement_data}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 

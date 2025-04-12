@@ -120,6 +120,23 @@ class UserStatisticsClient:
             print(f"An error occurred: {e}")
             return None
         
+    def get_achievement(self, achievement_name):
+        try:
+            response = requests.get(f"{self.base_url}/user/achievement/{achievement_name}")
+
+            if response.status_code == 200:
+                return response.json()  # Return the user achievements as JSON
+            elif response.status_code == 404:
+                print(f"Achievement '{achievement_name}' not found.")
+                return None
+            else:
+                print(f"Failed to fetch achievement '{achievement_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
+        
     def get_user_feed(self, user_name):
         try:
             response = requests.get(f"{self.base_url}/user/{user_name}/get_feed")
@@ -167,7 +184,10 @@ if __name__ == "__main__":
         print("6. Get user achievements")
         print("7. Get user feed")
         print("8. Get user feed topic")
-        print("9. Exit")
+        print("9. Get users related by anime")
+        print("10. Get user achievements")
+        print("11. Get one achievement")
+        print("69. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -192,7 +212,7 @@ if __name__ == "__main__":
             print(top10_animes)
         elif choice == "6":
             user_name = input("Enter the user name: ")
-            user_achievements = client.users_related_by_anime(user_name)
+            user_achievements = client.get_user_achievements(user_name)
             print(user_achievements)
         elif choice == "7":
             user_name = input("Enter the user name: ")
@@ -203,6 +223,18 @@ if __name__ == "__main__":
             user_feed_topic = client.get_user_feed_topic(user_name)
             print(user_feed_topic)
         elif choice == "9":
+            user_name = input("Enter the user name: ")
+            user_list = client.users_related_by_anime(user_name) 
+            print (user_list)
+        elif choice == "10":
+            user_name = input("Enter the user name: ")
+            ach_list = client.get_user_achievements(user_name) 
+            print (ach_list)
+        elif choice == "11":
+            title = input("Enter the achievement name: ")
+            ach = client.get_achievement(title) 
+            print (ach)
+        elif choice == "69":
             print("Exiting...")
             break
         else:

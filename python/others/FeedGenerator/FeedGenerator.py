@@ -69,10 +69,8 @@ class FeedGenerator(FeedGeneratorServiceServicer):
             print("topic found: ", topic.topicname)
 
             feed.extend(topic.publications)
-        print(dir(feed[0]))
-        print(type(feed[0]))
                 
-        return FeedResponse(feed)
+        return FeedResponse(feed=feed)
 
     #all topics subscribed
     def GetTopicFeed(self, request, context):
@@ -92,7 +90,7 @@ class FeedGenerator(FeedGeneratorServiceServicer):
 
             feed.append(topic)
 
-        return TopicFeedResponse(user.topics_subscribed)
+        return TopicFeedResponse(topic_feed=feed)
 
 #TODO
 def serve():

@@ -3,6 +3,7 @@
 import grpc
 import warnings
 
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
@@ -53,6 +54,26 @@ class UserRepositoryStub(object):
                 request_serializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.SerializeToString,
                 response_deserializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.FromString,
                 _registered_method=True)
+        self.UpdateUser = channel.unary_unary(
+                '/UserRepository/UpdateUser',
+                request_serializer=repository_dot_UserRepository__pb2.update_user_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.update_user_Response.FromString,
+                _registered_method=True)
+        self.UpdateUserAchievement = channel.unary_unary(
+                '/UserRepository/UpdateUserAchievement',
+                request_serializer=repository_dot_UserRepository__pb2.update_user_achievement_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.update_user_achievement_Response.FromString,
+                _registered_method=True)
+        self.GetAchievement = channel.unary_unary(
+                '/UserRepository/GetAchievement',
+                request_serializer=repository_dot_UserRepository__pb2.get_achievement_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.get_achievement_Response.FromString,
+                _registered_method=True)
+        self.GetUserAchievements = channel.unary_unary(
+                '/UserRepository/GetUserAchievements',
+                request_serializer=repository_dot_UserRepository__pb2.get_user_achievements_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.get_user_achievements_Response.FromString,
+                _registered_method=True)
 
 
 class UserRepositoryServicer(object):
@@ -77,6 +98,30 @@ class UserRepositoryServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateUserAchievement(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAchievement(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetUserAchievements(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserRepositoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -94,6 +139,26 @@ def add_UserRepositoryServicer_to_server(servicer, server):
                     servicer.GetUsersThatWatchedAnime,
                     request_deserializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.FromString,
                     response_serializer=repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.SerializeToString,
+            ),
+            'UpdateUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateUser,
+                    request_deserializer=repository_dot_UserRepository__pb2.update_user_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.update_user_Response.SerializeToString,
+            ),
+            'UpdateUserAchievement': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateUserAchievement,
+                    request_deserializer=repository_dot_UserRepository__pb2.update_user_achievement_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.update_user_achievement_Response.SerializeToString,
+            ),
+            'GetAchievement': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAchievement,
+                    request_deserializer=repository_dot_UserRepository__pb2.get_achievement_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.get_achievement_Response.SerializeToString,
+            ),
+            'GetUserAchievements': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUserAchievements,
+                    request_deserializer=repository_dot_UserRepository__pb2.get_user_achievements_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.get_user_achievements_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -178,6 +243,114 @@ class UserRepository(object):
             '/UserRepository/GetUsersThatWatchedAnime',
             repository_dot_UserRepository__pb2.get_users_that_watched_anime_Request.SerializeToString,
             repository_dot_UserRepository__pb2.get_users_that_watched_anime_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRepository/UpdateUser',
+            repository_dot_UserRepository__pb2.update_user_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.update_user_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateUserAchievement(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRepository/UpdateUserAchievement',
+            repository_dot_UserRepository__pb2.update_user_achievement_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.update_user_achievement_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetAchievement(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRepository/GetAchievement',
+            repository_dot_UserRepository__pb2.get_achievement_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.get_achievement_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetUserAchievements(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRepository/GetUserAchievements',
+            repository_dot_UserRepository__pb2.get_user_achievements_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.get_user_achievements_Response.FromString,
             options,
             channel_credentials,
             insecure,

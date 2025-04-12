@@ -16,6 +16,9 @@ from python.repository.User.UserRepository_pb2 import (
     get_user_Response,
     get_all_users_Response,
     get_users_that_watched_anime_Response,
+    get_achievement_Response,
+    get_user_achievements_Response,
+    update_user_achievement_Response,
     # TODO: After testing, uncomment the following line
     # update_User_Response,
 )
@@ -29,6 +32,38 @@ from python.Common.User_pb2 import (
 
 class UserRepository_Service(UserRepositoryServicer) :
 
+    Achievements = [
+        Achievement(
+            title="Anime Enthusiast",
+            description="Watched 100+ anime series",
+            date="2025-03-26",
+            rarity=Rarity.EPIC
+        ),
+        Achievement(
+            title="Manga Collector",
+            description="Collected 50+ manga volumes",
+            date="2025-03-20",
+            rarity=Rarity.RARE
+        ),
+        Achievement(
+            title="Cosplay Champion",
+            description="Won 5 cosplay competitions",
+            date="2024-12-15",
+            rarity=Rarity.LEGENDARY
+        ),
+        Achievement(
+            title="Wow",
+            description="Big win",
+            date="2025-04-15",
+            rarity=Rarity.LEGENDARY
+        ),
+        Achievement(
+            title="Anime Historian",
+            description="Watched anime from every decade since the 1980s",
+            date="2025-01-10",
+            rarity=Rarity.MYTHIC
+        )
+    ]
     # TODO: Implement database connection and queries to retrieve user database
 
     # Example list of users
@@ -118,6 +153,27 @@ class UserRepository_Service(UserRepositoryServicer) :
         print("Found users: ", users)
         return get_users_that_watched_anime_Response(users=users)
     
+    def GetUserAchievements(self, request, context):
+        print("Searching for achievements of user: ", request.user_name)
+        for user in self.Users:
+            if user.user_name == request.user_name:
+                return get_user_achievements_Response(achievements=user.achievements)
+        raise NotFound("User not found")
+        
+    def GetAchievement(self, request, context):
+        print("Searching for achievement with title: ", request.title)
+        for achievement in self.Achievements:
+            print("aaaa")
+            if achievement.title == request.title:
+                print("found: ", achievement)
+                return get_achievement_Response(achievement=achievement)
+        raise NotFound("Achievement not found")
+    
+    def UpdateUserAchievement(self, request, context):
+        #TODO
+        ...
+    
+
     # TODO: Remove comments when _pb2_grpc files are updated
     # Returns success of the update
     #def UpdateUser(self, request, context):

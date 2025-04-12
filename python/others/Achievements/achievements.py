@@ -28,46 +28,34 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 class achievements(AchievementsControllerServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50080')  # Create a channel to the UserRepository
+        self.channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
         self.stub = UserRepositoryStub(self.channel)
 
     def GetAchivementList(self, request, context):
         
-        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
-        user = response.user
-        if user is None:
+        response = self.stub.GetUserAchievements(ur_pb2.get_user_achievements_Request(user_name=request.user_name))
+        achievements = response.achievements
+        if achievements is None:
             return NotFound("User not found")
 
         # micro_service_response = []
         # achievementList = [Achievement(n) for n in micro_service_response] # interagir com o próximo microserviço
+        print("yolo")
+        print(list(achievements))
 
-        return AchievementListResponse(user.achievements)
+        return AchievementListResponse(achievements=achievements)
     
     def GetAchievement(self, request, context):
-        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
-        user = response.user
-        if user is None:
-            return NotFound("User not found")
+        response = self.stub.GetAchievement(ur_pb2.get_achievement_Request(title=request.title))
+        achievement = response.achievement
+        if achievement is None:
+            return NotFound("achievement not found")
         
-        for achievement in user.achievements:
-            if achievement.title == request.title:
-                return AchievementResponse(achievement)
-            
-        return NotFound("Achievement not found")
+        return AchievementResponse(item=achievement)
     
     def UpdateAchievement(self, request, context):
-        user2up = request.user_to_update
-        ach = request.new
-        response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=user2up.user_name))
-        user = response.user
-        if user is None:
-            return NotFound("User not found")
-        
-        for achievement in user.achievements:
-            if achievement.title == ach.title:
-                user.achievements.pop(achievement)
-                user.achievements.append(ach)
-                return UpdateResponse(self.stub.UpdateUser(ur_pb2.get_user_Request(user=user)))
+        #TODO
+        ...
 
         
 

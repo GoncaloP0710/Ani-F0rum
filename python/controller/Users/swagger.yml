@@ -149,8 +149,8 @@ components:
       required: True
       schema:
         type: "string"
-    achievement_name:
-      name: "achievement_name"
+    title:
+      name: "title"
       description: "Name of the achievement"
       in: path
       required: True
@@ -253,59 +253,53 @@ paths:
   #       "404":
   #         description: "User not found"
 
-  # /user/{user_name}/achievements:
-  #   parameters:
-  #     - name: "user_name"
-  #       in: path
-  #       required: true
-  #       description: "Name of the user"
-  #       schema:
-  #         type: "string"
-  #   get:
-  #     operationId: "user_controller.get_achievements"
-  #     tags:
-  #       - User
-  #     summary: "Show user achievements"
-  #     responses:
-  #       "200":
-  #         description: "Successfully show user achievements"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: "array"
-  #               items:
-  #                 $ref: "#/components/schemas/User"
-  #       "404":
-  #         description: "User not found"
-  # /user/{user_name}/{achievement_name}:
-  #   parameters:
-  #     - name: "user_name"
-  #       in: path
-  #       required: true
-  #       description: "Name of the user"
-  #       schema:
-  #         type: "string"
-  #     - name: "achievement_name"
-  #       in: path
-  #       required: true
-  #       description: "Name of the achievement"
-  #       schema:
-  #         type: "string"
-  #   post:
-  #     operationId: "user_controller.add_achievement"
-  #     tags:
-  #       - User
-  #     summary: "Add an achievement to a user"
-  #     requestBody:
-  #         description: "User and achievement to add"
-  #         required: True
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: "#/components/schemas/User"
-  #     responses:
-  #       "201":
-  #         description: "Successfully added achievement"
+  /user/{user_name}/achievements:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "user_controller.GetAchivementList"
+      tags:
+        - User
+      summary: "Show user achievements"
+      responses:
+        "200":
+          description: "Successfully show user achievements"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Achievement"
+        "404":
+          description: "User not found"
+          
+  /user/achievement/{title}:
+    parameters:
+      - name: "title"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
+    get:
+      operationId: "user_controller.GetAchievement"
+      tags:
+        - User
+      summary: "Get a specific achievement by name"
+      responses:
+        "200":
+          description: "Successfully retrieved achievement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Achievement"
+        "404":
+          description: "Achievement not found"
 
   /user/{user_name}/karma:
     parameters:
