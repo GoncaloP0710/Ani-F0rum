@@ -18,7 +18,7 @@ from python.Common import User_pb2 as Common_dot_User__pb2
 from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
 
 def all_anime():
-    with grpc.insecure_channel('localhost:50052') as channel:  # Connect to the anime_list server
+    with grpc.insecure_channel('anime-list:50052') as channel:  # Connect to the anime_list server
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
         request = AnimeList_pb2.get_all_animes()  # Create a request
         
@@ -44,7 +44,7 @@ def get_anime(anime_name):
     print("===================== Get Anime ====================")
     print (anime_name)
 
-    with grpc.insecure_channel('localhost:50052') as channel:  # Connect to the anime_list server
+    with grpc.insecure_channel('anime-list:50052') as channel:  # Connect to the anime_list server
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
         request = AnimeList_pb2.get_anime_by_name_Request(anime_name=anime_name)  # Create a request
         
@@ -62,7 +62,7 @@ def get_anime(anime_name):
             return {"error": f"RPC failed: {e}"}, 500
         
 def get_similar_anime(anime_name):
-    with grpc.insecure_channel('localhost:50052') as channel:  # Connect to the anime_list server
+    with grpc.insecure_channel('anime-list:50052') as channel:  # Connect to the anime_list server
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
         request = AnimeList_pb2.get_similar_anime_Request(anime_name=anime_name)  # Create a request
         
@@ -99,7 +99,7 @@ def get_similar_anime_list(user_name):
     print("===================== Get Similar Anime List ====================")
     print(top10_anime)
     
-    with grpc.insecure_channel('localhost:50052') as channel:
+    with grpc.insecure_channel('anime-list:50052') as channel:
         stub = AnimeList_pb2_grpc.AnimeListStub(channel)
         request = AnimeList_pb2.recomended_animeList_Request(animes_most_liked=top10_anime)
 
@@ -121,3 +121,5 @@ def get_similar_anime_list(user_name):
 
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50051)
+
+

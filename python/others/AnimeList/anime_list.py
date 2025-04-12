@@ -35,7 +35,7 @@ class AnimeList_Service(AnimeListServicer):
 
     # Create a channel and a stub to the AnimeRepository microservice so we can call its methods
     def __init__(self): 
-        self.channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
+        self.channel = grpc.insecure_channel('anime-repository:50053')  # Create a channel to the AnimeRepository
         self.stub = AnimeRepository_pb2_grpc.AnimeRepositoryStub(self.channel)
 
     # Used when user wants to list all animes
@@ -172,6 +172,7 @@ def serve():
     server.start()
     print('AnimeList server running on port 50052')
 
+    """
     # Test functions
     print("===========================================")
     print ("Test GetAllAnimes")
@@ -192,7 +193,8 @@ def serve():
     print ("Test GetSimilarAnime")
     print (AnimeList_Service().GetSimilarAnime(get_similar_anime_Request(anime_name="Naruto"), None))
     print("===========================================")
-
+    """
+    
     server.wait_for_termination()
 
 if __name__ == '__main__':
