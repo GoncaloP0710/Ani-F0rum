@@ -15,6 +15,8 @@ from python.others.UserRecommendations import UserRecommendations_pb2_grpc, User
 from python.others.AnimeList import AnimeList_pb2_grpc, AnimeList_pb2
 from python.Common import User_pb2 as Common_dot_User__pb2
 from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics_pb2
+from python.others.Achievements import Achievements_pb2_grpc, Achievements_pb2
+from python.others.FeedGenerator import FeedGenerator_pb2_grpc, FeedGenerator_pb2
 
 def get_related_by_anime(user_name):
     # TODO: once the operation to get the animes watched by the user is tested use it instead.
@@ -192,6 +194,97 @@ def list_topics(user_name):
             request = UserStatistics_pb2.MostUsedTopicsRequest(user_name=user_name)
             response = stub.GetMostUsedTopics(request)
             return {"topics": list(response.topics)}
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
+    
+def get_user_achievements_list(user_name):
+    try:
+        with grpc.insecure_channel('localhost:50080') as channel:  # Connect to the UserRepository
+            stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
+            request = Achievements_pb2.GetAchievementListRequest(user_name=user_name)
+            response = stub.GetAchivementList(request)
+
+            # Convert achievements to JSON-serializable format
+            achievements = [
+                {
+                    "title": achievement.title,
+                    "description": achievement.description,
+                    "date": achievement.date,
+                    "rarity": achievement.rarity,
+                }
+                for achievement in response.achievements
+            ]
+
+            return {"achievements": achievements}
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
+    
+def get_user_achievement(user_name, title):
+    try:
+        with grpc.insecure_channel('localhost:50080') as channel:  # Connect to the UserRepository
+            stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
+            request = Achievements_pb2.GetAchievementRequest(user_name=user_name, title=title)
+            response = stub.GetAchievement(request)
+
+            # Convert achievement to JSON-serializable format
+            achievement = {
+                "title": response.achievement.title,
+                "description": response.achievement.description,
+                "date": response.achievement.date,
+                "rarity": response.achievement.rarity,
+            }
+
+            return {"achievement": achievement}
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
+
+
+def get_user_feed(user_name):
+    try:
+        with grpc.insecure_channel('localhost:50094') as channel:  # Connect to the FeedGenerator
+            stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
+            request = FeedGenerator_pb2.FeedRequest(user_name=user_name)
+            response = stub.GetFeed(request)
+
+            # Convert feed to JSON-serializable format
+            feed = [
+                {
+                    "topic_name": publication.topic_name,
+                    "message": publication.message.content,
+                    "username": publication.message.username,
+                    "timestamp": publication.message.timestamp,
+                }
+                for publication in response.feed
+            ]
+
+            return {"feed": feed}
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
+    
+def get_user_topic_feed(user_name):
+    try:
+        with grpc.insecure_channel('localhost:50094') as channel:  # Connect to the FeedGenerator
+            stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
+            request = FeedGenerator_pb2.TopicFeedRequest(user_name=user_name)
+            response = stub.GetTopicFeed(request)
+
+            # Convert topic feed to JSON-serializable format
+            topic_feed = [
+                {
+                    "topic_name": topic.topic_name,
+                    "publications": [
+                        {
+                            "message": publication.message.content,
+                            "username": publication.message.username,
+                            "timestamp": publication.message.timestamp,
+                        }
+                        for publication in topic.publications
+                    ],
+                }
+                for topic in response.topic_feed
+            ]
+
+            return {"topic_feed": topic_feed}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
 

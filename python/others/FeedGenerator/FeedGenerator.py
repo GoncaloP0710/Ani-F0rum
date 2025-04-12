@@ -61,7 +61,7 @@ def serve():
         FeedGenerator(), server
     )
 
-    server.add_insecure_port("[::]:50061")
+    server.add_insecure_port("[::]:50094")
     server.start()
     server.wait_for_termination()
 

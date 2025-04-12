@@ -28,7 +28,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 class achievements(AchievementsControllerServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
+        self.channel = grpc.insecure_channel('localhost:50080')  # Create a channel to the UserRepository
         self.stub = UserRepositoryStub(self.channel)
 
     def GetAchivementList(self, request, context):
@@ -44,7 +44,6 @@ class achievements(AchievementsControllerServicer):
         return AchievementListResponse(user.achievements)
     
     def GetAchievement(self, request, context):
-
         response = self.stub.GetUser(ur_pb2.get_user_Request(user_name=request.user_name))
         user = response.user
         if user is None:
@@ -83,7 +82,7 @@ def serve():
     )
 
    
-    server.add_insecure_port("[::]:443")
+    server.add_insecure_port("[::]:50080")
     server.start()
     server.wait_for_termination()
 

@@ -103,37 +103,68 @@ class UserStatisticsClient:
             print(f"An error occurred: {e}")
             return None
 
+    def get_user_achievements(self, user_name):
+        try:
+            response = requests.get(f"{self.base_url}/user/{user_name}/achievements")
+            
+            if response.status_code == 200:
+                return response.json()  # Return the user achievements as JSON
+            elif response.status_code == 404:
+                print(f"User '{user_name}' not found.")
+                return None
+            else:
+                print(f"Failed to fetch achievements for user '{user_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
+        
+    def get_user_feed():
+        ...
+
 if __name__ == "__main__":
     client = UserStatisticsClient()
 
-    # ============================= Related Users by Anime ============================
+    while True:
+        print("\nChoose an option:")
+        print("1. Get user karma")
+        print("2. Get most used topics")
+        print("3. Get user by name")
+        print("4. Get all users")
+        print("5. Get top 10 animes")
+        print("6. Get user achievements")
+        print("7. Exit")
 
-    user_name = "JohnDoe"
-    # user_list = client.users_related_by_anime(user_name) 
-    # print (user_list)
+        choice = input("Enter your choice: ")
 
-    # # ============================== Karma ============================
-    # user_name = "JohnDoe"
-    karma = client.get_user_karma(user_name)
-    print (karma)
-
-    # ============================== Most Used Topics ============================
-    # user_name = "JohnDoe"
-    # most_used_topics = client.get_most_used_topics(user_name)
-    # print (most_used_topics)
-
-    # ============================== User by name ============================
-    user = client.GetUserByName(user_name)
-    print(user)
-
-    # # ============================== Get All Users ============================
-    user_list = client.GetAllUsers()
-    print(user_list)
-
-    # # ============================== Top 10 Animes ============================
-    # user_name = "JohnDoe"
-    top10_animes = client.get_top10_animes(user_name)
-    print(top10_animes)
-    
+        if choice == "1":
+            user_name = input("Enter the user name: ")
+            karma = client.get_user_karma(user_name)
+            print(karma)
+        elif choice == "2":
+            user_name = input("Enter the user name: ")
+            most_used_topics = client.get_most_used_topics(user_name)
+            print(most_used_topics)
+        elif choice == "3":
+            user_name = input("Enter the user name: ")
+            user = client.GetUserByName(user_name)
+            print(user)
+        elif choice == "4":
+            user_list = client.GetAllUsers()
+            print(user_list)
+        elif choice == "5":
+            user_name = input("Enter the user name: ")
+            top10_animes = client.get_top10_animes(user_name)
+            print(top10_animes)
+        elif choice == "6":
+            user_name = input("Enter the user name: ")
+            user_achievements = client.users_related_by_anime(user_name)
+            print(user_achievements)
+        elif choice == "7":
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 
