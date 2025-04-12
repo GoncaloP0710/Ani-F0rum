@@ -98,6 +98,8 @@ class AnimeList_Service(AnimeListServicer):
         
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
+        except Exception as e:
+            context.abort(grpc.StatusCode.INTERNAL, str(e))
 
     # Used when user wants to get animes recommended to him based on his watched animes and the rankings he gave them
     # It should be called after getting the most liked animes by the user
@@ -105,18 +107,32 @@ class AnimeList_Service(AnimeListServicer):
     def GetRecomendedAnimeList(self, request, context):
         try:
             animes_recommendation = []  # Use a list instead of a set
+            print("GetRecomendedAnimeList")
+            print(request.animes_most_liked)
 
-            # Loop through the most liked animes
-            for anime in request.animes_most_liked:
-                # Call GetSimilarAnime for each anime
-                similar_anime_response = self.GetSimilarAnime(
-                    get_similar_anime_Request(anime_name=[anime.name]),
-                    context
-                )
-                for similar_anime in similar_anime_response.animes:
-                    # Add anime to the list only if it's not already present
-                    if similar_anime not in animes_recommendation:
-                        animes_recommendation.append(similar_anime)
+            try:
+                # Loop through the most liked animes
+                for anime in request.animes_most_liked:
+                    print(anime.name)
+                    # Call GetSimilarAnime for each anime
+                    similar_anime_response = self.GetSimilarAnime(
+                        get_similar_anime_Request(anime_name=anime.name),
+                        context
+                    )
+                    for similar_anime in similar_anime_response.animes:
+                        # Add anime to the list only if it's not already present
+                        if similar_anime not in animes_recommendation:
+                            animes_recommendation.append(similar_anime)
+            except grpc.RpcError as e:
+                print("Error in GetSimilarAnime: grpc.RpcError")
+                print(e)
+                context.abort(grpc.StatusCode.INTERNAL, str(e))
+            except Exception as e:
+                print("Error in GetSimilarAnime: Exception")
+                print(e)
+                context.abort(grpc.StatusCode.INTERNAL, str(e))
+
+            print("animes_recommendation")
 
             # Randomize the selection, limiting to 15 elements
             if len(animes_recommendation) > 15:

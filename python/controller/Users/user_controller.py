@@ -19,12 +19,10 @@ from python.others.Achievements import Achievements_pb2_grpc, Achievements_pb2
 from python.others.FeedGenerator import FeedGenerator_pb2_grpc, FeedGenerator_pb2
 
 def get_related_by_anime(user_name):
-    # TODO: once the operation to get the animes watched by the user is tested use it instead.
-    animes_name_watched = ["Naruto", "One Piece"]
+    top10_response = top10Anime(user_name)
+    animes_name_watched = [anime['name'] for anime in top10_response['top10_anime']]
     animes_watched = []
     similar_animes = []
-
-    print(animes_name_watched)
 
     try:
         with grpc.insecure_channel('localhost:50052') as channel:

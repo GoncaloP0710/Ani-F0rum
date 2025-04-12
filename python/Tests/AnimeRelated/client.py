@@ -57,6 +57,25 @@ class AnimeClient:
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
             return None
+    
+    def get_recomended_ani_list(self, user_name):
+        try:
+            # Make a GET request to the /anime/recomended/{name} endpoint
+            response = requests.get(f"{self.base_url}/anime/user/recomended/{user_name}")
+            
+            # Check if the response status code is 200 (OK)
+            if response.status_code == 200:
+                return response.json()  # Return the list of recommended animes as JSON
+            elif response.status_code == 404:
+                print(f"User '{user_name}' not found.")
+                return None
+            else:
+                print(f"Failed to fetch recommended animes for '{user_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
 
 # Example usage
 if __name__ == "__main__":
@@ -82,4 +101,12 @@ if __name__ == "__main__":
     if similar_animes:
         print(f"\nList of Animes similar to '{similar_anime_name}':")
         for anime in similar_animes:
+            print(anime)
+
+    # ============================== Get recommended anime list ==============================
+    user_name = "JohnDoe"
+    recommended_animes = client.get_recomended_ani_list(user_name)
+    if recommended_animes:
+        print(f"\nRecommended Animes for User '{user_name}':")
+        for anime in recommended_animes:
             print(anime)
