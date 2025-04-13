@@ -1,7 +1,7 @@
 import requests
 
 class AnimeClient:
-    def __init__(self, base_url="http://anime-controller:50051/api"):
+    def __init__(self, base_url="http://anime-controller:50051"):
         self.base_url = base_url
 
     def get_all_animes(self):
