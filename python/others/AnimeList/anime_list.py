@@ -6,6 +6,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 from concurrent import futures
 from itertools import combinations
 
+# ---------------------------------------------------------------
+from concurrent import futures
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
+# ---------------------------------------------------------------
+
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
@@ -30,6 +36,10 @@ from python.Common.Anime_pb2 import (
 
 from python.repository.Anime import AnimeRepository_pb2
 from python.repository.Anime import AnimeRepository_pb2_grpc
+
+print("===================== Anime List ====================")
+print("Trying to start AnimeList service...")
+print("=========================================================")
 
 class AnimeList_Service(AnimeListServicer):
 
@@ -160,6 +170,24 @@ class AnimeList_Service(AnimeListServicer):
         # Convert tuples to lists (if needed)
         return [list(combination) for combination in genre_combinations]
 
+# ----------------------------------------------------------------
+# HTTP server for Kubernetes probes
+class ProbeHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path in ["/healthz", "/readiness", "/startup"]:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+def start_http_server():
+    http_server = HTTPServer(('0.0.0.0', 8080), ProbeHandler)
+    print("HTTP server for probes started on port 8080")
+    http_server.serve_forever()
+# ----------------------------------------------------------------
+
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
@@ -171,6 +199,15 @@ def serve():
     server.add_insecure_port('[::]:50052')
     server.start()
     print('AnimeList server running on port 50052')
+
+    # -------------------------------------------------
+    # Start the HTTP server for probes in a separate thread
+    http_thread = threading.Thread(target=start_http_server)
+    http_thread.daemon = True
+    http_thread.start()
+
+    server.wait_for_termination()
+    # --------------------------------------------------
 
     """
     # Test functions
