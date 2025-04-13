@@ -384,5 +384,14 @@ def update_user_karma(user_name, karma_value):
         return {"error": f"RPC failed: {e}"}, 500
 
 
+def healthz():
+    return {"status": "ok"}, 200
+
+def readiness():
+    return {"status": "ready"}, 200
+
+def startup():
+    return {"status": "started"}, 200
+
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50040)

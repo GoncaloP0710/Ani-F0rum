@@ -4,6 +4,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 import random
 from concurrent import futures
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
 
 import grpc
 from python.others.Achievements.Achievements_pb2_grpc import(
@@ -28,7 +30,7 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 class achievements(AchievementsControllerServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
+        self.channel = grpc.insecure_channel('user-repository:50043')  # Create a channel to the UserRepository
         self.stub = UserRepositoryStub(self.channel)
 
     def GetAchivementList(self, request, context):
@@ -57,6 +59,23 @@ class achievements(AchievementsControllerServicer):
         return UpdateResponse(success=response.success)
 
         
+# ----------------------------------------------------------------
+# HTTP server for Kubernetes probes
+class ProbeHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path in ["/healthz", "/readiness", "/startup"]:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+def start_http_server():
+    http_server = HTTPServer(('0.0.0.0', 8080), ProbeHandler)
+    print("HTTP server for probes started on port 8080")
+    http_server.serve_forever()
+# ----------------------------------------------------------------
 
 
 def serve():
@@ -71,6 +90,14 @@ def serve():
    
     server.add_insecure_port("[::]:50080")
     server.start()
+    # -------------------------------------------------
+    # Start the HTTP server for probes in a separate thread
+    http_thread = threading.Thread(target=start_http_server)
+    http_thread.daemon = True
+    http_thread.start()
+
+    server.wait_for_termination()
+    # --------------------------------------------------
     server.wait_for_termination()
 
 

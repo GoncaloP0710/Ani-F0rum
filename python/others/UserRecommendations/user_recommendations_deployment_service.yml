@@ -1,0 +1,83 @@
+# Defines the pods, resource requests/limits, and probes.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-recommendations
+  labels:
+    app: user-recommendations
+spec:
+  replicas: 2 # Number of replicas - adjust latter after talking to the team
+  selector:
+    matchLabels:
+      app: user-recommendations
+  template:
+    metadata:
+      labels:
+        app: user-recommendations
+    spec:
+      containers:
+      - name: user-recommendations
+
+        # If you're using Minikube, you can leave the image: anime-repository:latest as it is, but you need to ensure that the image is available to the Minikube cluster. Since Minikube runs a local Kubernetes cluster, it does not automatically have access to Docker images built on your host machine unless you configure it properly.
+        # Or just use the image from Docker Hub i think
+        image: danunesl/user-recommendations:latest
+        imagePullPolicy: Always
+
+        
+        ports:
+        - containerPort: 50042
+
+        # TODO: Check if this is correct ----------------------------------------
+
+        # Resource Requests and Limits
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+
+        # The liveness probe checks if the container is still running and healthy.
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 60
+
+        # The readiness probe checks if the container is ready to serve traffic.
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 60
+
+        # The startup probe checks if the container has started successfully.
+        startupProbe:
+          httpGet:
+            path: /startup
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 60
+
+---
+
+# Service YAML for user-recommendations
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-recommendations
+  labels:
+    app: user-recommendations
+spec:
+  type: ClusterIP # Internal service type
+  selector:
+    app: user-recommendations # Matches the app label in the deployment
+  ports:
+    - name: http
+      protocol: TCP
+      port: 50042 # Exposed port
+      targetPort: 50042 # Port on the container
