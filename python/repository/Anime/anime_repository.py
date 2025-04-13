@@ -30,6 +30,11 @@ from python.Common.Anime_pb2 import (
     AnimeGenre,
 )
 
+from google.cloud import bigquery
+from flask import Flask, request, abort
+from google.oauth2 import service_account
+import json, os
+
 print("===================== Anime Repository ====================")
 print("Trying to start AnimeRepository service...")
 print("=========================================================")
@@ -37,6 +42,11 @@ print("=========================================================")
 class AnimeRepository_Service(AnimeRepositoryServicer) : 
 
     # TODO: Implement database connection and queries to retrieve anime data
+
+    json_string = os.environ.get('API_TOKEN')
+    json_file = json.loads(json_string)
+    credentials = service_account.Credentials.from_service_account_info(json_file)
+    client = bigquery.Client(credentials=credentials, location="europe-west1")
 
     Animes_Objects = [
         Anime(

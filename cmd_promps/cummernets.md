@@ -69,3 +69,29 @@ kubectl get hpa
 ```python
 kubectl describe hpa anime-list-hpa
 ```
+
+# Anime Repository
+
+## Anime Repository - Deployment & Service
+
+```python
+export API_TOKEN=$(cat JSON-KEY.json)
+```
+
+```python
+kubectl apply -f anime_list_deployment_service.yml
+```
+
+## Anime Repository - Scaler
+
+```python
+kubectl apply -f anime_repository_scaler.yml
+```
+
+```python
+kubectl get hpa
+```
+
+```python
+kubectl describe hpa anime-repository-hpa
+```
