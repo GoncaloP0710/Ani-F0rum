@@ -55,6 +55,60 @@ components:
   
 paths:
 
+  # Health Check Endpoint
+  /healthz:
+    get:
+      operationId: "anime_controller.healthz"
+      tags:
+        - Health
+      summary: "Check if the service is alive"
+      responses:
+        "200":
+          description: "Service is alive"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Readiness Check Endpoint
+  /readiness:
+    get:
+      operationId: "anime_controller.readiness"
+      tags:
+        - Health
+      summary: "Check if the service is ready to serve traffic"
+      responses:
+        "200":
+          description: "Service is ready"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Startup Check Endpoint
+  /startup:
+    get:
+      operationId: "anime_controller.startup"
+      tags:
+        - Health
+      summary: "Check if the service has started successfully"
+      responses:
+        "200":
+          description: "Service has started"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
   # =====================================================
   # ======================= Anime =======================
   # =====================================================  

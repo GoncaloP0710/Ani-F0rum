@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip uninstall -y connexion flask werkzeug  # Add the -y flag to skip confirmation
 RUN pip install "connexion[flask]"
 RUN pip install "connexion[uvicorn]"
+RUN apk add --no-cache curl
 
 # Set PYTHONPATH to include the project root
 ENV PYTHONPATH=/app

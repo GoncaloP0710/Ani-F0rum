@@ -119,6 +119,18 @@ def get_similar_anime_list(user_name):
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500  # Add this block to handle exceptions
 
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    return jsonify({"status": "ok"}), 200
+
+@app.route('/readiness', methods=['GET'])
+def readiness():
+    return jsonify({"status": "ready"}), 200
+
+@app.route('/startup', methods=['GET'])
+def startup():
+    return jsonify({"status": "started"}), 200
+
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50051)
 
