@@ -1,0 +1,8 @@
+grpc-interceptor ~= 0.11.0
+grpcio-tools ~= 1.30
+pytest ~= 5.4
+protobuf ~= 5.29
+grpcio ~= 1.71
+connexion ~= 3.2.0 
+swagger-ui-bundle ~= 0.0.9
+Flask==2.2.2
