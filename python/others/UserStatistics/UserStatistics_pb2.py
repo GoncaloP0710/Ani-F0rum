@@ -29,7 +29,7 @@ from python.Common import User_pb2 as Common_dot_Userpb2
 from python.Common import Topic_pb2 as Common_dot_Topic__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bothers/UserStatistics.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\x1a\x12\x43ommon/Topic.proto\"\x07\n\x05\x45mpty\"+\n\x16MostUsedTopics_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\";\n\x17MostUsedTopics_Response\x12 \n\x10most_used_topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\"\n\rTop10_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x0eTop10_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"!\n\x0cKarmaRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"$\n\rKarmaResponse\x12\x13\n\x0bkarma_Value\x18\x01 \x01(\x05\",\n\x15GetUserByNameResponse\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\")\n\x14GetUserByNameRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"+\n\x13GetAllUsersResponse\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\xa8\x02\n\x15UserStatisticsService\x12\x46\n\x11GetMostUsedTopics\x12\x17.MostUsedTopics_Request\x1a\x18.MostUsedTopics_Response\x12+\n\x08GetTop10\x12\x0e.Top10_Request\x1a\x0f.Top10_Response\x12-\n\x0cGetUserKarma\x12\r.KarmaRequest\x1a\x0e.KarmaResponse\x12+\n\x0bGetAllUsers\x12\x06.Empty\x1a\x14.GetAllUsersResponse\x12>\n\rGetUserByName\x12\x15.GetUserByNameRequest\x1a\x16.GetUserByNameResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1bothers/UserStatistics.proto\x1a\x12\x43ommon/Anime.proto\x1a\x11\x43ommon/User.proto\x1a\x12\x43ommon/Topic.proto\"\x07\n\x05\x45mpty\"+\n\x16MostUsedTopics_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\";\n\x17MostUsedTopics_Response\x12 \n\x10most_used_topics\x18\x01 \x03(\x0b\x32\x06.Topic\"\"\n\rTop10_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x0eTop10_Response\x12\x16\n\x06\x61nimes\x18\x01 \x03(\x0b\x32\x06.Anime\"!\n\x0cKarmaRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"$\n\rKarmaResponse\x12\x13\n\x0bkarma_Value\x18\x01 \x01(\x05\"<\n\x12KarmaUpdateRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x13\n\x0bkarma_value\x18\x02 \x01(\x05\"&\n\x13KarmaUpdateResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\",\n\x15GetUserByNameResponse\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\")\n\x14GetUserByNameRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\"+\n\x13GetAllUsersResponse\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User2\xe6\x02\n\x15UserStatisticsService\x12\x46\n\x11GetMostUsedTopics\x12\x17.MostUsedTopics_Request\x1a\x18.MostUsedTopics_Response\x12+\n\x08GetTop10\x12\x0e.Top10_Request\x1a\x0f.Top10_Response\x12-\n\x0cGetUserKarma\x12\r.KarmaRequest\x1a\x0e.KarmaResponse\x12<\n\x0fUpdateUserKarma\x12\x13.KarmaUpdateRequest\x1a\x14.KarmaUpdateResponse\x12+\n\x0bGetAllUsers\x12\x06.Empty\x1a\x14.GetAllUsersResponse\x12>\n\rGetUserByName\x12\x15.GetUserByNameRequest\x1a\x16.GetUserByNameResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -50,12 +50,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_KARMAREQUEST']._serialized_end=316
   _globals['_KARMARESPONSE']._serialized_start=318
   _globals['_KARMARESPONSE']._serialized_end=354
-  _globals['_GETUSERBYNAMERESPONSE']._serialized_start=356
-  _globals['_GETUSERBYNAMERESPONSE']._serialized_end=400
-  _globals['_GETUSERBYNAMEREQUEST']._serialized_start=402
-  _globals['_GETUSERBYNAMEREQUEST']._serialized_end=443
-  _globals['_GETALLUSERSRESPONSE']._serialized_start=445
-  _globals['_GETALLUSERSRESPONSE']._serialized_end=488
-  _globals['_USERSTATISTICSSERVICE']._serialized_start=491
-  _globals['_USERSTATISTICSSERVICE']._serialized_end=787
+  _globals['_KARMAUPDATEREQUEST']._serialized_start=356
+  _globals['_KARMAUPDATEREQUEST']._serialized_end=416
+  _globals['_KARMAUPDATERESPONSE']._serialized_start=418
+  _globals['_KARMAUPDATERESPONSE']._serialized_end=456
+  _globals['_GETUSERBYNAMERESPONSE']._serialized_start=458
+  _globals['_GETUSERBYNAMERESPONSE']._serialized_end=502
+  _globals['_GETUSERBYNAMEREQUEST']._serialized_start=504
+  _globals['_GETUSERBYNAMEREQUEST']._serialized_end=545
+  _globals['_GETALLUSERSRESPONSE']._serialized_start=547
+  _globals['_GETALLUSERSRESPONSE']._serialized_end=590
+  _globals['_USERSTATISTICSSERVICE']._serialized_start=593
+  _globals['_USERSTATISTICSSERVICE']._serialized_end=951
 # @@protoc_insertion_point(module_scope)

@@ -52,6 +52,11 @@ class UserStatisticsServiceStub(object):
                 request_serializer=others_dot_UserStatistics__pb2.KarmaRequest.SerializeToString,
                 response_deserializer=others_dot_UserStatistics__pb2.KarmaResponse.FromString,
                 _registered_method=True)
+        self.UpdateUserKarma = channel.unary_unary(
+                '/UserStatisticsService/UpdateUserKarma',
+                request_serializer=others_dot_UserStatistics__pb2.KarmaUpdateRequest.SerializeToString,
+                response_deserializer=others_dot_UserStatistics__pb2.KarmaUpdateResponse.FromString,
+                _registered_method=True)
         self.GetAllUsers = channel.unary_unary(
                 '/UserStatisticsService/GetAllUsers',
                 request_serializer=others_dot_UserStatistics__pb2.Empty.SerializeToString,
@@ -68,8 +73,7 @@ class UserStatisticsServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetMostUsedTopics(self, request, context):
-        """Prob broken
-        """
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -81,6 +85,12 @@ class UserStatisticsServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetUserKarma(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateUserKarma(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -115,6 +125,11 @@ def add_UserStatisticsServiceServicer_to_server(servicer, server):
                     servicer.GetUserKarma,
                     request_deserializer=others_dot_UserStatistics__pb2.KarmaRequest.FromString,
                     response_serializer=others_dot_UserStatistics__pb2.KarmaResponse.SerializeToString,
+            ),
+            'UpdateUserKarma': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateUserKarma,
+                    request_deserializer=others_dot_UserStatistics__pb2.KarmaUpdateRequest.FromString,
+                    response_serializer=others_dot_UserStatistics__pb2.KarmaUpdateResponse.SerializeToString,
             ),
             'GetAllUsers': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAllUsers,
@@ -208,6 +223,33 @@ class UserStatisticsService(object):
             '/UserStatisticsService/GetUserKarma',
             others_dot_UserStatistics__pb2.KarmaRequest.SerializeToString,
             others_dot_UserStatistics__pb2.KarmaResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateUserKarma(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserStatisticsService/UpdateUserKarma',
+            others_dot_UserStatistics__pb2.KarmaUpdateRequest.SerializeToString,
+            others_dot_UserStatistics__pb2.KarmaUpdateResponse.FromString,
             options,
             channel_credentials,
             insecure,

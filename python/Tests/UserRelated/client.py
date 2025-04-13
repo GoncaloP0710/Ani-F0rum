@@ -187,6 +187,23 @@ class UserStatisticsClient:
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
             return None
+        
+    def update_karma(self, user_name, karma_value):
+        try:
+            response = requests.post(f"{self.base_url}/user/{user_name}/karma/{karma_value}")
+
+            if response.status_code == 200:
+                return response.json()  # Return the updated karma as JSON
+            elif response.status_code == 404:
+                print(f"User '{user_name}' not found.")
+                return None
+            else:
+                print(f"Failed to update karma for user '{user_name}'. Status code: {response.status_code}")
+                print(f"Response: {response.text}")
+                return None
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
 
 if __name__ == "__main__":
     client = UserStatisticsClient()
@@ -205,6 +222,7 @@ if __name__ == "__main__":
         print("10. Get user achievements")
         print("11. Get one achievement")
         print("12. Update user achievement")
+        print("13. Update user karma")
         print("69. Exit")
 
         choice = input("Enter your choice: ")
@@ -256,6 +274,12 @@ if __name__ == "__main__":
             user_name = input("Enter the user name: ")
             title = input("Enter the achievement name: ")
             ach = client.update_achievement(user_name, title) 
+            print (ach)
+        elif choice == "13":
+            user_name = input("Enter the user name: ")
+            karma_value_str = input("Enter the karma value: ")
+            karma_value = int(karma_value_str)
+            ach = client.update_karma(user_name, karma_value) 
             print (ach)
         elif choice == "69":
             print("Exiting...")

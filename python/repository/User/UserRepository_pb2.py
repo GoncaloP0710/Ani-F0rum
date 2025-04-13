@@ -21,14 +21,13 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 
 _sym_db = _symbol_database.Default()
 
-
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 from python.Common import User_pb2 as Common_dot_User__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1frepository/UserRepository.proto\x1a\x11\x43ommon/User.proto\"%\n\x10get_user_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x11get_user_Response\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"\x17\n\x15get_all_users_Request\".\n\x16get_all_users_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\";\n$get_users_that_watched_anime_Request\x12\x13\n\x0b\x61nime_names\x18\x01 \x03(\t\"=\n%get_users_that_watched_anime_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"*\n\x13update_user_Request\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"\'\n\x14update_user_Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\"C\n\x1fupdate_user_achievement_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\"3\n update_user_achievement_Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\"(\n\x17get_achievement_Request\x12\r\n\x05title\x18\x01 \x01(\t\"=\n\x18get_achievement_Response\x12!\n\x0b\x61\x63hievement\x18\x01 \x01(\x0b\x32\x0c.Achievement\"2\n\x1dget_user_achievements_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"D\n\x1eget_user_achievements_Response\x12\"\n\x0c\x61\x63hievements\x18\x01 \x03(\x0b\x32\x0c.Achievement2\xa5\x04\n\x0eUserRepository\x12\x30\n\x07GetUser\x12\x11.get_user_Request\x1a\x12.get_user_Response\x12>\n\x0bGetAllUsers\x12\x16.get_all_users_Request\x1a\x17.get_all_users_Response\x12i\n\x18GetUsersThatWatchedAnime\x12%.get_users_that_watched_anime_Request\x1a&.get_users_that_watched_anime_Response\x12\x39\n\nUpdateUser\x12\x14.update_user_Request\x1a\x15.update_user_Response\x12\\\n\x15UpdateUserAchievement\x12 .update_user_achievement_Request\x1a!.update_user_achievement_Response\x12\x45\n\x0eGetAchievement\x12\x18.get_achievement_Request\x1a\x19.get_achievement_Response\x12V\n\x13GetUserAchievements\x12\x1e.get_user_achievements_Request\x1a\x1f.get_user_achievements_Responseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1frepository/UserRepository.proto\x1a\x11\x43ommon/User.proto\"%\n\x10get_user_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"(\n\x11get_user_Response\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"\x17\n\x15get_all_users_Request\".\n\x16get_all_users_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\";\n$get_users_that_watched_anime_Request\x12\x13\n\x0b\x61nime_names\x18\x01 \x03(\t\"=\n%get_users_that_watched_anime_Response\x12\x14\n\x05users\x18\x01 \x03(\x0b\x32\x05.User\"*\n\x13update_user_Request\x12\x13\n\x04user\x18\x01 \x01(\x0b\x32\x05.User\"\'\n\x14update_user_Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\"C\n\x1fupdate_user_achievement_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\"3\n update_user_achievement_Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\"(\n\x17get_achievement_Request\x12\r\n\x05title\x18\x01 \x01(\t\"=\n\x18get_achievement_Response\x12!\n\x0b\x61\x63hievement\x18\x01 \x01(\x0b\x32\x0c.Achievement\"2\n\x1dget_user_achievements_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\"D\n\x1eget_user_achievements_Response\x12\"\n\x0c\x61\x63hievements\x18\x01 \x03(\x0b\x32\x0c.Achievement\"C\n\x19update_user_karma_Request\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x13\n\x0bkarma_value\x18\x02 \x01(\x05\"-\n\x1aupdate_user_karma_Response\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xf1\x04\n\x0eUserRepository\x12\x30\n\x07GetUser\x12\x11.get_user_Request\x1a\x12.get_user_Response\x12>\n\x0bGetAllUsers\x12\x16.get_all_users_Request\x1a\x17.get_all_users_Response\x12i\n\x18GetUsersThatWatchedAnime\x12%.get_users_that_watched_anime_Request\x1a&.get_users_that_watched_anime_Response\x12\x39\n\nUpdateUser\x12\x14.update_user_Request\x1a\x15.update_user_Response\x12\\\n\x15UpdateUserAchievement\x12 .update_user_achievement_Request\x1a!.update_user_achievement_Response\x12\x45\n\x0eGetAchievement\x12\x18.get_achievement_Request\x1a\x19.get_achievement_Response\x12V\n\x13GetUserAchievements\x12\x1e.get_user_achievements_Request\x1a\x1f.get_user_achievements_Response\x12J\n\x0fUpdateUserKarma\x12\x1a.update_user_karma_Request\x1a\x1b.update_user_karma_Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -63,6 +62,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GET_USER_ACHIEVEMENTS_REQUEST']._serialized_end=694
   _globals['_GET_USER_ACHIEVEMENTS_RESPONSE']._serialized_start=696
   _globals['_GET_USER_ACHIEVEMENTS_RESPONSE']._serialized_end=764
-  _globals['_USERREPOSITORY']._serialized_start=767
-  _globals['_USERREPOSITORY']._serialized_end=1316
+  _globals['_UPDATE_USER_KARMA_REQUEST']._serialized_start=766
+  _globals['_UPDATE_USER_KARMA_REQUEST']._serialized_end=833
+  _globals['_UPDATE_USER_KARMA_RESPONSE']._serialized_start=835
+  _globals['_UPDATE_USER_KARMA_RESPONSE']._serialized_end=880
+  _globals['_USERREPOSITORY']._serialized_start=883
+  _globals['_USERREPOSITORY']._serialized_end=1508
 # @@protoc_insertion_point(module_scope)

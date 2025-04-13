@@ -343,6 +343,22 @@ paths:
         "404":
           description: "User not found"
 
+  /user/{user_name}/karma/{karma_value}:
+    post:
+      operationId: "user_controller.update_user_karma"
+      tags:
+        - User
+      summary: "Update user karma"
+      responses:
+        "201":
+          description: "Successfully updated user"
+          content:
+            application/json:
+              schema:
+                type: "boolean"
+        "404":
+          description: "User not found"
+
   # /user/{user_name}/track_records:
   #   parameters:
   #     - name: "user_name"

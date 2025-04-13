@@ -16,6 +16,7 @@ from UserStatistics_pb2 import (
     MostUsedTopics_Request,
     KarmaResponse,
     KarmaRequest,
+    KarmaUpdateResponse,
     GetAllUsersResponse,
     GetUserByNameResponse,
 )
@@ -25,6 +26,7 @@ from python.Common.User_pb2 import (
     Achievement,
     User
 )
+
 from python.Common.Anime_pb2 import (
     Anime,
     AnimeGenre,
@@ -128,6 +130,14 @@ class UserStatistics(UserStatisticsService):
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
 
         return KarmaResponse(karma_Value=response.user.karma)
+    
+    def UpdateUserKarma(self, request, context):
+        print("UpdateUserKarma")
+        response = self.user_stub.UpdateUserKarma(UserRepository_pb2.update_user_karma_Request(user_name=request.user_name, karma_value=request.karma_value))
+        if not response.success:
+            context.abort(grpc.StatusCode.NOT_FOUND, "Failed to update user karma")
+
+        return KarmaUpdateResponse(success=response.success)
         
     def GetAllUsers(self, request, context):
         print("GetAllUsers")

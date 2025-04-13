@@ -366,6 +366,21 @@ def get_user_topic_feed(user_name):
             return {"topic_feed": topic_feed}
     except grpc.RpcError as e:
         return {"error": f"RPC failed: {e}"}, 500
+    
+def update_user_karma(user_name, karma_value):
+    try:
+        # Convert karma_value to an integer
+        karma_value = int(karma_value)
+
+        with grpc.insecure_channel('localhost:50060') as channel:
+            stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+            request = UserStatistics_pb2.KarmaUpdateRequest(user_name=user_name, karma_value=karma_value)
+            response = stub.UpdateUserKarma(request)
+            return {"success": response.success}
+    except ValueError:
+        return {"error": "karma_value must be an integer"}, 400
+    except grpc.RpcError as e:
+        return {"error": f"RPC failed: {e}"}, 500
 
 
 if __name__ == "__main__":

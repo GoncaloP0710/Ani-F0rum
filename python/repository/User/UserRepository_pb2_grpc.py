@@ -3,7 +3,6 @@
 import grpc
 import warnings
 
-
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
@@ -74,6 +73,11 @@ class UserRepositoryStub(object):
                 request_serializer=repository_dot_UserRepository__pb2.get_user_achievements_Request.SerializeToString,
                 response_deserializer=repository_dot_UserRepository__pb2.get_user_achievements_Response.FromString,
                 _registered_method=True)
+        self.UpdateUserKarma = channel.unary_unary(
+                '/UserRepository/UpdateUserKarma',
+                request_serializer=repository_dot_UserRepository__pb2.update_user_karma_Request.SerializeToString,
+                response_deserializer=repository_dot_UserRepository__pb2.update_user_karma_Response.FromString,
+                _registered_method=True)
 
 
 class UserRepositoryServicer(object):
@@ -122,6 +126,12 @@ class UserRepositoryServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateUserKarma(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_UserRepositoryServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -159,6 +169,11 @@ def add_UserRepositoryServicer_to_server(servicer, server):
                     servicer.GetUserAchievements,
                     request_deserializer=repository_dot_UserRepository__pb2.get_user_achievements_Request.FromString,
                     response_serializer=repository_dot_UserRepository__pb2.get_user_achievements_Response.SerializeToString,
+            ),
+            'UpdateUserKarma': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateUserKarma,
+                    request_deserializer=repository_dot_UserRepository__pb2.update_user_karma_Request.FromString,
+                    response_serializer=repository_dot_UserRepository__pb2.update_user_karma_Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -351,6 +366,33 @@ class UserRepository(object):
             '/UserRepository/GetUserAchievements',
             repository_dot_UserRepository__pb2.get_user_achievements_Request.SerializeToString,
             repository_dot_UserRepository__pb2.get_user_achievements_Response.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateUserKarma(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/UserRepository/UpdateUserKarma',
+            repository_dot_UserRepository__pb2.update_user_karma_Request.SerializeToString,
+            repository_dot_UserRepository__pb2.update_user_karma_Response.FromString,
             options,
             channel_credentials,
             insecure,

@@ -19,6 +19,7 @@ from python.repository.User.UserRepository_pb2 import (
     get_achievement_Response,
     get_user_achievements_Response,
     update_user_achievement_Response,
+    update_user_karma_Response,
     # TODO: After testing, uncomment the following line
     # update_User_Response,
 )
@@ -209,6 +210,15 @@ class UserRepository_Service(UserRepositoryServicer) :
                 return update_user_achievement_Response(success=True)
         
         return update_user_achievement_Response(success=False)
+    
+    def UpdateUserKarma(self, request, context):
+        print("Updating karma of user: ", request.user_name)
+        for user in self.Users:
+            if user.user_name == request.user_name:
+                user.karma += request.karma_value
+                return update_user_karma_Response(success=True)
+        
+        return update_user_karma_Response(success=False)
         
     
 
