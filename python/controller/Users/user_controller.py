@@ -18,14 +18,18 @@ from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics
 from python.others.Achievements import Achievements_pb2_grpc, Achievements_pb2
 from python.others.FeedGenerator import FeedGenerator_pb2_grpc, FeedGenerator_pb2
 
+def init(self, base_url="http://user-controller:50040/api"):
+    self.base_url = base_url
+
 def get_related_by_anime(user_name):
     top10_response = top10Anime(user_name)
+    print("Top 10 Response:", top10_response)  # Debugging line
     animes_name_watched = [anime['name'] for anime in top10_response['top10_anime']]
     animes_watched = []
     similar_animes = []
 
     try:
-        with grpc.insecure_channel('localhost:50052') as channel:
+        with grpc.insecure_channel('anime-list:50052') as channel:
             stub = AnimeList_pb2_grpc.AnimeListStub(channel)
             request = AnimeList_pb2.get_multiple_anime_by_name_Request(anime_names=animes_name_watched)
             response = stub.GetMultipleAnimeByName(request)
@@ -48,7 +52,7 @@ def get_related_by_anime(user_name):
         print ("=========================== Animes Similar =====================")
         print (similar_animes)
 
-        with grpc.insecure_channel('localhost:50042') as channel:
+        with grpc.insecure_channel('user-recommendations:50042') as channel:
             stub = UserRecommendations_pb2_grpc.UserRecommendationsStub(channel)
             request = UserRecommendations_pb2.users_related_by_anime_Request(
                 animes_watched=animes_watched, animes_similar=similar_animes
