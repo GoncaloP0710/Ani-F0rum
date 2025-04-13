@@ -18,9 +18,6 @@ from python.others.UserStatistics import UserStatistics_pb2_grpc, UserStatistics
 from python.others.Achievements import Achievements_pb2_grpc, Achievements_pb2
 from python.others.FeedGenerator import FeedGenerator_pb2_grpc, FeedGenerator_pb2
 
-def init(self, base_url="http://user-controller:50040/api"):
-    self.base_url = base_url
-
 def get_related_by_anime(user_name):
     top10_response = top10Anime(user_name)
     print("Top 10 Response:", top10_response)  # Debugging line
@@ -93,7 +90,7 @@ def get_related_by_anime(user_name):
 
 def all_users():
     try:
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.Empty()
             response = stub.GetAllUsers(request)
@@ -125,7 +122,7 @@ def all_users():
 
 def get_user(user_name):
     try:
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.GetUserByNameRequest(user_name=user_name)
             response = stub.GetUserByName(request)
@@ -155,7 +152,7 @@ def get_user(user_name):
 
 def get_karma(user_name):
     try:
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.KarmaRequest(user_name=user_name)
             response = stub.GetUserKarma(request)
@@ -166,7 +163,7 @@ def get_karma(user_name):
 
 def top10Anime(user_name):
     try:
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.Top10_Request(user_name=user_name)
             response = stub.GetTop10(request)
@@ -191,7 +188,7 @@ def top10Anime(user_name):
 
 def list_topics(user_name):
     try:
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.MostUsedTopics_Request(user_name=user_name)
             response = stub.GetMostUsedTopics(request)
@@ -376,7 +373,7 @@ def update_user_karma(user_name, karma_value):
         # Convert karma_value to an integer
         karma_value = int(karma_value)
 
-        with grpc.insecure_channel('localhost:50060') as channel:
+        with grpc.insecure_channel('user-statistics:50041') as channel:
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
             request = UserStatistics_pb2.KarmaUpdateRequest(user_name=user_name, karma_value=karma_value)
             response = stub.UpdateUserKarma(request)

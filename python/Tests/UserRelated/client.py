@@ -1,7 +1,7 @@
 import requests
 
 class UserStatisticsClient:
-    def __init__(self, base_url="http://localhost:50040/api"):
+    def __init__(self, base_url="http://user-controller:50040/api"):
         self.base_url = base_url
 
     def users_related_by_anime(self, user_name) :

@@ -17,7 +17,7 @@ RUN pip install "connexion[uvicorn]"
 ENV PYTHONPATH=/app
 
 # Expose the port the service runs on
-EXPOSE 50060
+EXPOSE 50041
 
 # Run the service
 CMD ["python", "python/others/UserStatistics/UserStatistics.py"]

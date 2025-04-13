@@ -86,7 +86,7 @@ def get_similar_anime(anime_name):
 
 def get_similar_anime_list(user_name):
     top10_anime = None
-    with grpc.insecure_channel('localhost:50060') as channel:
+    with grpc.insecure_channel('user-statistics:50041') as channel:
         stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
         request = UserStatistics_pb2.Top10_Request(user_name=user_name)
         try:

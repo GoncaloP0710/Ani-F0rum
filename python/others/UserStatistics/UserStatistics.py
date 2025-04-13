@@ -50,10 +50,10 @@ from python.repository.Topic import TopicRepository_pb2
 class UserStatistics(UserStatisticsService):
 
     def __init__(self):
-        self.user_channel = grpc.insecure_channel('localhost:50043')  # Create a channel to the UserRepository
+        self.user_channel = grpc.insecure_channel('user-repository:50043')  # Create a channel to the UserRepository
         self.user_stub = UserRepository_pb2_grpc.UserRepositoryStub(self.user_channel)
 
-        self.anime_channel = grpc.insecure_channel('localhost:50053')  # Create a channel to the AnimeRepository
+        self.anime_channel = grpc.insecure_channel('anime-repository:50053')  # Create a channel to the AnimeRepository
         self.anime_stub = AnimeRepository_pb2_grpc.AnimeRepositoryStub(self.anime_channel)
 
         self.topic_channel = grpc.insecure_channel('localhost:50062')  # Create a channel to the TopicRepository
@@ -167,7 +167,7 @@ def serve():
     )
 
    
-    server.add_insecure_port("[::]:50060")
+    server.add_insecure_port("[::]:50041")
     server.start()
     server.wait_for_termination()
 

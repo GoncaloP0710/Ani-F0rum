@@ -69,6 +69,20 @@ docker build -t user-recommendations -f python/others/UserRecommendations/Docker
 docker run --rm -it --name user-recommendations --network user-network -p 50042:50042 user-recommendations
 ```
 
+# User Statistics
+
+```python
+docker build -t user-statistics -f python/others/UserStatistics/Dockerfile .
+```
+
+```python
+docker run --rm -it --name user-statistics --network user-network -p 50041:50041 user-statistics
+```
+
+```python
+docker network connect anime-network user-statistics
+```
+
 # User Controller
 
 ```python
