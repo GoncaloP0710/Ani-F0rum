@@ -19,7 +19,7 @@ kubectl get svc anime-controller # get CLUSTER-IP
 ```
 
 ```python
-kubectl exec -it pod/{name_of_pod}
+kubectl exec -it pod/{name_of_pod} -- /bin/sh
 ```
 
 ```python
