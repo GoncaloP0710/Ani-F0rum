@@ -95,3 +95,59 @@ kubectl get hpa
 ```python
 kubectl describe hpa anime-repository-hpa
 ```
+
+# User Controller
+
+## User Controller - Deployment & Service
+
+```python
+kubectl apply -f python/controller/Users/user_controller_deployment_service.yml
+```
+
+```python
+kubectl get pods
+```
+
+```python
+kubectl logs pod/{name_of_pod}
+```
+
+```python
+kubectl get svc user-controller # get CLUSTER-IP
+```
+
+```python
+kubectl exec -it pod/{name_of_pod} -- /bin/sh
+```
+
+```python
+wget -qO- http://{CLUSTER-IP}:50040/healthz
+```
+
+## User Controller - Scaler
+
+```python
+kubectl apply -f python/controller/Users/user_controller_scaler.yml
+```
+
+```python
+kubectl get hpa
+```
+
+```python
+kubectl describe hpa user-controller-hpa
+```
+
+# User Statistics
+
+```python
+kubectl apply -f python/others/UserStatistics/user_statistics_deployment_service.yml
+```
+
+# User Repository
+
+# Feed Generator
+
+# Achievement
+
+# User Recommendation

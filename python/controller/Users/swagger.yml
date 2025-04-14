@@ -162,6 +162,61 @@ components:
   # ======================= User =======================
   # ====================================================
 paths:
+
+
+  # Health Check Endpoint
+  /healthz:
+    get:
+      operationId: "user_controller.healthz"
+      tags:
+        - Health
+      summary: "Check if the service is alive"
+      responses:
+        "200":
+          description: "Service is alive"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Readiness Check Endpoint
+  /readiness:
+    get:
+      operationId: "user_controller.readiness"
+      tags:
+        - Health
+      summary: "Check if the service is ready to serve traffic"
+      responses:
+        "200":
+          description: "Service is ready"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Startup Check Endpoint
+  /startup:
+    get:
+      operationId: "user_controller.startup"
+      tags:
+        - Health
+      summary: "Check if the service has started successfully"
+      responses:
+        "200":
+          description: "Service has started"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
 #   /user:
 #     post:
 #       operationId: "user_controller.create"
