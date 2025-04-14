@@ -20,4 +20,4 @@ ENV PYTHONPATH=/app
 EXPOSE 50094
 
 # Run the service
-CMD ["python", "python/controller/FeedGenerator/FeedGenerator.py"]
+CMD ["python", "python/others/FeedGenerator/FeedGenerator.py"]

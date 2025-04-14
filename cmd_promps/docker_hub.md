@@ -1,89 +1,89 @@
 # Anime-Controller
 
 ```python
-docker build -t goncalop0710/anime-controller:latest -f python/controller/Anime/Dockerfile .
+docker build -t 4sparkz/anime-controller:latest -f python/controller/Anime/Dockerfile .
 ```
 
 ```python
-docker push goncalop0710/anime-controller:latest
+docker push 4sparkz/anime-controller:latest
 ```
 
 # Anime-List
 
 ```python
-docker build -t goncalop0710/anime-list:latest -f python/others/AnimeList/Dockerfile .
+docker build -t 4sparkz/anime-list:latest -f python/others/AnimeList/Dockerfile .
 ```
 
 ```python
-docker push goncalop0710/anime-list:latest
+docker push 4sparkz/anime-list:latest
 ```
 
 # Anime-Repository
 
 ```python
-docker build -t goncalop0710/anime-repository:latest -f python/repository/Anime/Dockerfile .
+docker build -t 4sparkz/anime-repository:latest -f python/repository/Anime/Dockerfile .
 ```
 
 ```python
-docker push goncalop0710/anime-repository:latest
+docker push 4sparkz/anime-repository:latest
 ```
 
 # User-Controller
 
 ```python
-docker build -t danunesl/user-controller:latest -f python/controller/Users/Dockerfile .
+docker build -t 4sparkz/user-controller:latest -f python/controller/Users/Dockerfile .
 ```
 
 ```python
-docker push danunesl/user-controller:latest
+docker push 4sparkz/user-controller:latest
 ```
 
 # User-repository
 
 ```python
-docker build -t danunesl/user-repository:latest -f python/repository/User/Dockerfile .
+docker build -t 4sparkz/user-repository:latest -f python/repository/User/Dockerfile .
 ```
 
 ```python
-docker push danunesl/user-repository:latest
+docker push 4sparkz/user-repository:latest
 ```
 
 # achievements
 
 ```python
-docker build -t danunesl/achievements:latest -f python/others/Achievements/Dockerfile .
+docker build -t 4sparkz/achievements:latest -f python/others/Achievements/Dockerfile .
 ```
 
 ```python
-docker push danunesl/achievements:latest
+docker push 4sparkz/achievements:latest
 ```
 
 # FeedGenerator
 
 ```python
-docker build -t danunesl/feed-generator:latest -f python/others/FeedGenerator/Dockerfile .
+docker build -t 4sparkz/feed-generator:latest -f python/others/FeedGenerator/Dockerfile .
 ```
 
 ```python
-docker push danunesl/feed-generator:latest
+docker push 4sparkz/feed-generator:latest
 ```
 
 # UserStatistics
 
 ```python
-docker build -t danunesl/user-statistics:latest -f python/others/UserStatistics/Dockerfile .
+docker build -t 4sparkz/user-statistics:latest -f python/others/UserStatistics/Dockerfile .
 ```
 
 ```python
-docker push danunesl/user-statistics:latest
+docker push 4sparkz/user-statistics:latest
 ```
 
 # UserRecommendations
 
 ```python
-docker build -t danunesl/user-recommendations:latest -f python/others/UserRecommendations/Dockerfile .
+docker build -t 4sparkz/user-recommendations:latest -f python/others/UserRecommendations/Dockerfile .
 ```
 
 ```python
-docker push danunesl/user-recommendations:latest
+docker push 4sparkz/user-recommendations:latest
 ```

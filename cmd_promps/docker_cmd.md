@@ -97,6 +97,29 @@ docker run --rm -it --name user-controller --network user-network -p 50040:50040
 docker network connect anime-network user-controller
 ```
 
+
+# Feed Generator 
+
+```python
+docker build -t feed-generator -f python/others/FeedGenerator/Dockerfile .
+```
+
+```python
+docker run --rm -it --name feed-generator --network user-network -p 50094:50094 feed-generator
+```
+
+
+# Achievements
+
+```python
+docker build -t achievements -f python/others/Achievements/Dockerfile .
+```
+
+```python
+docker run --rm -it --name achievements --network user-network -p 50080:50080 achievements
+```
+
+
 # User Client
 
 ```python
