@@ -146,6 +146,11 @@ kubectl apply -f python/others/UserStatistics/user_statistics_deployment_service
 
 # User Repository
 
+
+```python
+kubectl apply -f python/repository/User/user_repository_deployment_service.yml
+```
+
 # Feed Generator
 
 # Achievement
