@@ -157,3 +157,99 @@ kubectl apply -f python/repository/User/user_repository_deployment_service.yml
 
 # User Recommendation
 
+# Topics Controller
+
+## Topics Controller - Deployment & Service
+
+```python
+kubectl apply -f topics_controller_deployment_service.yml
+```
+
+```python
+kubectl get pods
+```
+
+```python
+kubectl logs pod/{name_of_pod}
+```
+
+```python
+kubectl get svc anime-controller # get CLUSTER-IP
+```
+
+```python
+kubectl exec -it pod/{name_of_pod} -- /bin/sh
+```
+
+```python
+wget -qO- http://{CLUSTER-IP}:50051/healthz
+```
+
+## Topics Controller - Scaler
+
+```python
+kubectl apply -f topics_controller_scaler.yml
+```
+
+```python
+kubectl get hpa
+```
+
+```python
+kubectl describe hpa topics-controller-hpa
+```
+
+# Publisher
+
+## Publisher - Deployment & Service
+
+```python
+kubectl apply -f publisher_deployment_service.yml
+```
+
+```python
+kubectl get pods
+```
+
+```python
+kubectl logs pod/{name_of_pod}
+```
+
+## Publisher - Scaler
+
+```python
+kubectl apply -f publisher_scaler.yml
+```
+
+```python
+kubectl get hpa
+```
+
+```python
+kubectl describe hpa publisher-hpa
+```
+
+# Topic Repository
+
+## Topic Repository - Deployment & Service
+
+```python
+export API_TOKEN=$(cat JSON-KEY.json)
+```
+
+```python
+kubectl apply -f publisher_deployment_service.yml
+```
+
+## Topic Repository - Scaler
+
+```python
+kubectl apply -f topic_repository_scaler.yml
+```
+
+```python
+kubectl get hpa
+```
+
+```python
+kubectl describe hpa topic-repository-hpa
