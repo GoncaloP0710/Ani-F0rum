@@ -32,6 +32,16 @@ from python.Common.User_pb2 import (
     Achievement,
     Rarity,
 )
+from flask import Flask, request, abort
+from google.cloud import bigquery
+from google.oauth2 import service_account
+import json, os
+import logging
+
+json_string = os.environ.get('API_TOKEN')
+json_file = json.loads(json_string)
+credentials = service_account.Credentials.from_service_account_info(json_file)
+client = bigquery.Client(credentials=credentials, location="europe-west1")
 
 class UserRepository_Service(UserRepositoryServicer) :
 
@@ -156,10 +166,68 @@ class UserRepository_Service(UserRepositoryServicer) :
     # Returns an user by name
     def GetUser(self, request, context):
         print("Searching for user with id: ", request.user_name)
-        for user in self.Users:
-            if user.user_name == request.user_name:
-                return get_user_Response(user=user)
-        raise NotFound("User not found")
+        #logging.info("Doing something important...")
+        
+        
+        # return get_user_Response(user=User(
+        #     user_name="JohnDoe",
+        #     password="password123",
+        #     location="USA",
+        #     animes_watched=["Naruto", "One Piece", "Attack on Titan"],
+        #     anime_watched_score=[9, 10, 8],
+        #     topics_subscribed=["Solo Leveling ep12", "Solo Leveling images"],
+        #     karma=150,
+        #     achievements=[
+        #         Achievement(
+        #             title="Anime Enthusiast",
+        #             description="Watched 100+ anime series",
+        #             date="2025-03-26",
+        #             rarity=Rarity.EPIC
+        #         ),
+        #         Achievement(
+        #             title="Manga Collector",
+        #             description="Collected 50+ manga volumes",
+        #             date="2025-03-20",
+        #             rarity=Rarity.RARE
+        #         )
+        #     ]
+        # ),)
+
+        query = "SELECT * FROM cn-fc58192.vmcloud.users WHERE user_name =" + request.user_name 
+        query_job = client.query(query)
+        result = query_job.result()
+        
+
+        if not result:
+
+            query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + request.user_name 
+            query_job = client.query(query)
+            result = query_job.result()
+            #criar user e insert em cn-fc58192.vmcloud.users
+
+            if not result:
+                raise NotFound("User not found")
+            
+            user = User()
+            user.user_name = result.user_id
+            user.password = ""
+            user.location = ""
+            user.animes_watched = result.anime_id
+            user.anime_watched_score = result.rating
+            user.topics_subscribed = []
+            user.karma = 0
+            user.achievements = []
+
+            return get_user_Response(user=user)
+            
+            
+        else:
+           return get_user_Response(user=User())
+        
+        # for user in self.Users:
+        #     if user.user_name == request.user_name:
+        #         return get_user_Response(user=user)
+            
 
     # Returns all users
     def GetAllUsers(self, request, context):

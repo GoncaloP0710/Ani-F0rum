@@ -127,6 +127,7 @@ class UserStatistics(UserStatisticsService):
         return MostUsedTopics_Response(most_used_topics=top_topics)
     
     def GetUserKarma(self, request, context):
+        print("karma ", request.user_name)
         response = self.user_stub.GetUser(UserRepository_pb2.get_user_Request(user_name=request.user_name))
         if not response.user:
             context.abort(grpc.StatusCode.NOT_FOUND, "User not found")
