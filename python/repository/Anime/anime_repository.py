@@ -24,6 +24,21 @@ from python.Common.Anime_pb2 import (
     AnimeGenre,
 )
 
+from flask import Flask, request, abort
+from google.cloud import bigquery
+import json, os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console
+    ]
+)
+
+client = bigquery.Client(project="cn-fc58192", location="europe-west1")
+
 print("===================== Anime Repository ====================")
 print("Trying to start AnimeRepository service...")
 print("=========================================================")
@@ -107,20 +122,92 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         )
     ]
 
+    # Map genre strings to AnimeGenre enum values
+    GENRE_MAPPING = {
+        "Action": AnimeGenre.ACTION,
+        "Adventure": AnimeGenre.ADVENTURE,
+        "Comedy": AnimeGenre.COMEDY,
+        "Drama": AnimeGenre.DRAMA,
+        "Fantasy": AnimeGenre.FANTASY,
+        "Horror": AnimeGenre.HORROR,
+        "Mystery": AnimeGenre.MYSTERY,
+        "Romance": AnimeGenre.ROMANCE,
+        "Sci-Fi": AnimeGenre.SCI_FI,
+        "Thriller": AnimeGenre.THRILLER,
+    }
+
+    def map_genres_to_enum(genre_list):
+        mapped_genres = []
+        for genre in genre_list:
+            if genre.strip() in GENRE_MAPPING:
+                mapped_genres.append(GENRE_MAPPING[genre.strip()])
+            else:
+                logging.warning(f"Unknown genre: {genre.strip()}")
+        return mapped_genres
+
     # Returns all animes
     def Animes(self, request, context):
-        print("Searching for all animes")
-        return animes_Response(animes=self.Animes_Objects)
+        logging.info("Fetching all animes from BigQuery")
+
+        # Query to fetch anime data
+        query = "SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`"
+        query_job = client.query(query)
+        result = query_job.result()
+
+        # Transform query result into Anime objects
+        animes = []
+        for row in result:
+            try:
+                # Map genres to AnimeGenre enum
+                genres = map_genres_to_enum(row["Genres"].split(","))
+                
+                # Create an Anime object
+                anime = Anime(
+                    name=row["Name"],
+                    genres=genres,  # Use the mapped genres
+                    episodes=row["Episodes"],
+                    score=row["Score"],
+                    aired=row["Aired"],
+                    synopsis=row.get("Synopsis", "No synopsis available")  # Default if synopsis is missing
+                )
+                animes.append(anime)
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        logging.info(f"Fetched {len(animes)} animes from BigQuery")
+
+        # Return the transformed Anime objects
+        return animes_Response(animes=animes)
     
     # Returns an anime by name
     def AnimeByName(self, request, context):
         AnimeName = request.anime_name
-        print("Searching for anime with name: ", AnimeName)
-        # Create an Anime object TODO: Remove this part after testing
-        for anime in self.Animes_Objects:
-            if anime.name == AnimeName:
-                return anime_by_name_Response(anime=anime)
-        raise NotFound("Anime not found")
+        logging.info(f"Searching for anime by name: {AnimeName}")
+
+        query = f"SELECT * FROM `cn-fc58192.vmcloud.anime-filtered` WHERE Name = '{AnimeName}'"
+        query_job = client.query(query)
+        result = query_job.result()
+
+        if not result:
+            logging.warning(f"No anime found with name: {AnimeName}")
+            raise NotFound("Anime not found")
+
+        # Map genres to AnimeGenre enum
+        genres = map_genres_to_enum(result[0]["Genres"].split(","))
+
+        # Create an Anime object
+        anime = Anime(
+            name=result[0]["Name"],
+            genres=genres,  # Use the mapped genres
+            episodes=result[0]["Episodes"],
+            score=result[0]["Score"],
+            aired=result[0]["Aired"],
+            synopsis=result[0].get("Synopsis", "No synopsis available")
+        )
+
+        return anime_by_name_Response(anime=anime)
     
     def MultipleAnimeByName(self, request, context):
         print("Searching for multiple animes by name")
@@ -132,16 +219,60 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
     
     # Returns all animes that belong to some of the given genres
     def AnimeRelatedByGenre(self, request, context):
-        print("Searching for animes by genre")
-        result = []  # Use a list instead of a set
-        
-        for anime in self.Animes_Objects:
-            print(anime.genres)
-            # Check if any genre in request.anime_genres matches a genre in anime.genres
-            if any(genre in anime.genres for genre in request.anime_genres):
-                result.append(anime)  # Add to the list
-        return anime_by_genre_Response(animes=result)
+        logging.info("Searching for animes by genre")
 
+        # Convert the requested genres (enum values) to their string representations
+        requested_genres = [genre.name for genre in request.anime_genres]
+        logging.info(f"Requested genres: {requested_genres}")
+
+        # Build the query to fetch animes that match the requested genres
+        query = """
+            SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`
+            WHERE ARRAY_LENGTH(ARRAY(
+                SELECT genre
+                FROM UNNEST(SPLIT(Genres, ',')) AS genre
+                WHERE genre IN UNNEST(@requested_genres)
+            )) > 0
+        """
+
+        # Configure the query with parameters
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ArrayQueryParameter("requested_genres", "STRING", requested_genres)
+            ]
+        )
+
+        # Execute the query
+        query_job = client.query(query, job_config=job_config)
+        result = query_job.result()
+
+        # Transform query result into Anime objects
+        animes = []
+        for row in result:
+            try:
+                # Map genres to AnimeGenre enum
+                genres = map_genres_to_enum(row["Genres"].split(","))
+
+                # Create an Anime object
+                anime = Anime(
+                    name=row["Name"],
+                    genres=genres,  # Use the mapped genres
+                    episodes=row["Episodes"],
+                    score=row["Score"],
+                    aired=row["Aired"],
+                    synopsis=row.get("Synopsis", "No synopsis available")  # Default if synopsis is missing
+                )
+                animes.append(anime)
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        logging.info(f"Fetched {len(animes)} animes matching the genres from BigQuery")
+
+        # Return the transformed Anime objects
+        return anime_by_genre_Response(animes=animes)
+        
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
     server = grpc.server(
