@@ -181,52 +181,24 @@ class UserRepository_Service(UserRepositoryServicer) :
         
        # return get_user_Response(user=self.Users[0])
 
-        query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + str(request.user_name) 
+        query = f"SELECT * FROM `cn-fc58192.vmcloud.user-details` WHERE Username = '{request.user_name}'"
         query_job = client.query(query)
-        result = query_job.result()
-        logging.info(result)
+        result = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("Query result: %s", result)
+
+        #user-karma -> str user_name , int karma
+        #user-achievements -> str user_name , str title, str description, str date, str rarity
         
-        # Log each row in the result
-        for row in result:
-            logging.info(f"Query result row: {row}")
 
         if not result:
-
-            query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + str(request.user_name) 
-            query_job = client.query(query)
-            result = query_job.result()
-            #criar user e insert em cn-fc58192.vmcloud.users
-
-            if not result:
-                raise NotFound("User not found")
-            
-            # user = User(
-            #     user_name = result.user_id,
-            #     password = "-",
-            #     location = "-",
-            #     animes_watched = result.anime_id,
-            #     anime_watched_score = result.rating,
-            #     topics_subscribed = ["default"],
-            #     karma = 0,
-            #     achievements = [Achievement(
-            #         title="Anime Enthusiast",
-            #         description="Watched 100+ anime series",
-            #         date="2025-03-26",
-            #         rarity=Rarity.EPIC
-            #     ),]
-            # )
-
-            return get_user_Response(user=result)
-            
-            
+            logging.info("User not found")
+            raise NotFound("User not found")
         else:
-           return get_user_Response(user=result)
+            # If user exists, return the first result
+            user_data = result[0]
+            logging.info("User found: %s", user_data)
+            return get_user_Response(user=user_data)
         
-        for user in self.Users:
-            if user.user_name == request.user_name:
-                return get_user_Response(user=user)
-            
-
     # Returns all users
     def GetAllUsers(self, request, context):
         print("Searching for all users")

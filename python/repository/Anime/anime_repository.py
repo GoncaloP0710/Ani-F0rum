@@ -136,11 +136,11 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         "Thriller": AnimeGenre.THRILLER,
     }
 
-    def map_genres_to_enum(genre_list):
+    def map_genres_to_enum(self, genre_list):
         mapped_genres = []
         for genre in genre_list:
-            if genre.strip() in GENRE_MAPPING:
-                mapped_genres.append(GENRE_MAPPING[genre.strip()])
+            if genre.strip() in self.GENRE_MAPPING:
+                mapped_genres.append(self.GENRE_MAPPING[genre.strip()])
             else:
                 logging.warning(f"Unknown genre: {genre.strip()}")
         return mapped_genres
@@ -150,7 +150,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         logging.info("Fetching all animes from BigQuery")
 
         # Query to fetch anime data
-        query = "SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`"
+        query = "SELECT * FROM cn-fc58192.vmcloud.anime-filtered"
         query_job = client.query(query)
         result = query_job.result()
 
@@ -159,7 +159,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         for row in result:
             try:
                 # Map genres to AnimeGenre enum
-                genres = map_genres_to_enum(row["Genres"].split(","))
+                genres = self.map_genres_to_enum(row["Genres"].split(","))
                 
                 # Create an Anime object
                 anime = Anime(
@@ -186,7 +186,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         AnimeName = request.anime_name
         logging.info(f"Searching for anime by name: {AnimeName}")
 
-        query = f"SELECT * FROM `cn-fc58192.vmcloud.anime-filtered` WHERE Name = '{AnimeName}'"
+        query = f"SELECT * FROM cn-fc58192.vmcloud.anime-filtered WHERE Name = {AnimeName}"
         query_job = client.query(query)
         result = query_job.result()
 
@@ -195,7 +195,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
             raise NotFound("Anime not found")
 
         # Map genres to AnimeGenre enum
-        genres = map_genres_to_enum(result[0]["Genres"].split(","))
+        genres = self.map_genres_to_enum(result[0]["Genres"].split(","))
 
         # Create an Anime object
         anime = Anime(
@@ -251,7 +251,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         for row in result:
             try:
                 # Map genres to AnimeGenre enum
-                genres = map_genres_to_enum(row["Genres"].split(","))
+                genres = self.map_genres_to_enum(row["Genres"].split(","))
 
                 # Create an Anime object
                 anime = Anime(

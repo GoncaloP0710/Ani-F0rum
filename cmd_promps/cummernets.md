@@ -3,7 +3,7 @@
 ## Anime Controller - Deployment & Service
 
 ```python
-kubectl apply -f anime_controller_deployment_service.yml
+kubectl apply -f python/controller/Anime/anime_controller_deployment_service.yml
 ```
 
 ```python
@@ -45,7 +45,7 @@ kubectl describe hpa anime-controller-hpa
 ## Anime List - Deployment & Service
 
 ```python
-kubectl apply -f anime_list_deployment_service.yml
+kubectl apply -f python/others/AnimeList/anime_list_deployment_service.yml
 ```
 
 ```python
@@ -79,7 +79,7 @@ export API_TOKEN=$(cat JSON-KEY.json)
 ```
 
 ```python
-kubectl apply -f anime_list_deployment_service.yml
+kubectl apply -f python/repository/Anime/anime_repository_deployment_service.yml
 ```
 
 ## Anime Repository - Scaler
