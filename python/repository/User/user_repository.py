@@ -41,8 +41,15 @@ import logging
 # json_string = os.environ.get("API_TOKEN")
 # json_file = json.loads(json_string)
 # credentials = service_account.Credentials.from_service_account_info(json_file)
-client = bigquery.Client(location="europe-west1")
+client = bigquery.Client(project="cn-fc58192", location="europe-west1")
 
+logging.basicConfig(
+    level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console
+    ]
+)
 class UserRepository_Service(UserRepositoryServicer) :
 
     Achievements = [
@@ -165,20 +172,27 @@ class UserRepository_Service(UserRepositoryServicer) :
 
     # Returns an user by name
     def GetUser(self, request, context):
-        print("Searching for user with id: ", request.user_name)
-        #logging.info("Doing something important...")
-        
+        logging.info("Searching for user with id: ", request.user_name)
+     
+        logging.info("==========================================")
+        logging.info("logging")
+        logging.info(request.user_name)
+        logging.info("==========================================")
         
        # return get_user_Response(user=self.Users[0])
 
-        query = "SELECT * FROM cn-fc58192.vmcloud.users WHERE user_name =" + request.user_name 
+        query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + str(request.user_name) 
         query_job = client.query(query)
         result = query_job.result()
+        logging.info(result)
         
+        # Log each row in the result
+        for row in result:
+            logging.info(f"Query result row: {row}")
 
         if not result:
 
-            query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + request.user_name 
+            query = "SELECT * FROM cn-fc58192.vmcloud.animelist WHERE user_id =" + str(request.user_name) 
             query_job = client.query(query)
             result = query_job.result()
             #criar user e insert em cn-fc58192.vmcloud.users
@@ -229,7 +243,7 @@ class UserRepository_Service(UserRepositoryServicer) :
 
         print("Found users: ", users)
         return get_users_that_watched_anime_Response(users=users)
-    name
+    #name
     def GetUserAchievements(self, request, context):
         print("Searching for achievements of user: ", request.user_name)
         for user in self.Users:
