@@ -5,6 +5,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 import random
 from concurrent import futures
 
+# ---------------------------------------------------------------
+from concurrent import futures
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
+# ---------------------------------------------------------------
+
 import grpc
 
 from python.others.Publisher.Publisher_pb2_grpc import (
@@ -141,17 +147,23 @@ class PublishService(PublisherServicer):
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
     
-"""
-    def Recommend(self, request, context):
-        if request.category not in books_by_category:
-            raise NotFound("Category not found")
+# ----------------------------------------------------------------
+# HTTP server for Kubernetes probes
+class ProbeHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path in ["/healthz", "/readiness", "/startup"]:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
 
-        books_for_category = books_by_category[request.category]
-        num_results = min(request.max_results, len(books_for_category))
-        books_to_recommend = random.sample(books_for_category, num_results)
-
-        return RecommendationResponse(publisher=books_to_recommend)
-"""
+def start_http_server():
+    http_server = HTTPServer(('0.0.0.0', 8080), ProbeHandler)
+    print("HTTP server for probes started on port 8080")
+    http_server.serve_forever()
+# ----------------------------------------------------------------
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
@@ -180,6 +192,12 @@ def serve():
     server.add_insecure_port("[::]:50061")
     print('Publisher server running on port 50061')
     server.start()
+
+    # -------------------------------------------------
+    # Start the HTTP server for probes in a separate thread
+    http_thread = threading.Thread(target=start_http_server)
+    http_thread.daemon = True
+    http_thread.start()
 
     #print (PublishService().CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname="Test"), None))
     #print (PublishService().GetTopic(TopicRepository_pb2.GetTopicRequest(topicname="Test"), None))

@@ -21,7 +21,7 @@ spec:
 
         # If you're using Minikube, you can leave the image: topics-controller:latest as it is, but you need to ensure that the image is available to the Minikube cluster. Since Minikube runs a local Kubernetes cluster, it does not automatically have access to Docker images built on your host machine unless you configure it properly.
         # Or just use the image from Docker Hub i think
-        image: diogoalmeida107/topics-controller:latest
+        image: 4sparkz/topics-controller:latest
         imagePullPolicy: Always
 
         
@@ -65,19 +65,19 @@ spec:
 
 ---
 
-# Service YAML for anime-controller
+# Service YAML for topics-controller
 apiVersion: v1
 kind: Service
 metadata:
-  name: anime-controller
+  name: topics-controller
   labels:
-    app: anime-controller
+    app: topics-controller
 spec:
   type: ClusterIP # Internal service type
   selector:
-    app: anime-controller # Matches the app label in the deployment
+    app: topics-controller # Matches the app label in the deployment
   ports:
     - name: http
       protocol: TCP
-      port: 50051 # Exposed port
-      targetPort: 50051 # Port on the container
+      port: 50060 # Exposed port
+      targetPort: 50060 # Port on the container

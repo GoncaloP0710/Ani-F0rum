@@ -6,6 +6,12 @@ import random
 from collections import Counter
 from concurrent import futures
 
+# ---------------------------------------------------------------
+from concurrent import futures
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
+# ---------------------------------------------------------------
+
 import grpc
 
 from python.repository.Topic.TopicRepository_pb2_grpc import (
@@ -85,37 +91,6 @@ class TopicService(TopicRepositoryServicer):
                 ]
             )
         ]
-
-    def MostUsedTopics(self, request, context):
-        
-        print("Processing a MostUsedTopics request")
-        micro_service_response = [] # TODO with SQL
-        print("Received response from other micro service")
-
-        # assume that the anime name are the first 2 words
-        anime_names = [" ".join(topic.topicname.split()[:2]) for topic in self.Topics]
-        counter = Counter(anime_names)
-        most_used = counter.most_common(1)
-        
-        print("Returning the response: " + trending_topics)
-
-        return MostUsedTopicsResponse(most_used[0][0]) if most_used else NotFound("No topics found")
-    
-    def TopicSubscribers(self, request, context):
-
-        print("Processing a TopicSubscribers request")
-        
-        res = []
-
-        for topic in self.Topics:
-            if topic.name in request.topicnames:
-                micro_service_response = []
-                print("Received response from other micro service for topic name: " + topic_name)
-                subscribers = topic.subscribers
-                res.append(topsubscribers)
-                
-        print("Returning the response: " + res)
-        return TopicSubscribersResponse(subscribers)
 
     def Recomendation(self, request, context):
 
@@ -237,17 +212,23 @@ class TopicService(TopicRepositoryServicer):
 
         return PublishInTopicResponse(publicationname = publication_name)
 
-"""
-    def Recommend(self, request, context):
-        if request.category not in books_by_category:
-            raise NotFound("Category not found")
+# ----------------------------------------------------------------
+# HTTP server for Kubernetes probes
+class ProbeHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path in ["/healthz", "/readiness", "/startup"]:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
 
-        books_for_category = books_by_category[request.category]
-        num_results = min(request.max_results, len(books_for_category))
-        books_to_recommend = random.sample(books_for_category, num_results)
-
-        return RecommendationResponse(topic=books_to_recommend)
-"""
+def start_http_server():
+    http_server = HTTPServer(('0.0.0.0', 8080), ProbeHandler)
+    print("HTTP server for probes started on port 8080")
+    http_server.serve_forever()
+# ----------------------------------------------------------------
 
 def serve():
     interceptors = [ExceptionToStatusInterceptor()]
@@ -276,6 +257,13 @@ def serve():
     server.add_insecure_port("[::]:50062")
     server.start()
     print('Topic Repository server running on port 50062')
+
+    # -------------------------------------------------
+    # Start the HTTP server for probes in a separate thread
+    http_thread = threading.Thread(target=start_http_server)
+    http_thread.daemon = True
+    http_thread.start()
+
     server.wait_for_termination()
 
 if __name__ == "__main__":

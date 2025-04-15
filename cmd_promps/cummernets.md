@@ -174,7 +174,7 @@ kubectl logs pod/{name_of_pod}
 ```
 
 ```python
-kubectl get svc anime-controller # get CLUSTER-IP
+kubectl get svc topics-controller # get CLUSTER-IP
 ```
 
 ```python
@@ -182,7 +182,7 @@ kubectl exec -it pod/{name_of_pod} -- /bin/sh
 ```
 
 ```python
-wget -qO- http://{CLUSTER-IP}:50051/healthz
+wget -qO- http://{CLUSTER-IP}:50060/healthz
 ```
 
 ## Topics Controller - Scaler
@@ -234,11 +234,7 @@ kubectl describe hpa publisher-hpa
 ## Topic Repository - Deployment & Service
 
 ```python
-export API_TOKEN=$(cat JSON-KEY.json)
-```
-
-```python
-kubectl apply -f publisher_deployment_service.yml
+kubectl apply -f topic_repository_deployment_service.yml
 ```
 
 ## Topic Repository - Scaler
@@ -253,3 +249,4 @@ kubectl get hpa
 
 ```python
 kubectl describe hpa topic-repository-hpa
+```
