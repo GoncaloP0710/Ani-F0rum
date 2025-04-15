@@ -1,0 +1,23 @@
+# Configures autoscaling for the deployment.
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: topics-controller-hpa
+  namespace: default
+  labels:
+    app: topics-controller
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: topics-controller # Name of the deployment to scale
+  minReplicas: 1 # Minimum number of pods
+  maxReplicas: 10 # Maximum number of pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80 # Target CPU utilization percentage

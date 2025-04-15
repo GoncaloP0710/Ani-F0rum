@@ -129,3 +129,48 @@ docker build -t user-client -f python/Tests/UserRelated/Dockerfile .
 ```python
 docker run --rm -it --name user-client --network user-network user-client
 ```
+
+# Topics Network
+
+```python
+docker network create topics-network
+```
+
+# Topics Repository
+
+```python
+docker build -t topic-repository -f python/repository/Topic/Dockerfile .
+```
+
+```python
+docker run --rm -d --name topic-repository --network topics-network -p 50062:50062 topic-repository
+```
+# Topics List 
+
+```python
+docker build -t publisher -f python/others/Publisher/Dockerfile .
+```
+
+```python
+docker run --rm -it --name publisher --network topics-network -p 50061:50061 publisher
+```
+
+# Topics Controller 
+
+```python
+docker build -t topics-controller -f python/controller/Topics/Dockerfile .
+```
+
+```python
+docker run --rm -it --name topics-controller --network topics-network -p 50060:50060 topics-controller
+```
+
+# Topics Client 
+
+```python
+docker build -t topics-client -f python/Tests/TopicRelated/Dockerfile .
+```
+
+```python
+docker run --rm -it --name topics-client --network topics-network topics-client
+```

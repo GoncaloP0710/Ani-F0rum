@@ -44,7 +44,7 @@ from python.repository.Topic import TopicRepository_pb2_grpc
 class PublishService(PublisherServicer):
 
     def __init__(self):
-        self.channel = grpc.insecure_channel('localhost:50062')  # Create a channel to the TopicRepository
+        self.channel = grpc.insecure_channel('topic-repository:50062')  # Create a channel to the TopicRepository
         self.stub = TopicRepositoryStub(self.channel)
 
     def GetTopics(self, request, context):
@@ -60,6 +60,7 @@ class PublishService(PublisherServicer):
     def CreateTopic(self, request, context):
 
         try:
+            print("Processing a CreateTopics request")
             response = self.stub.CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname=request.topicname))
             return CreateTopicResponsePub(topicname=response.topicname)
         except grpc.RpcError as e:
@@ -69,13 +70,18 @@ class PublishService(PublisherServicer):
     def GetTopic(self, request, context):
 
         try:
+            print("Processing a GetTopic request")
             response = self.stub.GetTopic(TopicRepository_pb2.GetTopicRequest(topicname=request.topicname))
             return GetTopicResponsePub(topic=response.topic)
         except grpc.RpcError as e:
             context.abort(grpc.StatusCode.INTERNAL, str(e))
             return None
     
-    def PublishInTopic(self, request, context):
+    def Publish(self, request, context):
+
+        print("Processing a PublishInTopic request")
+        print('Received request')
+        print(request)
 
         topic_name = request.topicname
         publication_name = request.publicationname
@@ -175,16 +181,16 @@ def serve():
     print('Publisher server running on port 50061')
     server.start()
 
-    print (PublishService().CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname="Test"), None))
-    print (PublishService().GetTopic(TopicRepository_pb2.GetTopicRequest(topicname="Test"), None))
-    print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Message", message=Message(
-        username="testUser1",
-        content="This is a test"
-    )), None))
-    print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Image", image=Image(
-        name="test image",
-        username="testUser1"
-    )), None))
+    #print (PublishService().CreateTopic(TopicRepository_pb2.CreateTopicRequest(topicname="Test"), None))
+    #print (PublishService().GetTopic(TopicRepository_pb2.GetTopicRequest(topicname="Test"), None))
+    #print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Message", message=Message(
+    #    username="testUser1",
+    #    content="This is a test"
+    #)), None))
+    #print (PublishService().PublishInTopic(PublishInTopicRequestPub(topicname="Solo Leveling ep12", publicationname="Test Image", image=Image(
+    #    name="test image",
+    #    username="testUser1"
+    #)), None))
 
     server.wait_for_termination()
 

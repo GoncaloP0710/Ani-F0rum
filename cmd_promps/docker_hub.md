@@ -87,3 +87,33 @@ docker build -t 4sparkz/user-recommendations:latest -f python/others/UserRecomme
 ```python
 docker push 4sparkz/user-recommendations:latest
 ```
+
+# Topics-Controller
+
+```python
+docker build -t diogoalmeida107/topics-controller:latest -f python/controller/Topics/Dockerfile .
+```
+
+```python
+docker push diogoalmeida107/topics-controller:latest
+```
+
+# Publisher
+
+```python
+docker build -t diogoalmeida107/publisher:latest -f python/others/Publisher/Dockerfile .
+```
+
+```python
+docker push diogoalmeida107/publisher:latest
+```
+
+# Topic-Repository
+
+```python
+docker build -t diogoalmeida107/topic-repository:latest -f python/repository/Topic/Dockerfile .
+```
+
+```python
+docker push diogoalmeida107/topic-repository:latest
+```

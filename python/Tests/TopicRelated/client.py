@@ -1,7 +1,7 @@
 import requests
 
 class TopicClient:
-    def __init__(self, base_url="http://localhost:50060/api"):
+    def __init__(self, base_url="http://topics-controller:50060/"):
         self.base_url = base_url
 
     def get_topics(self):
@@ -27,9 +27,7 @@ class TopicClient:
             print('make a create topic request to the controller')
             # Make a POST request to the /topics endpoint
             response = requests.post(f"{self.base_url}/topics", json={
-                "topic": {
-                    "name": topic_name
-                }
+                "name": topic_name
             })
 
             print('Got the response:')
@@ -74,16 +72,37 @@ class TopicClient:
 
     def publish(self):
         try:
-            topic_name = input('Qual o nome do tópico?')
-            publication_name = input('Qual o nome da publicação?')
-            username = input('Qual o seu nome de usuário?')
-            content = input('Qual o conteúdo da publicação? (e.g. nome da imagem ou conteúdo da mensagem)')
+            topic_name = input('Qual o nome do tópico?\n')
+            publication_name = input('Qual o nome da publicação?\n')
+            username = input('Qual o seu nome de usuário?\n')
+            content_type = input('Qual o tipo de conteúdo? (e.g. imagem ou mensagem)\n')
+            content = input('Qual o conteúdo da publicação? (e.g. nome da imagem ou conteúdo da mensagem)\n')
+
+            response = None
 
             # Make a POST request to the /topics/{topicname} endpoint
-            response = requests.post(f"{self.base_url}/topics/{topic_name}")
+            if content_type == 'imagem' or content_type == 'image':
+                response = requests.post(f"{self.base_url}/topics/{topic_name}", json={
+                    "name": publication_name,
+                    "topic_name": topic_name,
+                    "images": [{
+                        "username": username,
+                        "name": content
+                    }]
+                })
+            else:
+                response = requests.post(f"{self.base_url}/topics/{topic_name}", json={
+                    "name": publication_name,
+                    "topic_name": topic_name,
+                    "message": {
+                        "username": username,
+                        "content": content
+                    }
+                })
             
             # Check if the response status code is 200 (OK)
-            if response.status_code == 201:
+            if response.status_code >= 200 and response.status_code < 300:
+                print('Got the response:')
                 return response.json()  # Return the anime details as JSON
             # TODO adicionar caso de erro de criação (e.g. já existe com este nome)
             #elif response.status_code == 400:

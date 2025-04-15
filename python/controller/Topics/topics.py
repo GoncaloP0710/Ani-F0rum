@@ -16,7 +16,7 @@ from python.Common import Topic_pb2
 
 def all_topics():
 
-    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
         request = Publisher_pb2.GetTopicsRequestPub() # Create a request
         
@@ -55,20 +55,19 @@ def all_topics():
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-# having an error where it doesn't recognize the argument
-#    return function(*args, **kwargs)
-#           ^^^^^^^^^^^^^^^^^^^^^^^^^
-#TypeError: create() missing 1 required positional argument: 'topic'
 def create(body):
 
     print('Handling a create request')
+
+    print('Received body')
+    print(body)
 
     topicname = body.get('name')
     
     print('Received value')
     print(topicname)
 
-    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
         print('Before request to other micro service')
         request = Publisher_pb2.CreateTopicRequestPub(topicname=topicname) # Create a request
@@ -82,7 +81,7 @@ def create(body):
 
 def get_topic(topic_name):
 
-    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
         request = Publisher_pb2.GetTopicRequestPub(topicname=topic_name) # Create a request
 
@@ -122,24 +121,57 @@ def get_topic(topic_name):
 
 # not tested, stuck in create_topic error
 def publish(topic_name, body):
- 
+
+    print('Handling a publish request')
+
+    print('Received value')
+    print(topic_name)
+    print('Received body')
+    print(body)
+
     publicationname = body.get('name')
-    topicname = body.get('topic_name')
-    username = body.get('message')
-    content = body.get('images')
+    msg = body.get('message')
+    img = body.get('images')[0] if body.get('images') else None
 
-    # TODO construir o json do lado do cliente
-
-    with grpc.insecure_channel('localhost:50061') as channel: # Connect to the anime_list server
+    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
-        request = Publisher_pb2.PublishInTopicRequestPub() # Create a request
-        
+        if msg != None:
+            request = Publisher_pb2.PublishInTopicRequestPub(
+                topicname=topic_name,
+                publicationname=publicationname,
+                image=None,
+                message=Topic_pb2.Message(
+                    username=msg.get('username'),
+                    content=msg.get('content')
+                )
+            )
+        else:
+            request = Publisher_pb2.PublishInTopicRequestPub(
+                topicname=topic_name,
+                publicationname=publicationname,
+                image=Topic_pb2.Image(
+                    username=img.get('username'),
+                    name=img.get('name')
+                ),
+                message=None
+            )
+
         try:  # Make the request
             response = stub.Publish(request)
             print("Published: " + response.publicationname)
             return response.publicationname  # Return the list of animes as JSON
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
+
+
+def healthz():
+    return {"status": "ok"}, 200
+
+def readiness():
+    return {"status": "ready"}, 200
+
+def startup():
+    return {"status": "started"}, 200
 
 def get_user_personalized():
     ...

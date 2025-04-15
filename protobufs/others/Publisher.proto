@@ -1,29 +1,29 @@
 syntax = "proto3";
 import "Common/Topic.proto";
 
-message GetTopicsRequest {}
+message GetTopicsRequestPub {}
 
-message GetTopicsResponse {
+message GetTopicsResponsePub {
     repeated Topic topics = 1;
 }
 
-message CreateTopicRequest {
+message CreateTopicRequestPub {
     string topicname = 1;
 }
 
-message CreateTopicResponse {
+message CreateTopicResponsePub {
     string topicname = 1;
 }
 
-message GetTopicRequest {
+message GetTopicRequestPub {
     string topicname = 1;
 }
 
-message GetTopicResponse {
+message GetTopicResponsePub {
     Topic topic = 1;
 }
 
-message PublishInTopicRequest {
+message PublishInTopicRequestPub {
     string topicname = 1;
     string publicationname = 2;
     oneof content {
@@ -32,13 +32,13 @@ message PublishInTopicRequest {
     }
 }
 
-message PublishInTopicResponse {
+message PublishInTopicResponsePub {
     string publicationname = 1;
 }
 
 service Publisher {
-    rpc GetTopics (GetTopicsRequest) returns (GetTopicsResponse);
-    rpc CreateTopic (CreateTopicRequest) returns (CreateTopicResponse);
-    rpc GetTopic (GetTopicRequest) returns (GetTopicResponse);
-    rpc Publish (PublishInTopicRequest) returns (PublishInTopicResponse);
+    rpc GetTopics (GetTopicsRequestPub) returns (GetTopicsResponsePub);
+    rpc CreateTopic (CreateTopicRequestPub) returns (CreateTopicResponsePub);
+    rpc GetTopic (GetTopicRequestPub) returns (GetTopicResponsePub);
+    rpc Publish (PublishInTopicRequestPub) returns (PublishInTopicResponsePub);
 }
