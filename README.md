@@ -73,10 +73,4 @@ Repositories are responsible for interacting with the database. They provide low
 
 ## How to run
 
-1. **Clone the project on the cloud**
-
-```python
-git clone https://github.com/GoncaloP0710/Ani-F0rum.git
-```
-
-2. **Conect Kubernets**
+[All the information needed is here](cmd_promps/cummernets.md).

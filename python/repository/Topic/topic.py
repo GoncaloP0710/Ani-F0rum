@@ -165,6 +165,7 @@ class TopicService(TopicRepositoryServicer):
         topic_map = {}
 
         for row in result:
+            logging.info(f'row: {row}')
             try:
             
                 publication = None
