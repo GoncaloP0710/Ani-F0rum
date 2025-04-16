@@ -55,56 +55,6 @@ client = bigquery.Client(project="cn-fc58192", location="europe-west1")
 
 class TopicService(TopicRepositoryServicer):
 
-    def __init__(self):
-        self.Topics = [
-            Topic(
-                topicname = 'Solo Leveling ep12',
-                subscribers = [
-                    Subscriber(name = 'Diogo'),
-                    Subscriber(name = 'Gonçalo'),
-                    Subscriber(name = 'André'),
-                    Subscriber(name = 'Daniel')
-                ],
-                publications = [
-                    Publication(
-                        name = "Diogo Reaction",
-                        topicname = 'Solo Leveling',
-                        message = Message(
-                            username = 'Diogo',
-                            content = 'Wow, it was amazing!'
-                        )
-                    ),
-                    Publication(
-                        name = 'Answer to Diogo Reaction',
-                        topicname = 'Solo Leveling',
-                        message = Message(
-                            username = 'Gonçalo',
-                            content = 'I agree Gajo.'
-                        )
-                    )
-                ]
-            ),
-            Topic(
-                topicname = 'Solo Leveling images',
-                subscribers = [
-                    Subscriber(name = 'Diogo'),
-                    Subscriber(name = 'Gonçalo'),
-                    Subscriber(name = 'André'),
-                    Subscriber(name = 'Daniel')
-                ],
-                publications = [
-                    Publication(
-                        name = 'Last fight',
-                        topicname = 'Solo Leveling',
-                        images = Image(
-                            name = 'Epic fight',
-                            username = 'Diogo'
-                        )
-                    )
-                ]
-            )
-        ]
-
     def Recomendation(self, request, context):
 
         print("Processing a Recomendation request")
@@ -123,98 +73,127 @@ class TopicService(TopicRepositoryServicer):
 
         logging.info("Processing a GetTopics request")
 
-        query = """
-            SELECT
-                t.topicname AS topic_name,
-                s.name AS subscriber_name,
-                p.publicationid,
-                p.name AS publication_name,
-                p.topicname AS publication_topicname,
-                m.username AS message_username,
-                m.content AS message_content,
-                NULL AS image_name,
-                NULL AS image_username
-            FROM `cn-fc58192.vmcloud.topics` t
-            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
-
-            UNION ALL
-
-            SELECT
-                t.topicname AS topic_name,
-                s.name AS subscriber_name,
-                p.publicationid,
-                p.name AS publication_name,
-                p.topicname AS publication_topicname,
-                NULL AS message_username,
-                NULL AS message_content,
-                i.name AS image_name,
-                i.username AS image_username
-            FROM `cn-fc58192.vmcloud.topics` t
-            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
-            """
-        
-        query_job = client.query(query)
-        result = query_job.result()
-
-        logging.info('Building Topics')
-
         topic_map = {}
 
-        for row in result:
-            logging.info(f'row: {row}')
+        topic_name_query = """
+            SELECT topicname FROM `fc64854cn.topics.topics`;
+        """
+        topic_name_query_job = client.query(topic_name_query)
+        topic_name_result = topic_name_query_job.result()
+
+        for row in topic_name_result:
             try:
-            
-                publication = None
-                name = row['topic_name']
-                subscriber_name = row.get('subscriber_name')
-                logging.info(f'subscriber_name: {subscriber_name}')
+                topic_name = row['topicname']
+                topic_map[topic_name] = {
+                    "subscribers": [],
+                    "publications": []
+                }
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
 
-                if name not in topic_map:
-                    topic_map[name] = {
-                        "subscribers": set(),
-                        "publications": []
-                    }
+        subscribers_query = """
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name
+            FROM `fc64854cn.topics.topics` t
+            LEFT JOIN `fc64854cn.topics.subscribers` s ON t.topicid = s.topicid;
+        """
+        subscribers_query_job = client.query(subscribers_query)
+        subscribers_result = subscribers_query_job.result()
 
-                if subscriber_name:
-                    topic_map[name]["subscribers"].add(Subscriber(name=subscriber_name))
+        for row in subscribers_result:
+            try:
+                topic_name = row['topic_name']
+                subscriber_name = row['subscriber_name']
 
-                if row['message_username'] is not None:
-                    logging.info(f'message_username: {row['message_username']}')
-                    publication = Publication(
-                        name=row['publication_name'],
-                        topicname=row['publication_topicname'],
-                        message = Message(
-                            username=row['message_username'],
-                            content=row['message_content']
-                        )
-                    )
-                    
-                elif row['image_name'] is not None:
-                    logging.info(f'image_name: {row['image_name']}')
-                    publication = Publication(
-                        name=row['publication_name'],
-                        topicname=row['publication_topicname'],
-                        images = Image(
-                            name=row['image_name'],
-                            username=row['image_username']
-                        )
-                    )
-                else:
-                    logging.info(f'else branch')
-                    continue
-
-                logging.info(f'publication: {publication}')
-
-                topic_map[name]["publications"].append(publication)
+                if topic_name in topic_map:
+                    topic_map[topic_name]["subscribers"].append(Subscriber(name=subscriber_name))
 
             except KeyError as e:
                 logging.error(f"Missing field in query result: {e}")
             except Exception as e:
                 logging.error(f"Error processing row: {e}")
+                    
+        message_publications_query = """
+            SELECT
+                t.topicname AS topic_name,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                m.username AS message_username,
+                m.content AS message_content
+            FROM `fc64854cn.topics.topics` t
+            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `fc64854cn.topics.messages` m ON p.publicationid = m.publicationid
+        """
+        message_publications_query_job = client.query(message_publications_query)
+        message_publications_result = message_publications_query_job.result()
+
+        for row in message_publications_result:
+            try:
+                topic_name = row['topic_name']
+                publication_name = row['publication_name']
+                publication_topicname = row['publication_topicname']
+                message_username = row['message_username']
+                message_content = row['message_content']
+
+                if topic_name in topic_map:
+                    publication = Publication(
+                        name=publication_name,
+                        topicname=publication_topicname,
+                        message=Message(
+                            username=message_username,
+                            content=message_content
+                        )
+                    )
+                    topic_map[topic_name]["publications"].append(publication)
+            
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        image_publications_query = """
+            SELECT
+                t.topicname AS topic_name,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                i.name AS image_name,
+                i.username AS image_username
+            FROM `fc64854cn.topics.topics` t
+            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `fc64854cn.topics.images` i ON p.publicationid = i.publicationid
+        """
+
+        image_publications_query_job = client.query(image_publications_query)
+        image_publications_result = image_publications_query_job.result()
+
+        for row in image_publications_result:
+            try:
+                topic_name = row['topic_name']
+                publication_name = row['publication_name']
+                publication_topicname = row['publication_topicname']
+                image_name = row['image_name']
+                image_username = row['image_username']
+
+                if topic_name in topic_map:
+                    publication = Publication(
+                        name=publication_name,
+                        topicname=publication_topicname,
+                        images=Image(
+                            name=image_name,
+                            username=image_username
+                        )
+                    )
+                    topic_map[topic_name]["publications"].append(publication)
+            
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        logging.info('Building Topics')
         
         topics = []
         for name, data in topic_map.items():
@@ -238,17 +217,23 @@ class TopicService(TopicRepositoryServicer):
         topic_name = request.topicname
 
         query = """
-            INSERT INTO `cn-fc58192.vmcloud.topics` (topicid, topicname)
+            INSERT INTO `fc64854cn.topics.topics` (topicid, topicname)
             SELECT
                 IFNULL(MAX(topicid), 0) + 1 AS new_topicid,
                 @topic_name AS topicname
-            FROM `cn-fc58192.vmcloud.topics`
+            FROM `fc64854cn.topics.topics`
             WHERE NOT EXISTS (
-                SELECT 1 FROM `cn-fc58192.vmcloud.topics` WHERE topicname = @topic_name
+                SELECT 1 FROM `fc64854cn.topics.topics` WHERE topicname = @topic_name
             );
             """
         
-        query_job = client.query(query)
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topic_name)
+            ]
+        )
+
+        query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 
         logging.info(f"Succefully created {topic_name}")
@@ -261,103 +246,165 @@ class TopicService(TopicRepositoryServicer):
 
         topicname = request.topicname
 
-        query = """
-            SELECT
-                t.topicname AS topic_name,
-                s.name AS subscriber_name,
-                p.publicationid,
-                p.name AS publication_name,
-                p.topicname AS publication_topicname,
-                m.username AS message_username,
-                m.content AS message_content,
-                NULL AS image_name,
-                NULL AS image_username
-            FROM `cn-fc58192.vmcloud.topics` t
-            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
-            WHERE t.topicname = @topicname
-
-            UNION ALL
-
-            SELECT
-                t.topicname AS topic_name,
-                s.name AS subscriber_name,
-                p.publicationid,
-                p.name AS publication_name,
-                p.topicname AS publication_topicname,
-                NULL AS message_username,
-                NULL AS message_content,
-                i.name AS image_name,
-                i.username AS image_username
-            FROM `cn-fc58192.vmcloud.topics` t
-            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
-            WHERE t.topicname = @topicname
-            """
-        
-        job_config = bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery.ScalarQueryParameter("topicname", "STRING", topicname)
-            ]
-        )
-        
-        query_job = client.query(query, job_config=job_config)
-        result = query_job.result()
-
-        logging.info('Building Topic')
-
-        topic = None
         topic_map = {}
 
-        for row in result:
+        topic_name_query = """
+            SELECT topicname FROM `fc64854cn.topics.topics` t
+            WHERE t.topicname = @topic_name;
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topicname)
+            ]
+        )
+
+        topic_name_query_job = client.query(topic_name_query, job_config=job_config)
+        topic_name_result = topic_name_query_job.result()
+
+        for row in topic_name_result:
             try:
-            
-                name = row['topic_name']
-                subscriber_name = row.get('subscriber_name')
-
-                if name not in topic_map:
-                    topic_map[name] = {
-                        "subscribers": set(),
-                        "publications": []
-                    }
-
-                if subscriber_name:
-                    topic_map[name]["subscribers"].add(subscriber_name)
-
-                if row['message_username'] is not None:
-                    publication = Publication(
-                        name=row['publication_name'],
-                        topicname=row['publication_topicname'],
-                        message = Message(
-                            username=row['message_username'],
-                            content=row['message_content']
-                        )
-                    )
-                    
-                elif row['image_name'] is not None:
-                    publication = Publication(
-                        name=row['publication_name'],
-                        topicname=row['publication_topicname'],
-                        images = Image(
-                            name=row['image_name'],
-                            username=row['image_username']
-                        )
-                    )
-
-                topic_map[name]["publications"].append(publication)
-
+                topic_name = row['topicname']
+                topic_map[topic_name] = {
+                    "subscribers": [],
+                    "publications": []
+                }
             except KeyError as e:
                 logging.error(f"Missing field in query result: {e}")
             except Exception as e:
                 logging.error(f"Error processing row: {e}")
 
+        subscribers_query = """
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name
+            FROM `fc64854cn.topics.topics` t
+            LEFT JOIN `fc64854cn.topics.subscribers` s ON t.topicid = s.topicid
+            WHERE t.topicname = @topic_name;
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topicname)
+            ]
+        )
+
+        subscribers_query_job = client.query(subscribers_query, job_config=job_config)
+        subscribers_result = subscribers_query_job.result()
+
+        for row in subscribers_result:
+            try:
+                topic_name = row['topic_name']
+                subscriber_name = row['subscriber_name']
+
+                if topic_name in topic_map:
+                    topic_map[topic_name]["subscribers"].append(Subscriber(name=subscriber_name))
+
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+                    
+        message_publications_query = """
+            SELECT
+                t.topicname AS topic_name,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                m.username AS message_username,
+                m.content AS message_content
+            FROM `fc64854cn.topics.topics` t
+            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `fc64854cn.topics.messages` m ON p.publicationid = m.publicationid
+            WHERE t.topicname = @topic_name;
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topicname)
+            ]
+        )
+
+        message_publications_query_job = client.query(message_publications_query, job_config=job_config)
+        message_publications_result = message_publications_query_job.result()
+
+        for row in message_publications_result:
+            try:
+                topic_name = row['topic_name']
+                publication_name = row['publication_name']
+                publication_topicname = row['publication_topicname']
+                message_username = row['message_username']
+                message_content = row['message_content']
+
+                if topic_name in topic_map:
+                    publication = Publication(
+                        name=publication_name,
+                        topicname=publication_topicname,
+                        message=Message(
+                            username=message_username,
+                            content=message_content
+                        )
+                    )
+                    topic_map[topic_name]["publications"].append(publication)
+            
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        image_publications_query = """
+            SELECT
+                t.topicname AS topic_name,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                i.name AS image_name,
+                i.username AS image_username
+            FROM `fc64854cn.topics.topics` t
+            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `fc64854cn.topics.images` i ON p.publicationid = i.publicationid
+            WHERE t.topicname = @topic_name;
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topicname)
+            ]
+        )
+
+        image_publications_query_job = client.query(image_publications_query, job_config=job_config)
+        image_publications_result = image_publications_query_job.result()
+
+        for row in image_publications_result:
+            try:
+                topic_name = row['topic_name']
+                publication_name = row['publication_name']
+                publication_topicname = row['publication_topicname']
+                image_name = row['image_name']
+                image_username = row['image_username']
+
+                if topic_name in topic_map:
+                    publication = Publication(
+                        name=publication_name,
+                        topicname=publication_topicname,
+                        images=Image(
+                            name=image_name,
+                            username=image_username
+                        )
+                    )
+                    topic_map[topic_name]["publications"].append(publication)
+            
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        logging.info('Building Topic')
+        
+        topic = None
         for name, data in topic_map.items():
             topic = Topic(
                 topicname=name,
-                subscribers=list(data["subscribers"]),
-                publications=list(data["publications"])
+                subscribers=topic_map[name]["subscribers"],
+                publications=topic_map[name]["publications"]
             )
 
         logging.info("Returning the topic")
@@ -379,23 +426,32 @@ class TopicService(TopicRepositoryServicer):
             DECLARE publication_id INT64;
 
             SET topic_id = (
-                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
+                SELECT topicid FROM `fc64854cn.topics.topics`
                 WHERE topicname = @topic_name
                 LIMIT 1
             );
 
             SET publication_id = (
-                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `fc64854cn.topics.publications`
             );
 
-            INSERT INTO `cn-fc58192.vmcloud.publications` (publicationid, topicid, name, topicname)
+            INSERT INTO `fc64854cn.topics.publications` (publicationid, topicid, name, topicname)
             VALUES (publication_id, topic_id, @publication_name, @topic_name);
 
-            INSERT INTO `cn-fc58192.vmcloud.messages` (publicationid, username, content)
+            INSERT INTO `fc64854cn.topics.messages` (publicationid, username, content)
             VALUES (publication_id, @username, @content);
         """
         
-        query_job = client.query(query)
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topic_name),
+                bigquery.ScalarQueryParameter("publication_name", "STRING", publication_name),
+                bigquery.ScalarQueryParameter("username", "STRING", username),
+                bigquery.ScalarQueryParameter("content", "STRING", content)
+            ]
+        )
+
+        query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 
         logging.info(f"Published: {publication_name}")
@@ -417,23 +473,32 @@ class TopicService(TopicRepositoryServicer):
             DECLARE publication_id INT64;
 
             SET topic_id = (
-                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
+                SELECT topicid FROM `fc64854cn.topics.topics`
                 WHERE topicname = @topic_name
                 LIMIT 1
             );
 
             SET publication_id = (
-                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `fc64854cn.topicspublications`
             );
 
-            INSERT INTO publications (publicationid, topicid, name, topicname)
+            INSERT INTO `fc64854cn.topics.publications` (publicationid, topicid, name, topicname)
             VALUES (publication_id, topic_id, @publication_name, @topic_name);
 
-            INSERT INTO images (publicationid, name, username)
+            INSERT INTO `fc64854cn.topics.images` (publicationid, name, username)
             VALUES (publication_id, @image_name, @username);
         """
         
-        query_job = client.query(query)
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topic_name", "STRING", topic_name),
+                bigquery.ScalarQueryParameter("publication_name", "STRING", publication_name),
+                bigquery.ScalarQueryParameter("username", "STRING", username),
+                bigquery.ScalarQueryParameter("image_name", "STRING", image_name)
+            ]
+        )
+
+        query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 
         logging.info(f"Published: {publication_name}")

@@ -189,6 +189,18 @@ kubectl exec -it pod/{name_of_pod} -- /bin/sh
 wget -qO- http://{CLUSTER-IP}:50060/healthz
 ```
 
+# GET /topics example
+wget -qO- http://{CLUSTER-IP}:50060/topics
+
+# GET /topics/{topic_name} example
+wget -qO- http://{CLUSTER-IP}:50060/topics/yes
+
+# POST /topics example
+wget --post-data='{"name":"yes"}' --header='Content-Type: application/json' -qO- http://{CLUSTER-IP}:50060/topics
+
+# POST /topics/{topic_name} example
+wget --post-data='{"name":"sim", "topic_name":"yes", "message":{"username":"gajo","content":"no"}}' --header='Content-Type: application/json' -qO- http://{CLUSTER-IP}:50060/topics/yes
+
 ## Topics Controller - Scaler
 
 ```python
@@ -222,7 +234,7 @@ kubectl logs pod/{name_of_pod}
 ## Publisher - Scaler
 
 ```python
-kubectl apply -f publisher_scaler.yml
+kubectl apply -f python/others/Publisher/publisher_scaler.yml
 ```
 
 ```python
