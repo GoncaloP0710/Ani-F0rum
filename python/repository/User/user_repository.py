@@ -198,6 +198,14 @@ class UserRepository_Service(UserRepositoryServicer) :
         result3 = list(query_job.result())  # Convert result to a list for easier handling
         logging.info("User achievements query result: %s", result3)
 
+        # Query to get user anime watched and score
+        query = "SELECT * FROM `cn-fc58192.vmcloud.users-score-2023` WHERE Username = @username"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("username", "STRING", request.user_name)]
+        ))
+        result4 = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("User anime watched and score query result: %s", result4)
+
         if not result:
             logging.info("User not found")
             raise NotFound("User not found")
@@ -214,16 +222,18 @@ class UserRepository_Service(UserRepositoryServicer) :
                 )
                 for achievement in result3  # Iterate over the list of achievements from the DB
             ] if result3 else []  # Default to empty list if no achievements
+            animes_watched = [entry["Anime Title"] for entry in result4]  # Extract anime titles
+            anime_watched_score = [entry["rating"] for entry in result4]  # Extract anime scores
 
             logging.info("User found: %s", user_data)
 
             # Extract fields from the database result
             user = User(
                 user_name=user_data["Username"],  
-                password="",  
+                password="123",  
                 location=user_data["Location"],  
-                animes_watched=[],  
-                anime_watched_score=[],  
+                animes_watched=animes_watched,  
+                anime_watched_score=anime_watched_score,  
                 topics_subscribed=[], 
                 karma=user_karma["karma"] if user_karma else 0, 
                 achievements=user_achievements, 
@@ -233,64 +243,250 @@ class UserRepository_Service(UserRepositoryServicer) :
         
     # Returns all users
     def GetAllUsers(self, request, context):
-        print("Searching for all users")
-        return get_all_users_Response(users=self.Users)
+        logging.info("Fetching all users")
+
+        # Query to get all user details
+        query = "SELECT * FROM `cn-fc58192.vmcloud.users-details-2023`"
+        query_job = client.query(query)
+        user_details = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("All user details query result: %s", user_details)
+
+        # Query to get all user karma
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-karma`"
+        query_job = client.query(query)
+        user_karma = {entry["user_name"]: entry["karma"] for entry in query_job.result()}  # Map user_name to karma
+        logging.info("All user karma query result: %s", user_karma)
+
+        # Query to get all user achievements
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements`"
+        query_job = client.query(query)
+        user_achievements = {}
+        for entry in query_job.result():
+            user_name = entry["user_name"]
+            if user_name not in user_achievements:
+                user_achievements[user_name] = []
+            user_achievements[user_name].append(
+                Achievement(
+                    title=entry["title"],
+                    description=entry["description"],
+                    date=entry["date"],
+                    rarity=Rarity.Value(entry["rarity"])
+                )
+            )
+        logging.info("All user achievements query result: %s", user_achievements)
+
+        # Query to get all user anime watched and scores
+        query = "SELECT * FROM `cn-fc58192.vmcloud.users-score-2023`"
+        query_job = client.query(query)
+        user_anime = {}
+        for entry in query_job.result():
+            user_name = entry["user_name"]
+            if user_name not in user_anime:
+                user_anime[user_name] = {"animes_watched": [], "anime_watched_score": []}
+            user_anime[user_name]["animes_watched"].append(entry["anime_title"])
+            user_anime[user_name]["anime_watched_score"].append(entry["rating"])
+        logging.info("All user anime watched and score query result: %s", user_anime)
+
+        # Map all users to User objects
+        users = []
+        for user_data in user_details:
+            user_name = user_data["Username"]
+            users.append(
+                User(
+                    user_name=user_name,
+                    password="",  # Passwords are not retrieved for security reasons
+                    location=user_data["Location"],
+                    animes_watched=user_anime.get(user_name, {}).get("animes_watched", []),
+                    anime_watched_score=user_anime.get(user_name, {}).get("anime_watched_score", []),
+                    topics_subscribed=[],  # Add if available in the database
+                    karma=user_karma.get(user_name, 0),
+                    achievements=user_achievements.get(user_name, [])
+                )
+            )
+
+        return get_all_users_Response(users=users)
     
     # Returns all users with one of the animes in their list
     def GetUsersThatWatchedAnime(self, request, context):
-        print("Searching for users that watched these animes: ", request.anime_names)
-        users = []  # Use a list instead of a set
-        for anime in request.anime_names:
-            for user in self.Users:
-                if anime in user.animes_watched and user not in users:
-                    users.append(user)  # Add user to the list if not already present
+        logging.info("Searching for users that watched these animes: %s", request.anime_names)
 
-        print("Found users: ", users)
+        # Query to get usernames of users who watched the given anime(s)
+        query = """
+            SELECT DISTINCT Username 
+            FROM `cn-fc58192.vmcloud.users-score-2023`
+            WHERE `Anime Title` IN UNNEST(@anime_titles)
+        """
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ArrayQueryParameter("anime_titles", "STRING", request.anime_names)
+            ]
+        ))
+        result = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("Query result for users that watched the given animes: %s", result)
+
+        # Retrieve full user objects using GetUser
+        users = []
+        for entry in result:
+            username = entry["Username"]
+            try:
+                # Create a mock request to call GetUser
+                user_request = type('Request', (object,), {"user_name": username})()
+                user_response = self.GetUser(user_request, context)
+                users.append(user_response.user)
+            except NotFound:
+                logging.warning("User not found for username: %s", username)
+
+        logging.info("Found users: %s", users)
         return get_users_that_watched_anime_Response(users=users)
     #name
     def GetUserAchievements(self, request, context):
-        print("Searching for achievements of user: ", request.user_name)
-        for user in self.Users:
-            if user.user_name == request.user_name:
-                return get_user_achievements_Response(achievements=user.achievements)
-        raise NotFound("User not found")
+        logging.info("Searching for achievements of user: ", request.user_name)
+
+        # Query user achievements
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements` WHERE user_name = @username"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("username", "STRING", request.user_name)]
+        ))
+        result = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("User achievements query result: %s", result)
+
+        user_achievements = [
+                Achievement(
+                    title=achievement["title"],
+                    description=achievement["description"],
+                    date=achievement["date"],
+                    rarity=Rarity.Value(achievement["rarity"])
+                )
+                for achievement in result  # Iterate over the list of achievements from the DB
+            ] if result else []
+
+        return get_user_achievements_Response(achievements=user_achievements)
         
     def GetAchievement(self, request, context):
-        print("Searching for achievement with title: ", request.title)
-        for achievement in self.Achievements:
-            if achievement.title == request.title:
-                return get_achievement_Response(achievement=achievement)
-        raise NotFound("Achievement not found")
+        logging.info("Searching for achievement with title: ", request.title)
+        
+        # Query user achievements
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements` WHERE title = @title"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("title", "STRING", request.title)]
+        ))
+        result = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("Achievement title query result: %s", result)
+
+        achievement = Achievement(
+            title=result[0]["title"],
+            description=result[0]["description"],
+            date=result[0]["date"],
+            rarity=Rarity.Value(result[0]["rarity"])
+        ) if result else None
+
+        return get_achievement_Response(achievement=achievement)
     
     def UpdateUserAchievement(self, request, context):
-        print("Updating user with user_name: ", request.user_name," and with title: ", request.title)
+        logging.info("Updating user with user_name: %s and with title: %s", request.user_name, request.title)
 
+        # Verificar se o achievement existe na tabela para o usuário
+        query_check = """
+            SELECT COUNT(*) as count
+            FROM `cn-fc58192.vmcloud.user-achievements`
+            WHERE user_name = @user_name AND title = @title
+        """
+        query_job = client.query(query_check, job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+                bigquery.ScalarQueryParameter("title", "STRING", request.title)
+            ]
+        ))
+        result = list(query_job.result())
+        achievement_exists = result[0]["count"] > 0
+
+        if achievement_exists:
+            logging.info("Achievement already exists for user: %s with title: %s", request.user_name, request.title)
+            return update_user_achievement_Response(success=False, message="Achievement already exists")
+
+        # Buscar o achievement na lista local
         ach = None
-        err = True
         for achievement in self.Achievements:
             if achievement.title == request.title:
                 ach = achievement
-                err = False
                 break
-        
-        if err:
+
+        if not ach:
             raise NotFound("Achievement not found")
 
-        for user in self.Users:
-            if user.user_name == request.user_name:
-                user.achievements.append(ach)
-                return update_user_achievement_Response(success=True)
-        
-        return update_user_achievement_Response(success=False)
+        # Inserir o achievement na tabela
+        query_insert = """
+            INSERT INTO `cn-fc58192.vmcloud.user-achievements` (user_name, title, description, date, rarity)
+            VALUES (@user_name, @title, @description, @date, @rarity)
+        """
+        query_job = client.query(query_insert, job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+                bigquery.ScalarQueryParameter("title", "STRING", ach.title),
+                bigquery.ScalarQueryParameter("description", "STRING", ach.description),
+                bigquery.ScalarQueryParameter("date", "STRING", ach.date),
+                bigquery.ScalarQueryParameter("rarity", "STRING", ach.rarity.name)  # Convert enum to string
+            ]
+        ))
+
+        try:
+            query_job.result()  # Aguarda a execução da query
+            logging.info("Achievement successfully added for user: %s with title: %s", request.user_name, request.title)
+            return update_user_achievement_Response(success=True)
+        except Exception as e:
+            logging.error("Failed to add achievement for user: %s with title: %s. Error: %s", request.user_name, request.title, str(e))
+            return update_user_achievement_Response(success=False, message="Failed to add achievement")
     
     def UpdateUserKarma(self, request, context):
-        print("Updating karma of user: ", request.user_name)
-        for user in self.Users:
-            if user.user_name == request.user_name:
-                user.karma += request.karma_value
-                return update_user_karma_Response(success=True)
-        
-        return update_user_karma_Response(success=False)
+        logging.info("Updating karma for user: %s by value: %d", request.user_name, request.karma_value)
+
+        # Verificar se o usuário existe na tabela
+        query_check = """
+            SELECT COUNT(*) as count
+            FROM `cn-fc58192.vmcloud.user-karma`
+            WHERE user_name = @user_name
+        """
+        query_job = client.query(query_check, job_config=bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name)
+            ]
+        ))
+        result = list(query_job.result())
+        user_exists = result[0]["count"] > 0
+
+        if user_exists:
+            # Atualizar o karma do usuário existente
+            query_update = """
+                UPDATE `cn-fc58192.vmcloud.user-karma`
+                SET karma = karma + @karma_value
+                WHERE user_name = @user_name
+            """
+            query_job = client.query(query_update, job_config=bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+                    bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
+                ]
+            ))
+        else:
+            # Inserir um novo registro para o usuário
+            query_insert = """
+                INSERT INTO `cn-fc58192.vmcloud.user-karma` (user_name, karma)
+                VALUES (@user_name, @karma_value)
+            """
+            query_job = client.query(query_insert, job_config=bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+                    bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
+                ]
+            ))
+
+        try:
+            query_job.result()  # Aguarda a execução da query
+            logging.info("Successfully updated or inserted karma for user: %s", request.user_name)
+            return update_user_karma_Response(success=True)
+        except Exception as e:
+            logging.error("Failed to update or insert karma for user: %s. Error: %s", request.user_name, str(e))
+            return update_user_karma_Response(success=False, message="Failed to update or insert karma")
         
     
 

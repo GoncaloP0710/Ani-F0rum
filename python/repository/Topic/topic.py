@@ -134,10 +134,10 @@ class TopicService(TopicRepositoryServicer):
                 m.content AS message_content,
                 NULL AS image_name,
                 NULL AS image_username
-            FROM topics t
-            LEFT JOIN subscribers s ON t.topicid = s.topicid
-            LEFT JOIN publications p ON t.topicid = p.topicid
-            LEFT JOIN messages m ON p.publicationid = m.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
 
             UNION ALL
 
@@ -151,10 +151,10 @@ class TopicService(TopicRepositoryServicer):
                 NULL AS message_content,
                 i.name AS image_name,
                 i.username AS image_username
-            FROM topics t
-            LEFT JOIN subscribers s ON t.topicid = s.topicid
-            LEFT JOIN publications p ON t.topicid = p.topicid
-            LEFT JOIN images i ON p.publicationid = i.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
             """
         
         query_job = client.query(query)
@@ -167,6 +167,7 @@ class TopicService(TopicRepositoryServicer):
         for row in result:
             try:
             
+                publication = None
                 name = row['topic_name']
                 subscriber_name = row.get('subscriber_name')
 
@@ -177,7 +178,7 @@ class TopicService(TopicRepositoryServicer):
                     }
 
                 if subscriber_name:
-                    topic_map[name]["subscribers"].add(subscriber_name)
+                    topic_map[name]["subscribers"].add(Subscriber(name=subscriber_name))
 
                 if row['message_username'] is not None:
                     publication = Publication(
@@ -203,18 +204,19 @@ class TopicService(TopicRepositoryServicer):
 
                 topic_map[name]["publications"].append(publication)
 
-                topics = []
-                for name, data in topic_map.items():
-                    topics.append(Topic(
-                        name=name,
-                        subscribers=list(data["subscribers"]),
-                        publications=list(data["publications"])
-                    ))
-
             except KeyError as e:
                 logging.error(f"Missing field in query result: {e}")
             except Exception as e:
                 logging.error(f"Error processing row: {e}")
+        
+        topics = []
+        for name, data in topic_map.items():
+            logging.info(f'data: {data}')
+            topics.append(Topic(
+                topicname=name,
+                subscribers=data["subscribers"],
+                publications=data["publications"]
+            ))
 
         logging.info(f"Fetched {len(topics)} topics from BigQuery")
 
@@ -229,13 +231,13 @@ class TopicService(TopicRepositoryServicer):
         topic_name = request.topicname
 
         query = """
-            INSERT INTO topics (topicid, topicname)
+            INSERT INTO `cn-fc58192.vmcloud.topics` (topicid, topicname)
             SELECT
                 IFNULL(MAX(topicid), 0) + 1 AS new_topicid,
                 @topic_name AS topicname
-            FROM topics
+            FROM `cn-fc58192.vmcloud.topics`
             WHERE NOT EXISTS (
-            SELECT 1 FROM topics WHERE topicname = @topic_name
+                SELECT 1 FROM `cn-fc58192.vmcloud.topics` WHERE topicname = @topic_name
             );
             """
         
@@ -248,7 +250,7 @@ class TopicService(TopicRepositoryServicer):
     
     def GetTopic(self, request, context):
 
-        print("Processing a GetTopic request")
+        logging.info("Processing a GetTopic request")
 
         topicname = request.topicname
 
@@ -263,10 +265,10 @@ class TopicService(TopicRepositoryServicer):
                 m.content AS message_content,
                 NULL AS image_name,
                 NULL AS image_username
-            FROM topics t
-            LEFT JOIN subscribers s ON t.topicid = s.topicid
-            LEFT JOIN publications p ON t.topicid = p.topicid
-            LEFT JOIN messages m ON p.publicationid = m.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
             WHERE t.topicname = @topicname
 
             UNION ALL
@@ -281,18 +283,25 @@ class TopicService(TopicRepositoryServicer):
                 NULL AS message_content,
                 i.name AS image_name,
                 i.username AS image_username
-            FROM topics t
-            LEFT JOIN subscribers s ON t.topicid = s.topicid
-            LEFT JOIN publications p ON t.topicid = p.topicid
-            LEFT JOIN images i ON p.publicationid = i.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
             WHERE t.topicname = @topicname
             """
         
-        query_job = client.query(query)
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("topicname", "STRING", topicname)
+            ]
+        )
+        
+        query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 
-        logging.info('Building Topics')
+        logging.info('Building Topic')
 
+        topic = None
         topic_map = {}
 
         for row in result:
@@ -329,99 +338,98 @@ class TopicService(TopicRepositoryServicer):
                             username=row['image_username']
                         )
                     )
-                else:
-                    continue
 
                 topic_map[name]["publications"].append(publication)
-
-                topics = []
-                for name, data in topic_map.items():
-                    topics.append(Topic(
-                        name=name,
-                        subscribers=list(data["subscribers"]),
-                        publications=list(data["publications"])
-                    ))
 
             except KeyError as e:
                 logging.error(f"Missing field in query result: {e}")
             except Exception as e:
                 logging.error(f"Error processing row: {e}")
 
-        micro_service_response = Topic()
-        print("Received response from other micro service")
-        topic = None
-        #for t in self.Topics:
-            #if t.topicname == topic_name:
-            #    topic = t
-            #    break
+        for name, data in topic_map.items():
+            topic = Topic(
+                topicname=name,
+                subscribers=list(data["subscribers"]),
+                publications=list(data["publications"])
+            )
 
-        print("Returning the response")
+        logging.info("Returning the topic")
 
         return GetTopicResponse(topic = topic)
     
     def PublishMessage(self, request, context):
 
-        print("Processing a PublishMessage request")
+        logging.info("Processing a PublishMessage request")
 
         topic_name = request.topicname
         publication_name = request.publicationname
         message = request.message
+        username = message.username
+        content = message.content
 
-        print(topic_name)
-        print(publication_name)
-        print(message.username)
-        print(message.content)
+        query = """
+            DECLARE topic_id INT64;
+            DECLARE publication_id INT64;
+
+            SET topic_id = (
+                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
+                WHERE topicname = @topic_name
+                LIMIT 1
+            );
+
+            SET publication_id = (
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
+            );
+
+            INSERT INTO `cn-fc58192.vmcloud.publications` (publicationid, topicid, name, topicname)
+            VALUES (publication_id, topic_id, @publication_name, @topic_name);
+
+            INSERT INTO `cn-fc58192.vmcloud.messages` (publicationid, username, content)
+            VALUES (publication_id, @username, @content);
+        """
         
-        print('size')
-        print(len(self.Topics))
+        query_job = client.query(query)
+        result = query_job.result()
 
-        for topic in self.Topics:
-            print(topic.topicname)
-            print(topic_name)
-            if topic.topicname == topic_name:
-                micro_service_response = Topic()
-                print("Received response from other micro service")
-                topic.publications.append(
-                    Publication(
-                        name = publication_name,
-                        topicname = topic_name,
-                        message = Message(
-                            username = message.username,
-                            content = message.content,
-                        )
-                    )
-                )
-                break
-                 
-        print("Returning the response: ")
-        print(publication_name)
+        logging.info(f"Published: {publication_name}")
 
         return PublishInTopicResponse(publicationname = publication_name)
     
     def PublishImage(self, request, context):
 
-        print("Processing a PublishImage request")
+        logging.info("Processing a PublishImage request")
 
         topic_name = request.topicname
         publication_name = request.publicationname
         image = request.image
+        image_name = image.name
+        username = image.username
 
-        for topic in self.Topics:
-            if topic.name == topic_name:
-                micro_service_response = Topic()
-                print("Received response from other micro service")
-                topic.publications.append(
-                    Publication(
-                        name = publication_name,
-                        topicname = topic_name,
-                        images = Image(
-                            name = image.name,
-                            username = image.username,
-                        )
-                    )
-                )
-                 
-        print("Returning the response: " + publication_name)
+        query = """
+            DECLARE topic_id INT64;
+            DECLARE publication_id INT64;
+
+            SET topic_id = (
+                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
+                WHERE topicname = @topic_name
+                LIMIT 1
+            );
+
+            SET publication_id = (
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
+            );
+
+            INSERT INTO publications (publicationid, topicid, name, topicname)
+            VALUES (publication_id, topic_id, @publication_name, @topic_name);
+
+            INSERT INTO images (publicationid, name, username)
+            VALUES (publication_id, @image_name, @username);
+        """
+        
+        query_job = client.query(query)
+        result = query_job.result()
+
+        logging.info(f"Published: {publication_name}")
 
         return PublishInTopicResponse(publicationname = publication_name)
 

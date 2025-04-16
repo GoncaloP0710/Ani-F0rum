@@ -7,7 +7,7 @@ metadata:
   labels:
     app: anime-controller
 spec:
-  replicas: 2 # Number of replicas - adjust latter after talking to the team
+  replicas: 1 # Number of replicas - adjust latter after talking to the team
   selector:
     matchLabels:
       app: anime-controller

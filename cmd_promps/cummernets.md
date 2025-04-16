@@ -157,6 +157,10 @@ kubectl apply -f python/repository/User/user_repository_deployment_service.yml
 
 # User Recommendation
 
+```python
+kubectl apply -f python/others/UserRecommendations/user_recommendations_deployment_service.yml
+```
+
 # Topics Controller
 
 ## Topics Controller - Deployment & Service
@@ -234,13 +238,13 @@ kubectl describe hpa publisher-hpa
 ## Topic Repository - Deployment & Service
 
 ```python
-kubectl apply -f topic_repository_deployment_service.yml
+kubectl apply -f python/repository/Topic/topic_repository_deployment_service.yml
 ```
 
 ## Topic Repository - Scaler
 
 ```python
-kubectl apply -f topic_repository_scaler.yml
+kubectl apply -f python/repository/Topic/topic_repository_scaler.yml
 ```
 
 ```python

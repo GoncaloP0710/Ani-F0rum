@@ -16,11 +16,13 @@ from python.repository.Anime.AnimeRepository_pb2_grpc import (
     AnimeRepositoryServicer,
     add_AnimeRepositoryServicer_to_server,
 )
+
 from python.repository.Anime.AnimeRepository_pb2 import (
     animes_Response,
     anime_by_name_Response,
     multiple_anime_by_name_Response,
     anime_by_genre_Response,
+    anime_by_name_Request,
 )
 
 from python.Common.Anime_pb2 import (
@@ -239,11 +241,21 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         return anime_by_name_Response(anime=anime)
     
     def MultipleAnimeByName(self, request, context):
-        print("Searching for multiple animes by name")
+        logging.info("Searching for multiple animes by name")
         result = []
-        for anime in self.Animes_Objects:
-            if anime.name in request.anime_names:
-                result.append(anime)  # Use a list instead of a set
+
+        for anime_name in request.anime_names:
+            try:
+                # Create a proper request object using AnimeRepository_pb2
+                anime_request = anime_by_name_Request(anime_name=anime_name)
+                # Call AnimeByName with the structured request
+                anime_response = self.AnimeByName(anime_request, context)
+                result.append(anime_response.anime)
+            except NotFound:
+                logging.warning(f"Anime not found: {anime_name}")
+            except Exception as e:
+                logging.error(f"Error fetching anime '{anime_name}': {e}")
+
         return multiple_anime_by_name_Response(animes=result)
     
     def AnimeRelatedByGenre(self, request, context):
@@ -251,7 +263,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
 
         # Convert the requested genres (enum values as integers) to their string representations
         try:
-            requested_genres = [AnimeGenre.Name(genre) for genre in request.anime_genres]
+            requested_genres = [AnimeGenre.Name(genre).lower() for genre in request.anime_genres]
         except KeyError as e:
             logging.error(f"Invalid genre value in request: {e}")
             raise ValueError("Invalid genre value in request")
@@ -263,7 +275,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
             SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`
             WHERE ARRAY_LENGTH(ARRAY(
                 SELECT genre
-                FROM UNNEST(SPLIT(Genres, ',')) AS genre
+                FROM UNNEST(SPLIT(LOWER(Genres), ',')) AS genre
                 WHERE genre IN UNNEST(@requested_genres)
             )) > 0
         """
@@ -276,6 +288,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         )
 
         # Execute the query
+        logging.info(f"Executing query: {query}")
         query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 

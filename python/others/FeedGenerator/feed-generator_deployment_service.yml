@@ -7,7 +7,7 @@ metadata:
   labels:
     app: feed-generator
 spec:
-  replicas: 2 # Number of replicas - adjust latter after talking to the team
+  replicas: 1 # Number of replicas - adjust latter after talking to the team
   selector:
     matchLabels:
       app: feed-generator

@@ -36,6 +36,16 @@ from python.Common.Anime_pb2 import (
 from python.repository.User import UserRepository_pb2
 from python.repository.User import UserRepository_pb2_grpc
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console
+    ]
+)
+
 class UserRecommendations_Service(UserRecommendationsServicer):
 
     def __init__(self):
@@ -50,25 +60,25 @@ class UserRecommendations_Service(UserRecommendationsServicer):
             weight_watched = 1.7  # Higher weight for animes_watched
             weight_similar = 1  # Lower weight for animes_similar
 
-            print("===================== Processing animes_watched =====================")
+            logging.info("===================== Processing animes_watched =====================")
             # Extract anime names from animes_watched
             anime_names_watched = [anime.name for anime in request.animes_watched]
             response = self.stub.GetUsersThatWatchedAnime(
                 UserRepository_pb2.get_users_that_watched_anime_Request(anime_names=anime_names_watched)
             )
-            print(response.users)
+            logging.info(response.users)
             for user in response.users:
                 if user.user_name not in user_scores:
                     user_scores[user.user_name] = 0
                 user_scores[user.user_name] += weight_watched
 
-            print("Processing animes_similar...")
+            logging.info("Processing animes_similar...")
             # Extract anime names from animes_similar
             anime_names_similar = [anime.name for anime in request.animes_similar]
             response = self.stub.GetUsersThatWatchedAnime(
                 UserRepository_pb2.get_users_that_watched_anime_Request(anime_names=anime_names_similar)
             )
-            print(response.users)
+            logging.info(response.users)
             for user in response.users:
                 if user.user_name not in user_scores:
                     user_scores[user.user_name] = 0
@@ -85,9 +95,9 @@ class UserRecommendations_Service(UserRecommendationsServicer):
                 )
                 users.append(user_response.user)
 
-            print ("=================== Result =================")
+            logging.info ("=================== Result =================")
 
-            print(users)
+            logging.info(users)
 
             # Return the response
             return users_related_by_anime_Response(users=users)
