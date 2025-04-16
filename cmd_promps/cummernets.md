@@ -162,7 +162,7 @@ kubectl apply -f python/repository/User/user_repository_deployment_service.yml
 ## Topics Controller - Deployment & Service
 
 ```python
-kubectl apply -f topics_controller_deployment_service.yml
+kubectl apply -f python/controller/Topics/topics_controller_deployment_service.yml
 ```
 
 ```python
@@ -204,7 +204,7 @@ kubectl describe hpa topics-controller-hpa
 ## Publisher - Deployment & Service
 
 ```python
-kubectl apply -f publisher_deployment_service.yml
+kubectl apply -f python/others/Publisher/publisher_deployment_service.yml
 ```
 
 ```python

@@ -172,32 +172,64 @@ class UserRepository_Service(UserRepositoryServicer) :
 
     # Returns an user by name
     def GetUser(self, request, context):
-        logging.info("Searching for user with id: ", request.user_name)
-     
-        logging.info("==========================================")
-        logging.info("logging")
-        logging.info(request.user_name)
-        logging.info("==========================================")
-        
-       # return get_user_Response(user=self.Users[0])
+        logging.info("Searching for user with id: %s", request.user_name)
 
-        query = f"SELECT * FROM `cn-fc58192.vmcloud.user-details` WHERE Username = '{request.user_name}'"
-        query_job = client.query(query)
+        # Query user details
+        query = "SELECT * FROM `cn-fc58192.vmcloud.users-details-2023` WHERE Username = @username"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("username", "STRING", request.user_name)]
+        ))
         result = list(query_job.result())  # Convert result to a list for easier handling
-        logging.info("Query result: %s", result)
+        logging.info("User details query result: %s", result)
 
-        #user-karma -> str user_name , int karma
-        #user-achievements -> str user_name , str title, str description, str date, str rarity
-        
+        # Query user karma
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-karma` WHERE user_name = @username"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("username", "STRING", request.user_name)]
+        ))
+        result2 = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("User karma query result: %s", result2)
+
+        # Query user achievements
+        query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements` WHERE user_name = @username"
+        query_job = client.query(query, job_config=bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("username", "STRING", request.user_name)]
+        ))
+        result3 = list(query_job.result())  # Convert result to a list for easier handling
+        logging.info("User achievements query result: %s", result3)
 
         if not result:
             logging.info("User not found")
             raise NotFound("User not found")
         else:
-            # If user exists, return the first result
+            # Map the database result to the User object
             user_data = result[0]
+            user_karma = result2[0] if result2 else None  # Get karma data if available
+            user_achievements = [
+                Achievement(
+                    title=achievement["title"],
+                    description=achievement["description"],
+                    date=achievement["date"],
+                    rarity=Rarity.Value(achievement["rarity"])
+                )
+                for achievement in result3  # Iterate over the list of achievements from the DB
+            ] if result3 else []  # Default to empty list if no achievements
+
             logging.info("User found: %s", user_data)
-            return get_user_Response(user=user_data)
+
+            # Extract fields from the database result
+            user = User(
+                user_name=user_data["Username"],  
+                password="",  
+                location=user_data["Location"],  
+                animes_watched=[],  
+                anime_watched_score=[],  
+                topics_subscribed=[], 
+                karma=user_karma["karma"] if user_karma else 0, 
+                achievements=user_achievements, 
+            )
+
+            return get_user_Response(user=user)
         
     # Returns all users
     def GetAllUsers(self, request, context):

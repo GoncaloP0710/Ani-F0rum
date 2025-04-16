@@ -91,29 +91,29 @@ docker push 4sparkz/user-recommendations:latest
 # Topics-Controller
 
 ```python
-docker build -t diogoalmeida107/topics-controller:latest -f python/controller/Topics/Dockerfile .
+docker build -t 4sparkz/topics-controller:latest -f python/controller/Topics/Dockerfile .
 ```
 
 ```python
-docker push diogoalmeida107/topics-controller:latest
+docker push 4sparkz/topics-controller:latest
 ```
 
 # Publisher
 
 ```python
-docker build -t diogoalmeida107/publisher:latest -f python/others/Publisher/Dockerfile .
+docker build -t 4sparkz/publisher:latest -f python/others/Publisher/Dockerfile .
 ```
 
 ```python
-docker push diogoalmeida107/publisher:latest
+docker push 4sparkz/publisher:latest
 ```
 
 # Topic-Repository
 
 ```python
-docker build -t diogoalmeida107/topic-repository:latest -f python/repository/Topic/Dockerfile .
+docker build -t 4sparkz/topic-repository:latest -f python/repository/Topic/Dockerfile .
 ```
 
 ```python
-docker push diogoalmeida107/topic-repository:latest
+docker push 4sparkz/topic-repository:latest
 ```

@@ -40,6 +40,19 @@ from python.Common.Topic_pb2 import (
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
 
+from google.cloud import bigquery
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console
+    ]
+)
+
+client = bigquery.Client(project="cn-fc58192", location="europe-west1")
+
 class TopicService(TopicRepositoryServicer):
 
     def __init__(self):
@@ -108,31 +121,231 @@ class TopicService(TopicRepositoryServicer):
 
     def GetTopics(self, request, context):
 
-        print("Processing a GetTopics request")
+        logging.info("Processing a GetTopics request")
 
-        print("Returning the response")
+        query = """
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name,
+                p.publicationid,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                m.username AS message_username,
+                m.content AS message_content,
+                NULL AS image_name,
+                NULL AS image_username
+            FROM topics t
+            LEFT JOIN subscribers s ON t.topicid = s.topicid
+            LEFT JOIN publications p ON t.topicid = p.topicid
+            LEFT JOIN messages m ON p.publicationid = m.publicationid
 
-        return GetTopicsResponse(topics = self.Topics) #if len(topics > 0) else NotFound("No topics found")
+            UNION ALL
+
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name,
+                p.publicationid,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                NULL AS message_username,
+                NULL AS message_content,
+                i.name AS image_name,
+                i.username AS image_username
+            FROM topics t
+            LEFT JOIN subscribers s ON t.topicid = s.topicid
+            LEFT JOIN publications p ON t.topicid = p.topicid
+            LEFT JOIN images i ON p.publicationid = i.publicationid
+            """
+        
+        query_job = client.query(query)
+        result = query_job.result()
+
+        logging.info('Building Topics')
+
+        topic_map = {}
+
+        for row in result:
+            try:
+            
+                name = row['topic_name']
+                subscriber_name = row.get('subscriber_name')
+
+                if name not in topic_map:
+                    topic_map[name] = {
+                        "subscribers": set(),
+                        "publications": []
+                    }
+
+                if subscriber_name:
+                    topic_map[name]["subscribers"].add(subscriber_name)
+
+                if row['message_username'] is not None:
+                    publication = Publication(
+                        name=row['publication_name'],
+                        topicname=row['publication_topicname'],
+                        message = Message(
+                            username=row['message_username'],
+                            content=row['message_content']
+                        )
+                    )
+                    
+                elif row['image_name'] is not None:
+                    publication = Publication(
+                        name=row['publication_name'],
+                        topicname=row['publication_topicname'],
+                        images = Image(
+                            name=row['image_name'],
+                            username=row['image_username']
+                        )
+                    )
+                else:
+                    continue
+
+                topic_map[name]["publications"].append(publication)
+
+                topics = []
+                for name, data in topic_map.items():
+                    topics.append(Topic(
+                        name=name,
+                        subscribers=list(data["subscribers"]),
+                        publications=list(data["publications"])
+                    ))
+
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
+
+        logging.info(f"Fetched {len(topics)} topics from BigQuery")
+
+        logging.info("Returning the response")
+
+        return GetTopicsResponse(topics = topics) #if len(topics > 0) else NotFound("No topics found")
     
     def CreateTopic(self, request, context):
 
-        print("Processing a CreateTopic request")
+        logging.info("Processing a CreateTopic request")
 
-        micro_service_response = 'topicname'
-        print("Received response from other micro service")
-        res = request.topicname
+        topic_name = request.topicname
 
-        self.Topics.append(Topic(topicname = res, subscribers = [], publications = []))
+        query = """
+            INSERT INTO topics (topicid, topicname)
+            SELECT
+                IFNULL(MAX(topicid), 0) + 1 AS new_topicid,
+                @topic_name AS topicname
+            FROM topics
+            WHERE NOT EXISTS (
+            SELECT 1 FROM topics WHERE topicname = @topic_name
+            );
+            """
+        
+        query_job = client.query(query)
+        result = query_job.result()
 
-        print("Returning the response")
+        logging.info(f"Succefully created {topic_name}")
 
-        return CreateTopicResponse(topicname = res)
+        return CreateTopicResponse(topicname = topic_name)
     
     def GetTopic(self, request, context):
 
         print("Processing a GetTopic request")
 
-        topic_name = request.topicname
+        topicname = request.topicname
+
+        query = """
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name,
+                p.publicationid,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                m.username AS message_username,
+                m.content AS message_content,
+                NULL AS image_name,
+                NULL AS image_username
+            FROM topics t
+            LEFT JOIN subscribers s ON t.topicid = s.topicid
+            LEFT JOIN publications p ON t.topicid = p.topicid
+            LEFT JOIN messages m ON p.publicationid = m.publicationid
+            WHERE t.topicname = @topicname
+
+            UNION ALL
+
+            SELECT
+                t.topicname AS topic_name,
+                s.name AS subscriber_name,
+                p.publicationid,
+                p.name AS publication_name,
+                p.topicname AS publication_topicname,
+                NULL AS message_username,
+                NULL AS message_content,
+                i.name AS image_name,
+                i.username AS image_username
+            FROM topics t
+            LEFT JOIN subscribers s ON t.topicid = s.topicid
+            LEFT JOIN publications p ON t.topicid = p.topicid
+            LEFT JOIN images i ON p.publicationid = i.publicationid
+            WHERE t.topicname = @topicname
+            """
+        
+        query_job = client.query(query)
+        result = query_job.result()
+
+        logging.info('Building Topics')
+
+        topic_map = {}
+
+        for row in result:
+            try:
+            
+                name = row['topic_name']
+                subscriber_name = row.get('subscriber_name')
+
+                if name not in topic_map:
+                    topic_map[name] = {
+                        "subscribers": set(),
+                        "publications": []
+                    }
+
+                if subscriber_name:
+                    topic_map[name]["subscribers"].add(subscriber_name)
+
+                if row['message_username'] is not None:
+                    publication = Publication(
+                        name=row['publication_name'],
+                        topicname=row['publication_topicname'],
+                        message = Message(
+                            username=row['message_username'],
+                            content=row['message_content']
+                        )
+                    )
+                    
+                elif row['image_name'] is not None:
+                    publication = Publication(
+                        name=row['publication_name'],
+                        topicname=row['publication_topicname'],
+                        images = Image(
+                            name=row['image_name'],
+                            username=row['image_username']
+                        )
+                    )
+                else:
+                    continue
+
+                topic_map[name]["publications"].append(publication)
+
+                topics = []
+                for name, data in topic_map.items():
+                    topics.append(Topic(
+                        name=name,
+                        subscribers=list(data["subscribers"]),
+                        publications=list(data["publications"])
+                    ))
+
+            except KeyError as e:
+                logging.error(f"Missing field in query result: {e}")
+            except Exception as e:
+                logging.error(f"Error processing row: {e}")
 
         micro_service_response = Topic()
         print("Received response from other micro service")

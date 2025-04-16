@@ -146,7 +146,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
             if genre.strip() in self.GENRE_MAPPING:
                 mapped_genres.append(self.GENRE_MAPPING[genre.strip()])
             else:
-                logging.warning(f"Unknown genre: {genre.strip()}")
+                logging.warning(f"Unknown genre: {genre.strip()}")  # Log and skip unknown genres
         return mapped_genres
 
     # Returns all animes
@@ -154,7 +154,7 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         logging.info("Fetching all animes from BigQuery")
 
         # Query to fetch anime data
-        query = "SELECT * FROM cn-fc58192.vmcloud.anime-filtered"
+        query = "SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`"
         query_job = client.query(query)
         result = query_job.result()
 
@@ -162,14 +162,21 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         animes = []
         for row in result:
             try:
-                # Map genres to AnimeGenre enum
+                # Map genres to AnimeGenre enum, ignoring unknown genres
                 genres = self.map_genres_to_enum(row["Genres"].split(","))
-                
+
+                # Convert episodes to an integer
+                try:
+                    episodes = int(row["Episodes"])
+                except ValueError:
+                    logging.error(f"Invalid episodes value for anime '{row['Name']}': {row['Episodes']}")
+                    continue  # Skip this anime if episodes cannot be converted
+
                 # Create an Anime object
                 anime = Anime(
                     name=row["Name"],
                     genres=genres,  # Use the mapped genres
-                    episodes=row["Episodes"],
+                    episodes=episodes,  # Convert to int
                     score=row["Score"],
                     aired=row["Aired"],
                     synopsis=row.get("Synopsis", "No synopsis available")  # Default if synopsis is missing
@@ -190,25 +197,43 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         AnimeName = request.anime_name
         logging.info(f"Searching for anime by name: {AnimeName}")
 
-        query = f"SELECT * FROM cn-fc58192.vmcloud.anime-filtered WHERE Name = {AnimeName}"
-        query_job = client.query(query)
+        # Use parameterized query to prevent SQL injection and syntax errors
+        query = """
+            SELECT * FROM `cn-fc58192.vmcloud.anime-filtered`
+            WHERE Name = @AnimeName
+        """
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("AnimeName", "STRING", AnimeName)
+            ]
+        )
+        query_job = client.query(query, job_config=job_config)
         result = query_job.result()
 
-        if not result:
+        # Check if the result is empty
+        rows = list(result)
+        if not rows:
             logging.warning(f"No anime found with name: {AnimeName}")
             raise NotFound("Anime not found")
 
-        # Map genres to AnimeGenre enum
-        genres = self.map_genres_to_enum(result[0]["Genres"].split(","))
+        # Map genres to AnimeGenre enum, ignoring unknown genres
+        genres = self.map_genres_to_enum(rows[0]["Genres"].split(","))
+
+        # Convert episodes to an integer
+        try:
+            episodes = int(rows[0]["Episodes"])
+        except ValueError:
+            logging.error(f"Invalid episodes value for anime '{AnimeName}': {rows[0]['Episodes']}")
+            raise ValueError("Invalid episodes value")
 
         # Create an Anime object
         anime = Anime(
-            name=result[0]["Name"],
+            name=rows[0]["Name"],
             genres=genres,  # Use the mapped genres
-            episodes=result[0]["Episodes"],
-            score=result[0]["Score"],
-            aired=result[0]["Aired"],
-            synopsis=result[0].get("Synopsis", "No synopsis available")
+            episodes=episodes,  # Convert to int
+            score=rows[0]["Score"],
+            aired=rows[0]["Aired"],
+            synopsis=rows[0].get("Synopsis", "No synopsis available")
         )
 
         return anime_by_name_Response(anime=anime)
@@ -221,12 +246,16 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
                 result.append(anime)  # Use a list instead of a set
         return multiple_anime_by_name_Response(animes=result)
     
-    # Returns all animes that belong to some of the given genres
     def AnimeRelatedByGenre(self, request, context):
         logging.info("Searching for animes by genre")
 
-        # Convert the requested genres (enum values) to their string representations
-        requested_genres = [genre.name for genre in request.anime_genres]
+        # Convert the requested genres (enum values as integers) to their string representations
+        try:
+            requested_genres = [AnimeGenre.Name(genre) for genre in request.anime_genres]
+        except KeyError as e:
+            logging.error(f"Invalid genre value in request: {e}")
+            raise ValueError("Invalid genre value in request")
+
         logging.info(f"Requested genres: {requested_genres}")
 
         # Build the query to fetch animes that match the requested genres
@@ -254,14 +283,21 @@ class AnimeRepository_Service(AnimeRepositoryServicer) :
         animes = []
         for row in result:
             try:
-                # Map genres to AnimeGenre enum
+                # Map genres to AnimeGenre enum, ignoring unknown genres
                 genres = self.map_genres_to_enum(row["Genres"].split(","))
+
+                # Convert episodes to an integer
+                try:
+                    episodes = int(row["Episodes"])
+                except ValueError:
+                    logging.error(f"Invalid episodes value for anime '{row['Name']}': {row['Episodes']}")
+                    continue  # Skip this anime if episodes cannot be converted
 
                 # Create an Anime object
                 anime = Anime(
                     name=row["Name"],
                     genres=genres,  # Use the mapped genres
-                    episodes=row["Episodes"],
+                    episodes=episodes,  # Convert to int
                     score=row["Score"],
                     aired=row["Aired"],
                     synopsis=row.get("Synopsis", "No synopsis available")  # Default if synopsis is missing
@@ -306,6 +342,15 @@ def serve():
     server.add_insecure_port('[::]:50053')
     server.start()
     print("AnimeRepository Server started on port 50053")
+
+    # -------------------------------------------------
+    # Start the HTTP server for probes in a separate thread
+    http_thread = threading.Thread(target=start_http_server)
+    http_thread.daemon = True
+    http_thread.start()
+
+    server.wait_for_termination()
+    # --------------------------------------------------
 
     server.wait_for_termination()
 
