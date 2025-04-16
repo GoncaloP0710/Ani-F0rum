@@ -41,6 +41,16 @@ print("===================== Anime List ====================")
 print("Trying to start AnimeList service...")
 print("=========================================================")
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console
+    ]
+)
+
 class AnimeList_Service(AnimeListServicer):
 
     # Create a channel and a stub to the AnimeRepository microservice so we can call its methods

@@ -170,6 +170,7 @@ class TopicService(TopicRepositoryServicer):
                 publication = None
                 name = row['topic_name']
                 subscriber_name = row.get('subscriber_name')
+                logging.info(f'subscriber_name: {subscriber_name}')
 
                 if name not in topic_map:
                     topic_map[name] = {
@@ -181,6 +182,7 @@ class TopicService(TopicRepositoryServicer):
                     topic_map[name]["subscribers"].add(Subscriber(name=subscriber_name))
 
                 if row['message_username'] is not None:
+                    logging.info(f'message_username: {row['message_username']}')
                     publication = Publication(
                         name=row['publication_name'],
                         topicname=row['publication_topicname'],
@@ -191,6 +193,7 @@ class TopicService(TopicRepositoryServicer):
                     )
                     
                 elif row['image_name'] is not None:
+                    logging.info(f'image_name: {row['image_name']}')
                     publication = Publication(
                         name=row['publication_name'],
                         topicname=row['publication_topicname'],
@@ -200,7 +203,10 @@ class TopicService(TopicRepositoryServicer):
                         )
                     )
                 else:
+                    logging.info(f'else branch')
                     continue
+
+                logging.info(f'publication: {publication}')
 
                 topic_map[name]["publications"].append(publication)
 
@@ -214,8 +220,8 @@ class TopicService(TopicRepositoryServicer):
             logging.info(f'data: {data}')
             topics.append(Topic(
                 topicname=name,
-                subscribers=data["subscribers"],
-                publications=data["publications"]
+                subscribers=topic_map[name]["subscribers"],
+                publications=topic_map[name]["publications"]
             ))
 
         logging.info(f"Fetched {len(topics)} topics from BigQuery")
