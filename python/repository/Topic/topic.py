@@ -350,10 +350,10 @@ class TopicService(TopicRepositoryServicer):
         micro_service_response = Topic()
         print("Received response from other micro service")
         topic = None
-        for t in self.Topics:
-            if t.topicname == topic_name:
-                topic = t
-                break
+        #for t in self.Topics:
+            #if t.topicname == topic_name:
+            #    topic = t
+            #    break
 
         print("Returning the response")
 
