@@ -283,7 +283,7 @@ class UserRepository_Service(UserRepositoryServicer) :
             user_name = entry["Username"]
             if user_name not in user_anime:
                 user_anime[user_name] = {"animes_watched": [], "anime_watched_score": []}
-            user_anime[user_name]["animes_watched"].append(entry["anime_title"])
+            user_anime[user_name]["animes_watched"].append(entry["Anime Title"])
             user_anime[user_name]["anime_watched_score"].append(entry["rating"])
         logging.info("All user anime watched and score query result: %s", user_anime)
 
