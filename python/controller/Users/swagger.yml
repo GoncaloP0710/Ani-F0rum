@@ -156,6 +156,13 @@ components:
       required: True
       schema:
         type: "string"
+    karma_value:
+      name: "karma_value"
+      description: "Karma value to update"
+      in: path
+      required: True
+      schema:
+        type: "integer"
 
 
   # ====================================================
