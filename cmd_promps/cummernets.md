@@ -155,6 +155,10 @@ kubectl apply -f python/repository/User/user_repository_deployment_service.yml
 
 # Achievement
 
+```python
+kubectl apply -f python/others/Achievements/achievements_deployment_service.yml
+```
+
 # User Recommendation
 
 ```python

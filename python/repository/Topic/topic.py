@@ -76,7 +76,7 @@ class TopicService(TopicRepositoryServicer):
         topic_map = {}
 
         topic_name_query = """
-            SELECT topicname FROM `fc64854cn.topics.topics`;
+            SELECT topicname FROM `cn-fc58192.vmcloud.topics`;
         """
         topic_name_query_job = client.query(topic_name_query)
         topic_name_result = topic_name_query_job.result()
@@ -97,8 +97,8 @@ class TopicService(TopicRepositoryServicer):
             SELECT
                 t.topicname AS topic_name,
                 s.name AS subscriber_name
-            FROM `fc64854cn.topics.topics` t
-            LEFT JOIN `fc64854cn.topics.subscribers` s ON t.topicid = s.topicid;
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid;
         """
         subscribers_query_job = client.query(subscribers_query)
         subscribers_result = subscribers_query_job.result()
@@ -123,9 +123,9 @@ class TopicService(TopicRepositoryServicer):
                 p.topicname AS publication_topicname,
                 m.username AS message_username,
                 m.content AS message_content
-            FROM `fc64854cn.topics.topics` t
-            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `fc64854cn.topics.messages` m ON p.publicationid = m.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
         """
         message_publications_query_job = client.query(message_publications_query)
         message_publications_result = message_publications_query_job.result()
@@ -161,9 +161,9 @@ class TopicService(TopicRepositoryServicer):
                 p.topicname AS publication_topicname,
                 i.name AS image_name,
                 i.username AS image_username
-            FROM `fc64854cn.topics.topics` t
-            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `fc64854cn.topics.images` i ON p.publicationid = i.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
         """
 
         image_publications_query_job = client.query(image_publications_query)
@@ -217,13 +217,13 @@ class TopicService(TopicRepositoryServicer):
         topic_name = request.topicname
 
         query = """
-            INSERT INTO `fc64854cn.topics.topics` (topicid, topicname)
+            INSERT INTO `cn-fc58192.vmcloud.topics` (topicid, topicname)
             SELECT
                 IFNULL(MAX(topicid), 0) + 1 AS new_topicid,
                 @topic_name AS topicname
-            FROM `fc64854cn.topics.topics`
+            FROM `cn-fc58192.vmcloud.topics`
             WHERE NOT EXISTS (
-                SELECT 1 FROM `fc64854cn.topics.topics` WHERE topicname = @topic_name
+                SELECT 1 FROM `cn-fc58192.vmcloud.topics` WHERE topicname = @topic_name
             );
             """
         
@@ -249,7 +249,7 @@ class TopicService(TopicRepositoryServicer):
         topic_map = {}
 
         topic_name_query = """
-            SELECT topicname FROM `fc64854cn.topics.topics` t
+            SELECT topicname FROM `cn-fc58192.vmcloud.topics` t
             WHERE t.topicname = @topic_name;
         """
 
@@ -278,8 +278,8 @@ class TopicService(TopicRepositoryServicer):
             SELECT
                 t.topicname AS topic_name,
                 s.name AS subscriber_name
-            FROM `fc64854cn.topics.topics` t
-            LEFT JOIN `fc64854cn.topics.subscribers` s ON t.topicid = s.topicid
+            FROM `cn-fc58192.vmcloud.topics` t
+            LEFT JOIN `cn-fc58192.vmcloud.subscribers` s ON t.topicid = s.topicid
             WHERE t.topicname = @topic_name;
         """
 
@@ -312,9 +312,9 @@ class TopicService(TopicRepositoryServicer):
                 p.topicname AS publication_topicname,
                 m.username AS message_username,
                 m.content AS message_content
-            FROM `fc64854cn.topics.topics` t
-            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `fc64854cn.topics.messages` m ON p.publicationid = m.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.messages` m ON p.publicationid = m.publicationid
             WHERE t.topicname = @topic_name;
         """
 
@@ -358,9 +358,9 @@ class TopicService(TopicRepositoryServicer):
                 p.topicname AS publication_topicname,
                 i.name AS image_name,
                 i.username AS image_username
-            FROM `fc64854cn.topics.topics` t
-            JOIN `fc64854cn.topics.publications` p ON t.topicid = p.topicid
-            LEFT JOIN `fc64854cn.topics.images` i ON p.publicationid = i.publicationid
+            FROM `cn-fc58192.vmcloud.topics` t
+            JOIN `cn-fc58192.vmcloud.publications` p ON t.topicid = p.topicid
+            LEFT JOIN `cn-fc58192.vmcloud.images` i ON p.publicationid = i.publicationid
             WHERE t.topicname = @topic_name;
         """
 
@@ -426,19 +426,19 @@ class TopicService(TopicRepositoryServicer):
             DECLARE publication_id INT64;
 
             SET topic_id = (
-                SELECT topicid FROM `fc64854cn.topics.topics`
+                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
                 WHERE topicname = @topic_name
                 LIMIT 1
             );
 
             SET publication_id = (
-                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `fc64854cn.topics.publications`
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
             );
 
-            INSERT INTO `fc64854cn.topics.publications` (publicationid, topicid, name, topicname)
+            INSERT INTO `cn-fc58192.vmcloud.publications` (publicationid, topicid, name, topicname)
             VALUES (publication_id, topic_id, @publication_name, @topic_name);
 
-            INSERT INTO `fc64854cn.topics.messages` (publicationid, username, content)
+            INSERT INTO `cn-fc58192.vmcloud.messages` (publicationid, username, content)
             VALUES (publication_id, @username, @content);
         """
         
@@ -473,19 +473,19 @@ class TopicService(TopicRepositoryServicer):
             DECLARE publication_id INT64;
 
             SET topic_id = (
-                SELECT topicid FROM `fc64854cn.topics.topics`
+                SELECT topicid FROM `cn-fc58192.vmcloud.topics`
                 WHERE topicname = @topic_name
                 LIMIT 1
             );
 
             SET publication_id = (
-                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `fc64854cn.topicspublications`
+                SELECT IFNULL(MAX(publicationid), 0) + 1 FROM `cn-fc58192.vmcloud.publications`
             );
 
-            INSERT INTO `fc64854cn.topics.publications` (publicationid, topicid, name, topicname)
+            INSERT INTO `cn-fc58192.vmcloud.publications` (publicationid, topicid, name, topicname)
             VALUES (publication_id, topic_id, @publication_name, @topic_name);
 
-            INSERT INTO `fc64854cn.topics.images` (publicationid, name, username)
+            INSERT INTO `cn-fc58192.vmcloud.images` (publicationid, name, username)
             VALUES (publication_id, @image_name, @username);
         """
         
