@@ -280,7 +280,7 @@ class UserRepository_Service(UserRepositoryServicer) :
         query_job = client.query(query)
         user_anime = {}
         for entry in query_job.result():
-            user_name = entry["user_name"]
+            user_name = entry["Username"]
             if user_name not in user_anime:
                 user_anime[user_name] = {"animes_watched": [], "anime_watched_score": []}
             user_anime[user_name]["animes_watched"].append(entry["anime_title"])
@@ -315,6 +315,7 @@ class UserRepository_Service(UserRepositoryServicer) :
             SELECT DISTINCT Username 
             FROM `cn-fc58192.vmcloud.users-score-2023`
             WHERE `Anime Title` IN UNNEST(@anime_titles)
+            LIMIT 10
         """
         query_job = client.query(query, job_config=bigquery.QueryJobConfig(
             query_parameters=[

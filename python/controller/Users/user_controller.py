@@ -298,7 +298,7 @@ def UpdateAchievement(user_name, title):
 
 def get_user_feed(user_name):
     try:
-        with grpc.insecure_channel('FeedGenerator:50094') as channel:  # Connect to the FeedGenerator
+        with grpc.insecure_channel('feed-generator:50094') as channel:  # Connect to the FeedGenerator
             stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
             request = FeedGenerator_pb2.FeedRequest(user_name=user_name)
             print("aaaaa")
@@ -330,7 +330,7 @@ def get_user_feed(user_name):
     
 def get_user_topic_feed(user_name):
     try:
-        with grpc.insecure_channel('FeedGenerator:50094') as channel:  # Connect to the FeedGenerator
+        with grpc.insecure_channel('feed-generator:50094') as channel:  # Connect to the FeedGenerator
             stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
             request = FeedGenerator_pb2.TopicFeedRequest(user_name=user_name)
             response = stub.GetTopicFeed(request)
