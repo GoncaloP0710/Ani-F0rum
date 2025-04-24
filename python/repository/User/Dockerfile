@@ -14,6 +14,8 @@ RUN pip install "connexion[flask]"
 RUN pip install "connexion[uvicorn]"
 RUN pip install --upgrade google-cloud-bigquery
 
+RUN pip install --no-cache-dir protobuf==5.29.0
+
 # Set PYTHONPATH to include the project root
 ENV PYTHONPATH=/app
 
