@@ -406,6 +406,19 @@ paths:
           description: "User not found"
 
   /user/{user_name}/karma/{karma_value}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "karma_value"
+        in: path
+        required: true
+        description: "Karma value to update"
+        schema:
+          type: "integer"
     post:
       operationId: "user_controller.update_user_karma"
       tags:

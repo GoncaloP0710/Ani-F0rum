@@ -294,7 +294,7 @@ class UserRepository_Service(UserRepositoryServicer) :
             users.append(
                 User(
                     user_name=user_name,
-                    password="",  # Passwords are not retrieved for security reasons
+                    password="123",  # Passwords are not retrieved for security reasons
                     location=user_data["Location"],
                     animes_watched=user_anime.get(user_name, {}).get("animes_watched", []),
                     anime_watched_score=user_anime.get(user_name, {}).get("anime_watched_score", []),

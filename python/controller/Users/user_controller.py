@@ -98,6 +98,7 @@ def all_users():
                 "users": [
                     {
                         "user_name": user.user_name,
+                        "password": user.password,
                         "location": user.location if user.HasField("location") else None,
                         "animes_watched": list(user.animes_watched),
                         "anime_watched_score": list(user.anime_watched_score),
@@ -130,6 +131,7 @@ def get_user(user_name):
             return {
                 "user": {
                     "user_name": user.user_name,
+                    "password": user.password,
                     "location": user.location if user.HasField("location") else None,
                     "animes_watched": list(user.animes_watched),
                     "anime_watched_score": list(user.anime_watched_score),
