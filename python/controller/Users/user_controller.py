@@ -226,7 +226,7 @@ def list_topics(user_name):
 
 def GetAchivementList(user_name):
     try:
-        with grpc.insecure_channel('localhost:50080') as channel:  
+        with grpc.insecure_channel('achievements:50080') as channel:  
             stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
             request = Achievements_pb2.AchievementListRequest(user_name=user_name)
             print(request)
@@ -254,7 +254,7 @@ def GetAchivementList(user_name):
 
 def GetAchievement(title):
     try:
-        with grpc.insecure_channel('localhost:50080') as channel:  
+        with grpc.insecure_channel('achievements:50080') as channel:  
             stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
             request = Achievements_pb2.AchievementRequest(title=title)
             print(request)
@@ -278,7 +278,7 @@ def GetAchievement(title):
 
 def UpdateAchievement(user_name, title):
     try:
-        with grpc.insecure_channel('localhost:50080') as channel: 
+        with grpc.insecure_channel('achievements:50080') as channel: 
             stub = Achievements_pb2_grpc.AchievementsControllerStub(channel)
             request = Achievements_pb2.UpdateRequest(user_name=user_name, title=title)
             print(request)
@@ -298,7 +298,7 @@ def UpdateAchievement(user_name, title):
 
 def get_user_feed(user_name):
     try:
-        with grpc.insecure_channel('localhost:50094') as channel:  # Connect to the FeedGenerator
+        with grpc.insecure_channel('FeedGenerator:50094') as channel:  # Connect to the FeedGenerator
             stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
             request = FeedGenerator_pb2.FeedRequest(user_name=user_name)
             print("aaaaa")
@@ -330,7 +330,7 @@ def get_user_feed(user_name):
     
 def get_user_topic_feed(user_name):
     try:
-        with grpc.insecure_channel('localhost:50094') as channel:  # Connect to the FeedGenerator
+        with grpc.insecure_channel('FeedGenerator:50094') as channel:  # Connect to the FeedGenerator
             stub = FeedGenerator_pb2_grpc.FeedGeneratorServiceStub(channel)
             request = FeedGenerator_pb2.TopicFeedRequest(user_name=user_name)
             response = stub.GetTopicFeed(request)

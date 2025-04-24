@@ -246,7 +246,7 @@ class UserRepository_Service(UserRepositoryServicer) :
         logging.info("Fetching all users")
 
         # Query to get all user details
-        query = "SELECT * FROM `cn-fc58192.vmcloud.users-details-2023`"
+        query = "SELECT * FROM `cn-fc58192.vmcloud.users-details-2023` LIMIT 10"
         query_job = client.query(query)
         user_details = list(query_job.result())  # Convert result to a list for easier handling
         logging.info("All user details query result: %s", user_details)
@@ -436,57 +436,98 @@ class UserRepository_Service(UserRepositoryServicer) :
         except Exception as e:
             logging.error("Failed to add achievement for user: %s with title: %s. Error: %s", request.user_name, request.title, str(e))
             return update_user_achievement_Response(success=False, message="Failed to add achievement")
-    
+        
     def UpdateUserKarma(self, request, context):
         logging.info("Updating karma for user: %s by value: %d", request.user_name, request.karma_value)
 
-        # Verificar se o usuário existe na tabela
-        query_check = """
-            SELECT COUNT(*) as count
-            FROM `cn-fc58192.vmcloud.user-karma`
-            WHERE user_name = @user_name
-        """
-        query_job = client.query(query_check, job_config=bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name)
-            ]
-        ))
-        result = list(query_job.result())
-        user_exists = result[0]["count"] > 0
+        query = """
+            DECLARE user_exists INT64;
 
-        if user_exists:
-            # Atualizar o karma do usuário existente
-            query_update = """
+            -- Verificar se o usuário já existe na tabela
+            SET user_exists = (
+                SELECT COUNT(*) 
+                FROM `cn-fc58192.vmcloud.user-karma`
+                WHERE user_name = @user_name
+            );
+
+            -- Se o usuário existir, atualize o karma
+            IF user_exists > 0 THEN
                 UPDATE `cn-fc58192.vmcloud.user-karma`
                 SET karma = karma + @karma_value
-                WHERE user_name = @user_name
-            """
-            query_job = client.query(query_update, job_config=bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
-                    bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
-                ]
-            ))
-        else:
-            # Inserir um novo registro para o usuário
-            query_insert = """
+                WHERE user_name = @user_name;
+            ELSE
+                -- Caso contrário, insira um novo registro
                 INSERT INTO `cn-fc58192.vmcloud.user-karma` (user_name, karma)
-                VALUES (@user_name, @karma_value)
-            """
-            query_job = client.query(query_insert, job_config=bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
-                    bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
-                ]
-            ))
+                VALUES (@user_name, @karma_value);
+            END IF;
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+                bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
+            ]
+        )
 
         try:
+            query_job = client.query(query, job_config=job_config)
             query_job.result()  # Aguarda a execução da query
             logging.info("Successfully updated or inserted karma for user: %s", request.user_name)
             return update_user_karma_Response(success=True)
         except Exception as e:
             logging.error("Failed to update or insert karma for user: %s. Error: %s", request.user_name, str(e))
             return update_user_karma_Response(success=False, message="Failed to update or insert karma")
+    
+    # def UpdateUserKarma(self, request, context):
+    #     logging.info("Updating karma for user: %s by value: %d", request.user_name, request.karma_value)
+
+    #     # Verificar se o usuário existe na tabela
+    #     query_check = """
+    #         SELECT COUNT(*) as count
+    #         FROM `cn-fc58192.vmcloud.user-karma`
+    #         WHERE user_name = @user_name
+    #     """
+    #     query_job = client.query(query_check, job_config=bigquery.QueryJobConfig(
+    #         query_parameters=[
+    #             bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name)
+    #         ]
+    #     ))
+    #     result = list(query_job.result())
+    #     user_exists = result[0]["count"] > 0
+
+    #     if user_exists:
+    #         # Atualizar o karma do usuário existente
+    #         query_update = """
+    #             UPDATE `cn-fc58192.vmcloud.user-karma`
+    #             SET karma = karma + @karma_value
+    #             WHERE user_name = @user_name
+    #         """
+    #         query_job = client.query(query_update, job_config=bigquery.QueryJobConfig(
+    #             query_parameters=[
+    #                 bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+    #                 bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
+    #             ]
+    #         ))
+    #     else:
+    #         # Inserir um novo registro para o usuário
+    #         query_insert = """
+    #             INSERT INTO `cn-fc58192.vmcloud.user-karma` (user_name, karma)
+    #             VALUES (@user_name, @karma_value)
+    #         """
+    #         query_job = client.query(query_insert, job_config=bigquery.QueryJobConfig(
+    #             query_parameters=[
+    #                 bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
+    #                 bigquery.ScalarQueryParameter("karma_value", "INT64", request.karma_value)
+    #             ]
+    #         ))
+
+    #     try:
+    #         query_job.result()  # Aguarda a execução da query
+    #         logging.info("Successfully updated or inserted karma for user: %s", request.user_name)
+    #         return update_user_karma_Response(success=True)
+    #     except Exception as e:
+    #         logging.error("Failed to update or insert karma for user: %s. Error: %s", request.user_name, str(e))
+    #         return update_user_karma_Response(success=False, message="Failed to update or insert karma")
         
     
 
