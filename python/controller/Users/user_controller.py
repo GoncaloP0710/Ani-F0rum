@@ -1,3 +1,4 @@
+import logging
 import sys
 import os
 import connexion
@@ -371,19 +372,33 @@ def get_user_topic_feed(user_name):
         return {"error": f"RPC failed: {e}"}, 500
     
 def update_user_karma(user_name, karma_value):
+    logging.info(f"Received request to update karma for user: {user_name} with value: {karma_value}")
     try:
         # Convert karma_value to an integer
         karma_value = int(karma_value)
+        logging.info(f"Converted karma_value to integer: {karma_value}")
 
         with grpc.insecure_channel('user-statistics:50041') as channel:
+            logging.info("Established gRPC channel with user-statistics service")
             stub = UserStatistics_pb2_grpc.UserStatisticsServiceStub(channel)
+            logging.info("Created UserStatisticsServiceStub")
+            
             request = UserStatistics_pb2.KarmaUpdateRequest(user_name=user_name, karma_value=karma_value)
+            logging.info(f"Created KarmaUpdateRequest: user_name={user_name}, karma_value={karma_value}")
+            
             response = stub.UpdateUserKarma(request)
+            logging.info(f"Received response from UpdateUserKarma: success={response.success}")
+            
             return {"success": response.success}
-    except ValueError:
+    except ValueError as ve:
+        logging.error(f"ValueError: karma_value must be an integer. Error: {ve}")
         return {"error": "karma_value must be an integer"}, 400
     except grpc.RpcError as e:
+        logging.error(f"gRPC error occurred: {e}")
         return {"error": f"RPC failed: {e}"}, 500
+    except Exception as ex:
+        logging.error(f"Unexpected error occurred: {ex}")
+        return {"error": "Internal server error"}, 500
 
 
 def healthz():
