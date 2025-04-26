@@ -243,67 +243,25 @@ class UserRepository_Service(UserRepositoryServicer) :
         
     # Returns all users
     def GetAllUsers(self, request, context):
-        logging.info("Fetching all users")
+        logging.info("Fetching all user names")
 
-        # Query to get all user details
-        query = "SELECT * FROM `cn-fc58192.vmcloud.users-details-2023` LIMIT 10"
+        # Query to get all user names
+        query = "SELECT Username FROM `cn-fc58192.vmcloud.users-details-2023` LIMIT 10"
         query_job = client.query(query)
-        user_details = list(query_job.result())  # Convert result to a list for easier handling
-        logging.info("All user details query result: %s", user_details)
+        user_names = [entry["Username"] for entry in query_job.result()]  # Extract usernames
+        logging.info("All user names query result: %s", user_names)
 
-        # Query to get all user karma
-        query = "SELECT * FROM `cn-fc58192.vmcloud.user-karma`"
-        query_job = client.query(query)
-        user_karma = {entry["user_name"]: entry["karma"] for entry in query_job.result()}  # Map user_name to karma
-        logging.info("All user karma query result: %s", user_karma)
-
-        # Query to get all user achievements
-        query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements`"
-        query_job = client.query(query)
-        user_achievements = {}
-        for entry in query_job.result():
-            user_name = entry["user_name"]
-            if user_name not in user_achievements:
-                user_achievements[user_name] = []
-            user_achievements[user_name].append(
-                Achievement(
-                    title=entry["title"],
-                    description=entry["description"],
-                    date=entry["date"],
-                    rarity=Rarity.Value(entry["rarity"])
-                )
-            )
-        logging.info("All user achievements query result: %s", user_achievements)
-
-        # Query to get all user anime watched and scores
-        query = "SELECT * FROM `cn-fc58192.vmcloud.users-score-2023`"
-        query_job = client.query(query)
-        user_anime = {}
-        for entry in query_job.result():
-            user_name = entry["Username"]
-            if user_name not in user_anime:
-                user_anime[user_name] = {"animes_watched": [], "anime_watched_score": []}
-            user_anime[user_name]["animes_watched"].append(entry["Anime Title"])
-            user_anime[user_name]["anime_watched_score"].append(entry["rating"])
-        logging.info("All user anime watched and score query result: %s", user_anime)
-
-        # Map all users to User objects
         users = []
-        for user_data in user_details:
-            user_name = user_data["Username"]
-            users.append(
-                User(
-                    user_name=user_name,
-                    password="123",  # Passwords are not retrieved for security reasons
-                    location=user_data["Location"],
-                    animes_watched=user_anime.get(user_name, {}).get("animes_watched", []),
-                    anime_watched_score=user_anime.get(user_name, {}).get("anime_watched_score", []),
-                    topics_subscribed=[],  # Add if available in the database
-                    karma=user_karma.get(user_name, 0),
-                    achievements=user_achievements.get(user_name, [])
-                )
-            )
+        for user_name in user_names:
+            try:
+                # Create a mock request to call GetUser
+                user_request = type('Request', (object,), {"user_name": user_name})()
+                user_response = self.GetUser(user_request, context)
+                users.append(user_response.user)
+            except NotFound:
+                logging.warning("User not found for username: %s", user_name)
 
+        logging.info("Fetched all users: %s", users)
         return get_all_users_Response(users=users)
     
     # Returns all users with one of the animes in their list
@@ -364,7 +322,7 @@ class UserRepository_Service(UserRepositoryServicer) :
         return get_user_achievements_Response(achievements=user_achievements)
         
     def GetAchievement(self, request, context):
-        logging.info("Searching for achievement with title: ", request.title)
+        logging.info("Searching for achievement with title: %s", request.title)
         
         # Query user achievements
         query = "SELECT * FROM `cn-fc58192.vmcloud.user-achievements` WHERE title = @title"
@@ -373,6 +331,9 @@ class UserRepository_Service(UserRepositoryServicer) :
         ))
         result = list(query_job.result())  # Convert result to a list for easier handling
         logging.info("Achievement title query result: %s", result)
+
+        if not result:
+            raise NotFound("Achievement not found")
 
         achievement = Achievement(
             title=result[0]["title"],
@@ -384,59 +345,57 @@ class UserRepository_Service(UserRepositoryServicer) :
         return get_achievement_Response(achievement=achievement)
     
     def UpdateUserAchievement(self, request, context):
-        logging.info("Updating user with user_name: %s and with title: %s", request.user_name, request.title)
+        logging.info("Updating achievement for user: %s with title: %s", request.user_name, request.title)
 
-        # Verificar se o achievement existe na tabela para o usuário
-        query_check = """
-            SELECT COUNT(*) as count
-            FROM `cn-fc58192.vmcloud.user-achievements`
-            WHERE user_name = @user_name AND title = @title
-        """
-        query_job = client.query(query_check, job_config=bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
-                bigquery.ScalarQueryParameter("title", "STRING", request.title)
-            ]
-        ))
-        result = list(query_job.result())
-        achievement_exists = result[0]["count"] > 0
+        # Mapeamento de raridade
+        rarity_mapping = {
+            "EPIC": Rarity.EPIC ,
+            "RARE": Rarity.RARE,
+            "LEGENDARY": Rarity.LEGENDARY,
+            "MYTHIC": Rarity.MYTHIC 
+        }
 
-        if achievement_exists:
-            logging.info("Achievement already exists for user: %s with title: %s", request.user_name, request.title)
-            return update_user_achievement_Response(success=False, message="Achievement already exists")
-
-        # Buscar o achievement na lista local
-        ach = None
-        for achievement in self.Achievements:
-            if achievement.title == request.title:
-                ach = achievement
-                break
+        # Buscar o achievement na lista hardcoded
+        ach = next((achievement for achievement in self.Achievements if achievement.title == request.title), None)
 
         if not ach:
-            raise NotFound("Achievement not found")
+            logging.error("Achievement with title '%s' not found in hardcoded list", request.title)
+            raise NotFound("Achievement not found in hardcoded list")
 
-        # Inserir o achievement na tabela
-        query_insert = """
-            INSERT INTO `cn-fc58192.vmcloud.user-achievements` (user_name, title, description, date, rarity)
-            VALUES (@user_name, @title, @description, @date, @rarity)
+        # Query para verificar e atualizar/inserir o achievement
+        query = """
+            DECLARE achievement_exists INT64;
+
+            SET achievement_exists = (
+                SELECT COUNT(*)
+                FROM `cn-fc58192.vmcloud.user-achievements`
+                WHERE user_name = @user_name AND title = @title
+            );
+
+            IF achievement_exists = 0 THEN
+                INSERT INTO `cn-fc58192.vmcloud.user-achievements` (user_name, title, description, date, rarity)
+                VALUES (@user_name, @title, @description, @date, @rarity);
+            END IF;
         """
-        query_job = client.query(query_insert, job_config=bigquery.QueryJobConfig(
+
+        job_config = bigquery.QueryJobConfig(
             query_parameters=[
                 bigquery.ScalarQueryParameter("user_name", "STRING", request.user_name),
                 bigquery.ScalarQueryParameter("title", "STRING", ach.title),
                 bigquery.ScalarQueryParameter("description", "STRING", ach.description),
                 bigquery.ScalarQueryParameter("date", "STRING", ach.date),
-                bigquery.ScalarQueryParameter("rarity", "STRING", ach.rarity.name)  # Convert enum to string
+                bigquery.ScalarQueryParameter("rarity", "STRING", rarity_mapping.get(ach.rarity, "UNKNOWN"))
             ]
-        ))
+        )
 
         try:
+            query_job = client.query(query, job_config=job_config)
             query_job.result()  # Aguarda a execução da query
             logging.info("Achievement successfully added for user: %s with title: %s", request.user_name, request.title)
             return update_user_achievement_Response(success=True)
         except Exception as e:
             logging.error("Failed to add achievement for user: %s with title: %s. Error: %s", request.user_name, request.title, str(e))
-            return update_user_achievement_Response(success=False, message="Failed to add achievement")
+            return update_user_achievement_Response(success=False)
         
     def UpdateUserKarma(self, request, context):
         logging.info("Updating karma for user: %s by value: %d", request.user_name, request.karma_value)
@@ -444,20 +403,17 @@ class UserRepository_Service(UserRepositoryServicer) :
         query = """
             DECLARE user_exists INT64;
 
-            -- Verificar se o usuário já existe na tabela
             SET user_exists = (
                 SELECT COUNT(*) 
                 FROM `cn-fc58192.vmcloud.user-karma`
                 WHERE user_name = @user_name
             );
 
-            -- Se o usuário existir, atualize o karma
             IF user_exists > 0 THEN
                 UPDATE `cn-fc58192.vmcloud.user-karma`
                 SET karma = karma + @karma_value
                 WHERE user_name = @user_name;
             ELSE
-                -- Caso contrário, insira um novo registro
                 INSERT INTO `cn-fc58192.vmcloud.user-karma` (user_name, karma)
                 VALUES (@user_name, @karma_value);
             END IF;
