@@ -82,7 +82,7 @@ components:
 paths:
 
   # Health Check Endpoint
-  /healthz:
+  /topics/healthz:
     get:
       operationId: "topics.healthz"
       tags:
@@ -100,7 +100,7 @@ paths:
                     type: "string"
 
   # Readiness Check Endpoint
-  /readiness:
+  /topics/readiness:
     get:
       operationId: "topics.readiness"
       tags:
@@ -118,7 +118,7 @@ paths:
                     type: "string"
 
   # Startup Check Endpoint
-  /startup:
+  /topics/startup:
     get:
       operationId: "topics.startup"
       tags:

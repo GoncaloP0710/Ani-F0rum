@@ -23,7 +23,7 @@ kubectl exec -it pod/{name_of_pod} -- /bin/sh
 ```
 
 ```python
-wget -qO- http://{CLUSTER-IP}:50051/healthz
+wget -qO- http://{CLUSTER-IP}:50051/anime/healthz
 ```
 
 ## Anime Controller - Scaler
@@ -121,7 +121,7 @@ kubectl exec -it pod/{name_of_pod} -- /bin/sh
 ```
 
 ```python
-wget -qO- http://{CLUSTER-IP}:50040/healthz
+wget -qO- http://{CLUSTER-IP}:50040/user/healthz
 ```
 
 ## User Controller - Scaler
@@ -190,7 +190,7 @@ kubectl exec -it pod/{name_of_pod} -- /bin/sh
 ```
 
 ```python
-wget -qO- http://{CLUSTER-IP}:50060/healthz
+wget -qO- http://{CLUSTER-IP}:50060/topics/healthz
 ```
 
 # GET /topics example
@@ -208,7 +208,7 @@ wget --post-data='{"name":"sim", "topic_name":"yes", "message":{"username":"gajo
 ## Topics Controller - Scaler
 
 ```python
-kubectl apply -f topics_controller_scaler.yml
+kubectl apply -f python/controller/Topics/topics_controller_scaler.yml
 ```
 
 ```python
@@ -281,16 +281,7 @@ kubectl apply -f python/entry/entry_point_deployment_service.yml
 kubectl apply -f python/entry/entry_point_ingress.yml
 ```
 
-
-
 ```python
-kubectl get svc entry-point # get CLUSTER-IP
+kubectl apply -f python/entry/entry_point_clusterIP.yml
 ```
 
-```python
-kubectl exec -it pod/{name_of_pod} -- /bin/sh
-```
-
-```python
-wget -qO- http://{CLUSTER-IP}:50030/healthz
-```

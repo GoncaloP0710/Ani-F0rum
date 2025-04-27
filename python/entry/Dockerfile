@@ -18,7 +18,7 @@ RUN apk add --no-cache curl
 ENV PYTHONPATH=/app
 
 # Expose the port the service runs on
-EXPOSE 50030
+EXPOSE 80
 
 # Run the service
 CMD ["python", "python/entry/entry_point.py"]

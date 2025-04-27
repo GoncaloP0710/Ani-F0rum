@@ -26,7 +26,7 @@ spec:
 
         
         ports:
-        - containerPort: 50030
+        - containerPort: 80
 
         # TODO: Check if this is correct ----------------------------------------
 
@@ -43,7 +43,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /healthz
-            port: 50030
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 60
 
@@ -51,7 +51,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /readiness
-            port: 50030
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 60
 
@@ -59,7 +59,7 @@ spec:
         startupProbe:
           httpGet:
             path: /startup
-            port: 50030
+            port: 80
           initialDelaySeconds: 10
           periodSeconds: 60
 
@@ -73,11 +73,12 @@ metadata:
   labels:
     app: entry-point
 spec:
-  type: ClusterIP # Internal service type
+  type: NodePort # Internal service type
   selector:
     app: entry-point # Matches the app label in the deployment
   ports:
     - name: http
       protocol: TCP
-      port: 50030 # Exposed port
-      targetPort: 50030 # Port on the container
+      port: 80 # Exposed port
+      targetPort: 80 # Port on the container
+      nodePort: 30030

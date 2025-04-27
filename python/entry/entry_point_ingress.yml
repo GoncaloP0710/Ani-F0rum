@@ -1,17 +1,185 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: entry-point-ingress
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
   rules:
-    - host: entry-point.local  # Replace with your desired hostname
-      http:
+    - http:
         paths:
-          - path: /
+          - path: /anime
             pathType: Prefix
             backend:
               service:
-                name: entry-point  # Replace with the correct service name
+                name: anime-controller
                 port:
-                  number: 50030  # Replace with the correct port exposed by your service
+                  number: 50051
+          - path: /anime/healthz
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /anime/readiness
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /anime/startup
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /anime/anime_name/{anime_name}
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /anime/anime_name/{anime_name}/related
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /anime/user/recomended/{user_name}
+            pathType: Prefix
+            backend:
+              service:
+                name: anime-controller
+                port:
+                  number: 50051
+          - path: /user
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/healthz
+            pathType: Prefix
+            backend:
+              service:
+                name: users-controller
+                port:
+                  number: 50040
+          - path: /user/readiness
+            pathType: Prefix
+            backend:
+              service:
+                name: users-controller
+                port:
+                  number: 50040
+          - path: /user/startup
+            pathType: Prefix
+            backend:
+              service:
+                name: users-controller
+                port:
+                  number: 50040
+          - path: /user/{user_name}
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/{user_name}/related_by_anime
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/{user_name}/achievements
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/{user_name}/achievement/{title}
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/achievement/{title}
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/{user_name}/karma
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /user/{user_name}/karma/{karma_value}
+            pathType: Prefix
+            backend:
+              service:
+                name: users-contoller
+                port:
+                  number: 50040
+          - path: /topics
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/healthz
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/readiness
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/startup
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/{topic_name}
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/{user_name}
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060
+          - path: /topics/{user_name}/feed
+            pathType: Prefix
+            backend:
+              service:
+                name: topics-controller
+                port:
+                  number: 50060

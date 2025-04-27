@@ -1,0 +1,12 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: entry-point-gateway
+  namespace: default
+spec:
+  gatewayClassName: nginx  # Use the GatewayClass provided by your controller
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: entry-point.local  # Optional: Specify the hostname

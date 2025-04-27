@@ -1,3 +1,4 @@
+import logging
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
@@ -130,17 +131,20 @@ def get_user(user_name):
 
 
 def all_users():
+    logging.info("Fetching all users")
     try:
         response = requests.get(f"http://user-controller:50040/user")
+
+        logging.info(f"Response: {response.text}")
 
         if response.status_code == 200:
             return response.json()
         else:
-            print(f"Failed to fetch users. Status code: {response.status_code}")
-            print(f"Response: {response.text}")
+            logging.error(f"Failed to fetch users. Status code: {response.status_code}")
+            logging.error(f"Response: {response.text}")
             return None
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}")
         return None
 
 def get_karma(user_name):
@@ -240,6 +244,6 @@ def startup():
     return {"status": "started"}, 200
 
 if __name__ == "__main__":
-    connex_app.run(host="0.0.0.0", port=50030)
+    connex_app.run(host="0.0.0.0", port=80)
 
 
