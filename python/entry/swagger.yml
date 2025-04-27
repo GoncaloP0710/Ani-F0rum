@@ -1,0 +1,523 @@
+openapi: 3.0.0
+info:
+  title: "ANIME REST API"
+  description: "An API about anime"
+  version: "1.0.0"
+
+servers:
+  - url: "/"
+
+components:
+
+  # Schemas used in the API 
+  schemas:
+    Anime: #Anime schema that represents an anime
+      type: "object"
+      required:
+        - name
+        - genres
+        - episodes
+        - score
+        - aired
+        - synopsis
+      properties:
+        name:
+          type: "string"
+        genres:
+          type: "array"
+          items:
+            type: "string"
+        episodes:
+          type: "integer"
+        score:
+          type: "number"
+        aired:
+          type: "string"
+        synopsis:
+          type: "string"
+    User: # User schema that represents a user
+      type: "object"
+      required:
+        - username
+        - password
+        - location
+        - anime_watched
+        - anime_watched_score
+        - topics_subscribed
+        - messages_sent
+        - karma
+        - achievements
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        location:
+          type: "string"
+        anime_watched:
+          type: "array"
+          items:
+            type: "string"
+        anime_watched_score:
+          type: "array"
+          items:
+            type: "integer"
+        topics_subscribed:
+          type: "array"
+          items:
+            type: "string"
+        karma:
+          type: "integer"
+        achievements:
+          type: "array"
+          items:
+             $ref: "#/components/schemas/Achievement"
+    Achievement: # Achievement schema that represents a Achievement
+      type: "object"
+      required: 
+        - name
+        - description
+        - date
+        - rarity
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        date:
+          type: "string"
+        rarity:
+          type: "string"
+          enum: [common, rare, epic, legendary, mythic]
+    Topic: # Topic schema that represents a Topic
+      type: "object"
+      required: 
+        - name
+        - subscribers
+        - publications
+      properties:
+        name:
+          type: "string"
+        subscribers:
+          type: "array"
+          items:
+            type: "string"
+        publications: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Publication"
+    Publication: # Publication schema that represents a Publication
+      type: "object"
+      required: 
+        - name
+        - topic_name
+      properties:
+        name:
+          type: "string"
+        topic_name:
+          type: "string"
+        message:
+          $ref: "#/components/schemas/Message"
+        images: 
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Image"
+    Image: # Image schema that represents a Image
+      type: "object"
+      required: 
+        - name
+      properties:
+        name:
+          type: "string"
+    Message: # Message schema that represents a message
+      type: "object"
+      required:
+        - username
+        - content
+      properties:
+        username:
+          type: "string"
+        content:
+          type: "string"
+
+  # Parameters for paths 
+  parameters:
+    anime_name:
+      name: "anime_name"
+      description: "Name of the anime in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    anime_genre:
+      name: "anime_genre"
+      description: "Genre of the anime"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    user_name:
+      name: "user_name"
+      description: "Name of the user in question"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    title:
+      name: "title"
+      description: "Name of the achievement"
+      in: path
+      required: True
+      schema:
+        type: "string"
+    karma_value:
+      name: "karma_value"
+      description: "Karma value to update"
+      in: path
+      required: True
+      schema:
+        type: "integer"
+  
+paths:
+
+  # Health Check Endpoint
+  /healthz:
+    get:
+      operationId: "entry_point.healthz"
+      tags:
+        - Health
+      summary: "Check if the service is alive"
+      responses:
+        "200":
+          description: "Service is alive"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Readiness Check Endpoint
+  /readiness:
+    get:
+      operationId: "entry_point.readiness"
+      tags:
+        - Health
+      summary: "Check if the service is ready to serve traffic"
+      responses:
+        "200":
+          description: "Service is ready"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # Startup Check Endpoint
+  /startup:
+    get:
+      operationId: "entry_point.startup"
+      tags:
+        - Health
+      summary: "Check if the service has started successfully"
+      responses:
+        "200":
+          description: "Service has started"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+
+  # =====================================================
+  # ======================= Anime =======================
+  # =====================================================  
+  
+  /anime:
+    get:
+      operationId: "entry_point.all_anime"
+      tags:
+        - Anime
+      summary: "Show the anime list"
+      responses:
+        "200":
+          description: "Successfully show anime list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
+
+  /anime/anime_name/{anime_name}:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_anime"
+      tags:
+        - Anime
+      summary: "Show a specific anime if it exists"
+      responses:
+        "200":
+          description: "Successfully show the anime"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+
+  /anime/anime_name/{anime_name}/related:
+    parameters:
+      - name: "anime_name"
+        in: path
+        required: true
+        description: "Name of the anime"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_similar_anime"
+      tags:
+        - Anime
+      summary: "Show related anime to the specific anime"
+      responses:
+        "200":
+          description: "Successfully show related anime"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
+        "404":
+          description: "Anime not found"
+
+  /anime/user/recomended/{user_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_similar_anime_list"
+      tags:
+        - Anime
+      summary: "Show the anime list recommended for the user"
+      responses:
+        "200":
+          description: "Successfully show anime list"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Anime"
+
+
+  /user:
+    get:
+      operationId: "entry_point.all_users"
+      tags:
+        - User
+      summary: "Show all users"
+      responses:
+        "200":
+          description: "Successfully show all users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        
+  /user/{user_name}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_user"
+      tags:
+        - User
+      summary: "Get a specific user by username"
+      responses:
+        "200":
+          description: "Successfully retrieved user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/related_by_anime:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_related_by_anime"
+      tags:
+        - User
+      summary: "Show related users to the specific user based on anime watched"
+      responses:
+        "200":
+          description: "Successfully show related users"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+
+  /user/{user_name}/achievements:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.GetAchivementList"
+      tags:
+        - User
+      summary: "Show user achievements"
+      responses:
+        "200":
+          description: "Successfully show user achievements"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Achievement"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/achievement/{title}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "title"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.UpdateAchievement"
+      tags:
+        - User
+      summary: "Update user achievement"
+      responses:
+        "201":
+          description: "Successfully updated user"
+          content:
+            application/json:
+              schema:
+                type: "boolean"
+        "404":
+          description: "User or achievement not found"
+          
+  /user/achievement/{title}:
+    parameters:
+      - name: "title"
+        in: path
+        required: true
+        description: "Name of the achievement"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.GetAchievement"
+      tags:
+        - User
+      summary: "Get a specific achievement by name"
+      responses:
+        "200":
+          description: "Successfully retrieved achievement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Achievement"
+        "404":
+          description: "Achievement not found"  
+
+  /user/{user_name}/karma:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.get_karma"
+      tags:
+        - User
+      summary: "Show user karma"
+      responses:
+        "200":
+          description: "Successfully show user karma"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: "User not found"
+
+  /user/{user_name}/karma/{karma_value}:
+    parameters:
+      - name: "user_name"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "karma_value"
+        in: path
+        required: true
+        description: "Karma value to update"
+        schema:
+          type: "integer"
+    get:
+      operationId: "entry_point.update_user_karma"
+      tags:
+        - User
+      summary: "Update user karma"
+      responses:
+        "201":
+          description: "Successfully updated user"
+          content:
+            application/json:
+              schema:
+                type: "boolean"
+        "404":
+          description: "User not found"

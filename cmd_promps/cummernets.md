@@ -270,3 +270,27 @@ kubectl get hpa
 ```python
 kubectl describe hpa topic-repository-hpa
 ```
+
+# Entry Point
+
+```python
+kubectl apply -f python/entry/entry_point_deployment_service.yml
+```
+
+```python
+kubectl apply -f python/entry/entry_point_ingress.yml
+```
+
+
+
+```python
+kubectl get svc entry-point # get CLUSTER-IP
+```
+
+```python
+kubectl exec -it pod/{name_of_pod} -- /bin/sh
+```
+
+```python
+wget -qO- http://{CLUSTER-IP}:50030/healthz
+```

@@ -117,3 +117,14 @@ docker build -t 4sparkz/topic-repository:latest -f python/repository/Topic/Docke
 ```python
 docker push 4sparkz/topic-repository:latest
 ```
+
+
+# Entry-Point
+
+```python
+docker build -t 4sparkz/entry-point:latest -f python/entry/Dockerfile .
+```
+
+```python
+docker push 4sparkz/entry-point:latest
+```

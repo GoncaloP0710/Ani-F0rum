@@ -297,6 +297,27 @@ class UserRepository_Service(UserRepositoryServicer) :
 
         logging.info("Found users: %s", users)
         return get_users_that_watched_anime_Response(users=users)
+    
+    def string_to_rarity(self, rarity):
+        rarity_mapping = {
+            "COMMON" : Rarity.COMMON,
+            "RARE" : Rarity.RARE,
+            "EPIC" : Rarity.EPIC,
+            "LEGENDARY" : Rarity.LEGENDARY,
+            "MYTHIC" : Rarity.MYTHIC
+        }
+        return rarity_mapping.get(rarity, "UNKNOWN")
+    
+    def rarity_to_string(self, rarity):
+        rarity_mapping = {
+            Rarity.COMMON: "COMMON",
+            Rarity.RARE: "RARE",
+            Rarity.EPIC: "EPIC",
+            Rarity.LEGENDARY: "LEGENDARY",
+            Rarity.MYTHIC: "MYTHIC"
+        }
+        return rarity_mapping.get(rarity, "UNKNOWN")
+
     #name
     def GetUserAchievements(self, request, context):
         logging.info("Searching for achievements of user: ", request.user_name)
@@ -314,7 +335,7 @@ class UserRepository_Service(UserRepositoryServicer) :
                     title=achievement["title"],
                     description=achievement["description"],
                     date=achievement["date"],
-                    rarity=Rarity.Value(achievement["rarity"])
+                    rarity=self.string_to_rarity(achievement["rarity"])
                 )
                 for achievement in result  # Iterate over the list of achievements from the DB
             ] if result else []
@@ -334,26 +355,20 @@ class UserRepository_Service(UserRepositoryServicer) :
 
         if not result:
             raise NotFound("Achievement not found")
+        
+        logging.info("Achievement rarity found: %s", result[0]["rarity"])
 
         achievement = Achievement(
             title=result[0]["title"],
             description=result[0]["description"],
             date=result[0]["date"],
-            rarity=Rarity.Value(result[0]["rarity"])
+            rarity=self.string_to_rarity(result[0]["rarity"])
         ) if result else None
 
         return get_achievement_Response(achievement=achievement)
     
     def UpdateUserAchievement(self, request, context):
         logging.info("Updating achievement for user: %s with title: %s", request.user_name, request.title)
-
-        # Mapeamento de raridade
-        rarity_mapping = {
-            "EPIC": Rarity.EPIC ,
-            "RARE": Rarity.RARE,
-            "LEGENDARY": Rarity.LEGENDARY,
-            "MYTHIC": Rarity.MYTHIC 
-        }
 
         # Buscar o achievement na lista hardcoded
         ach = next((achievement for achievement in self.Achievements if achievement.title == request.title), None)
@@ -384,7 +399,7 @@ class UserRepository_Service(UserRepositoryServicer) :
                 bigquery.ScalarQueryParameter("title", "STRING", ach.title),
                 bigquery.ScalarQueryParameter("description", "STRING", ach.description),
                 bigquery.ScalarQueryParameter("date", "STRING", ach.date),
-                bigquery.ScalarQueryParameter("rarity", "STRING", rarity_mapping.get(ach.rarity, "UNKNOWN"))
+                bigquery.ScalarQueryParameter("rarity", "STRING", self.rarity_to_string(ach.rarity))
             ]
         )
 
