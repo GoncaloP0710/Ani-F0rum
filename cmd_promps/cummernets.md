@@ -274,6 +274,11 @@ kubectl describe hpa topic-repository-hpa
 # Entry Point
 
 ```python
+kubectl apply \
+ -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
+```
+
+```python
 kubectl apply -f python/entry/entry_point_deployment_service.yml
 ```
 

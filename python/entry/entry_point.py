@@ -232,6 +232,80 @@ def UpdateAchievement(user_name, title):
         print(f"An error occurred: {e}")
         return None
     
+def all_topics():
+
+    try:
+        # Make a GET request to the /topics endpoint
+        response = requests.get(f"http://topics-controller:50060/topics")
+        
+        # Check if the response status code is 200 (OK)
+        if response.status_code == 200:
+            return response.json()  # Return the list of topics as JSON
+        else:
+            print(f"Failed to fetch topics. Status code: {response.status_code}")
+            print(f"Response: {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def create(body):
+
+    try:
+        # Make a POST request to the /topics endpoint
+        response = requests.post(
+            url=f"http://topics-controller:50060/topics",
+            data=body
+        )
+        
+        # Check if the response status code is 200 (OK)
+        if response.status_code < 300:
+            return response.json()  # Return the created topic name
+        else:
+            print(f"Failed to create a topic. Status code: {response.status_code}")
+            print(f"Response: {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def get_topic(topic_name):
+
+    try:
+        # Make a GET request to the /topics/{topic_name} endpoint
+        response = requests.get(f"http://topics-controller:50060/topics/{topic_name}")
+        
+        # Check if the response status code is 200 (OK)
+        if response.status_code == 200:
+            return response.json()  # Return the list of topics as JSON
+        else:
+            print(f"Failed to fetch a topic. Status code: {response.status_code}")
+            print(f"Response: {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def publish(topic_name, body):
+
+    try:
+        # Make a POST request to the /topics/{topic_name} endpoint
+        response = requests.post(
+            url=f"http://topics-controller:50060/topics/{topic_name}",
+            data=body
+        )
+        
+        # Check if the response status code is 200 (OK)
+        if response.status_code < 300:
+            return response.json()  # Return the created topic name
+        else:
+            print(f"Failed to create a topic. Status code: {response.status_code}")
+            print(f"Response: {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
 
 
 def healthz():

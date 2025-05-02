@@ -42,7 +42,7 @@ spec:
         # The liveness probe checks if the container is still running and healthy.
         livenessProbe:
           httpGet:
-            path: /healthz
+            path: /topics/healthz
             port: 50060
           initialDelaySeconds: 5
           periodSeconds: 60
@@ -50,7 +50,7 @@ spec:
         # The readiness probe checks if the container is ready to serve traffic.
         readinessProbe:
           httpGet:
-            path: /readiness
+            path: /topics/readiness
             port: 50060
           initialDelaySeconds: 5
           periodSeconds: 60
@@ -58,7 +58,7 @@ spec:
         # The startup probe checks if the container has started successfully.
         startupProbe:
           httpGet:
-            path: /startup
+            path: /topics/startup
             port: 50060
           initialDelaySeconds: 10
           periodSeconds: 60

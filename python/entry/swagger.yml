@@ -146,42 +146,42 @@ components:
       name: "anime_name"
       description: "Name of the anime in question"
       in: path
-      required: True
+      required: true
       schema:
         type: "string"
     anime_genre:
       name: "anime_genre"
       description: "Genre of the anime"
       in: path
-      required: True
+      required: true
       schema:
         type: "string"
     user_name:
       name: "user_name"
       description: "Name of the user in question"
       in: path
-      required: True
+      required: true
       schema:
         type: "string"
     title:
       name: "title"
       description: "Name of the achievement"
       in: path
-      required: True
+      required: true
       schema:
         type: "string"
     karma_value:
       name: "karma_value"
       description: "Karma value to update"
       in: path
-      required: True
+      required: true
       schema:
         type: "integer"
     topic_name:
       name: "topic_name"
       description: "Name of the topic"
       in: path
-      required: True
+      required: true
       schema:
         type: "string"
   
@@ -531,7 +531,7 @@ paths:
 
   /topics:
     get:
-      operationId: "topics.all_topics"
+      operationId: "entry_point.all_topics"
       tags:
         - Topic
       summary: "Show a partial part of the topcis list"
@@ -545,7 +545,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Topic"
     post:
-      operationId: "topics.create"
+      operationId: "entry_point.create"
       tags:
         - Topic
       summary: "Create a new topic"
@@ -572,7 +572,7 @@ paths:
         schema:
           type: "string"
     get:
-      operationId: "topics.get_topic"
+      operationId: "entry_point.get_topic"
       tags:
         - Topic
       summary: "Show a specific topic if it exists"
@@ -586,7 +586,7 @@ paths:
         "404":
           description: "Topic not found"
     post:
-      operationId: "topics.publish"
+      operationId: "entry_point.publish"
       tags:
         - Topic
       summary: "Create a publication in the topic"
@@ -600,51 +600,3 @@ paths:
       responses:
         "201":
           description: "Successfully submitted a publication"
-
-  /topics/{user_name}: 
-    parameters:
-      - name: "user_name"
-        in: path
-        required: true
-        description: "Name of a user"
-        schema:
-          type: "string"
-    get:
-      operationId: "topics.get_user_personalized"
-      tags:
-        - Topic
-      summary: "Get a personalized topic list for the user"
-      responses:
-        "200":
-          description: "Successfully show the topic list"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Topic"
-        "404":
-          description: "User not found"
-  
-  /topics/{user_name}/feed: 
-    parameters:
-      - name: "user_name"
-        in: path
-        required: true
-        description: "Name of a user"
-        schema:
-          type: "string"
-    get:
-      operationId: "topics.get_user_personalized_feed"
-      tags:
-        - Topic
-      summary: "Get a personalized publication list for the user"
-      responses:
-        "200":
-          description: "Successfully show the publication list"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Publication"
-        "404":
-          description: "User not found"

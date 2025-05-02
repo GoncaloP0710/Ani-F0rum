@@ -119,7 +119,6 @@ def get_topic(topic_name):
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-# not tested, stuck in create_topic error
 def publish(topic_name, body):
 
     print('Handling a publish request')
@@ -172,12 +171,6 @@ def readiness():
 
 def startup():
     return {"status": "started"}, 200
-
-def get_user_personalized():
-    ...
-
-def get_user_personalized_feed():
-    ...
 
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50060)
