@@ -24,7 +24,7 @@ spec:
         image: 4sparkz/entry-point:latest
         imagePullPolicy: Always
 
-        
+
         ports:
         - containerPort: 80
 
@@ -73,7 +73,7 @@ metadata:
   labels:
     app: entry-point
 spec:
-  type: NodePort # Internal service type
+  type: ClusterIP # Internal service type
   selector:
     app: entry-point # Matches the app label in the deployment
   ports:
@@ -81,4 +81,4 @@ spec:
       protocol: TCP
       port: 80 # Exposed port
       targetPort: 80 # Port on the container
-      nodePort: 30030
+      #nodePort: 30030

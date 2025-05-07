@@ -9,7 +9,7 @@ servers:
 
 components:
 
-  # Schemas used in the API 
+  # Schemas used in the API
   schemas:
     Anime: #Anime schema that represents an anime
       type: "object"
@@ -74,7 +74,7 @@ components:
              $ref: "#/components/schemas/Achievement"
     Achievement: # Achievement schema that represents a Achievement
       type: "object"
-      required: 
+      required:
         - name
         - description
         - date
@@ -91,7 +91,7 @@ components:
           enum: [common, rare, epic, legendary, mythic]
     Topic: # Topic schema that represents a Topic
       type: "object"
-      required: 
+      required:
         - name
         - subscribers
         - publications
@@ -102,13 +102,13 @@ components:
           type: "array"
           items:
             type: "string"
-        publications: 
+        publications:
           type: "array"
           items:
             $ref: "#/components/schemas/Publication"
     Publication: # Publication schema that represents a Publication
       type: "object"
-      required: 
+      required:
         - name
         - topic_name
       properties:
@@ -118,13 +118,13 @@ components:
           type: "string"
         message:
           $ref: "#/components/schemas/Message"
-        images: 
+        images:
           type: "array"
           items:
             $ref: "#/components/schemas/Image"
     Image: # Image schema that represents a Image
       type: "object"
-      required: 
+      required:
         - name
       properties:
         name:
@@ -140,7 +140,7 @@ components:
         content:
           type: "string"
 
-  # Parameters for paths 
+  # Parameters for paths
   parameters:
     anime_name:
       name: "anime_name"
@@ -184,8 +184,16 @@ components:
       required: true
       schema:
         type: "string"
-  
+
 paths:
+
+  /:
+    get:
+      operationId: "entry_point.root"
+      summary: "Check if the api is working"
+      responses:
+        "200":
+          description: "API is working"
 
   # Health Check Endpoint
   /healthz:
@@ -243,8 +251,8 @@ paths:
 
   # =====================================================
   # ======================= Anime =======================
-  # =====================================================  
-  
+  # =====================================================
+
   /anime:
     get:
       operationId: "entry_point.all_anime"
@@ -348,7 +356,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/User"
-        
+
   /user/{user_name}:
     parameters:
       - name: "user_name"
@@ -451,7 +459,7 @@ paths:
                 type: "boolean"
         "404":
           description: "User or achievement not found"
-          
+
   /user/achievement/{title}:
     parameters:
       - name: "title"
@@ -473,7 +481,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Achievement"
         "404":
-          description: "Achievement not found"  
+          description: "Achievement not found"
 
   /user/{user_name}/karma:
     parameters:
@@ -575,7 +583,7 @@ paths:
         schema:
           type: "string"
     get:
-      operationId: "topics.create"
+      operationId: "entry_point.create"
       tags:
         - Topic
       summary: "Create a new topic"
@@ -597,7 +605,7 @@ paths:
         schema:
           $ref: "#/components/schemas/Publication"
     get:
-      operationId: "topics.publish"
+      operationId: "entry_point.publish"
       tags:
         - Topic
       summary: "Create a publication in the topic"
