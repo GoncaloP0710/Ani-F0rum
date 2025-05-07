@@ -252,11 +252,14 @@ def all_topics():
         print(f"An error occurred: {e}")
         return None
 
-def create(topicname):
+def create(body):
 
     try:
-        # Make a GET request to the /topics/{topicname}/create endpoint
-        response = requests.get(f"http://topics-controller:50060/topics/{topicname}/create")
+        # Make a POST request to the /topics endpoint
+        response = requests.post(
+            url=f"http://topics-controller:50060/topics",
+            json=body
+        )
 
         # Check if the response status code is 200 (OK)
         if response.status_code < 300:
@@ -289,13 +292,15 @@ def get_topic(topic_name):
 def publish(topic_name, body):
 
     try:
-        # Make a GET request to the /topics/{topic_name}/publish/{body} endpoint
-        # verificar se o body pode ser feito em query
-        response = requests.get(f"http://topics-controller:50060/topics/{topic_name}/publish/{body}")
+        # Make a POST request to the /topics/{topic_name} endpoint
+        response = requests.post(
+            url=f"http://topics-controller:50060/topics/{topic_name}",
+            json=body
+        )
 
         # Check if the response status code is 200 (OK)
         if response.status_code < 300:
-            return response.json()  # Return the publication name
+            return response.json()  # Return the created topic name
         else:
             print(f"Failed to create a topic. Status code: {response.status_code}")
             print(f"Response: {response.text}")
