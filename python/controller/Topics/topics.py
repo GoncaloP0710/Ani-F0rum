@@ -55,17 +55,9 @@ def all_topics():
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def create(body):
+def create(topicname):
 
     print('Handling a create request')
-
-    print('Received body')
-    print(body)
-
-    topicname = body.get('name')
-    
-    print('Received value')
-    print(topicname)
 
     with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
