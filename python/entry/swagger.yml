@@ -186,6 +186,13 @@ components:
         type: "string"
   
 paths:
+  /:
+    get:
+      operationId: "entry_point.root"
+      summary: "Check if the api is working"
+      responses:
+        "200":
+          description: "API is working"
 
   # Health Check Endpoint
   /healthz:
@@ -544,6 +551,25 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Topic"
+    post:
+      operationId: "entry_point.create"
+      tags:
+        - Topic
+      summary: "Create a new topic"
+      requestBody:
+          description: "Topic to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "topic"
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+      responses:
+        "201":
+          description: "Successfully created a topic"
   /topics/{topic_name}:
     parameters:
       - name: "topic_name"
@@ -566,41 +592,18 @@ paths:
                 $ref: "#/components/schemas/Topic"
         "404":
           description: "Topic not found"
-  /topics/{topic_name}/create:
-    parameters:
-      - name: "topic_name"
-        in: path
-        required: true
-        description: "Name of the topic"
-        schema:
-          type: "string"
-    get:
-      operationId: "topics.create"
-      tags:
-        - Topic
-      summary: "Create a new topic"
-      responses:
-        "200":
-          description: "Successfully created a topic"
-  /topics/{topic_name}/publish/{body}:
-    parameters:
-      - name: "topic_name"
-        in: path
-        required: true
-        description: "Name of the topic"
-        schema:
-          type: "string"
-      - name: "body"
-        in: path
-        required: true
-        description: "Body of the publication"
-        schema:
-          $ref: "#/components/schemas/Publication"
-    get:
-      operationId: "topics.publish"
+    post:
+      operationId: "entry_point.publish"
       tags:
         - Topic
       summary: "Create a publication in the topic"
+      requestBody:
+          description: "Publition to publish"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
       responses:
         "201":
           description: "Successfully submitted a publication"
