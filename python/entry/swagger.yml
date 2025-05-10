@@ -551,25 +551,6 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Topic"
-    post:
-      operationId: "entry_point.create"
-      tags:
-        - Topic
-      summary: "Create a new topic"
-      requestBody:
-          description: "Topic to create"
-          required: True
-          content:
-            application/json:
-              schema:
-                x-body-name: "topic"
-                type: "object"
-                properties:
-                  name:
-                    type: "string"
-      responses:
-        "201":
-          description: "Successfully created a topic"
   /topics/{topic_name}:
     parameters:
       - name: "topic_name"
@@ -592,18 +573,87 @@ paths:
                 $ref: "#/components/schemas/Topic"
         "404":
           description: "Topic not found"
-    post:
-      operationId: "entry_point.publish"
+  /topics/{topic_name}/create:
+    parameters:
+      - name: "topic_name"
+        in: path
+        required: true
+        description: "Name of the topic"
+        schema:
+          type: "string"
+    get:
+      operationId: "entry_point.create_topic"
       tags:
         - Topic
-      summary: "Create a publication in the topic"
-      requestBody:
-          description: "Publition to publish"
-          required: True
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Publication"
+      summary: "Create a new topic"
       responses:
         "201":
-          description: "Successfully submitted a publication"
+          description: "Successfully created a topic"
+  /topics/{topic_name}/publish/message/{publication_name}/{username}/{content}:
+    parameters:
+      - name: "topic_name"
+        in: path
+        required: true
+        description: "Name of the topic"
+        schema:
+          type: "string"
+      - name: "publication_name"
+        in: path
+        required: true
+        description: "Name of the publication"
+        schema:
+          type: "string"
+      - name: "username"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "content"
+        in: path
+        required: true
+        description: "Content of the message"
+        schema:
+          type: "string"
+    get:
+      tags:
+        - Topic
+      operationId: "entry_point.publish_message"
+      summary: "Create a publication in the topic"
+      responses:
+        "200":
+          description: "Successfully submitted a message publication"
+  /topics/{topic_name}/publish/image/{publication_name}/{username}/{image_name}:
+    parameters:
+      - name: "topic_name"
+        in: path
+        required: true
+        description: "Name of the topic"
+        schema:
+          type: "string"
+      - name: "publication_name"
+        in: path
+        required: true
+        description: "Name of the publication"
+        schema:
+          type: "string"
+      - name: "username"
+        in: path
+        required: true
+        description: "Name of the user"
+        schema:
+          type: "string"
+      - name: "image_name"
+        in: path
+        required: true
+        description: "Name of the image"
+        schema:
+          type: "string"
+    get:
+      tags:
+        - Topic
+      operationId: "entry_point.publish_image"
+      summary: "Create a publication in the topic"
+      responses:
+        "200":
+          description: "Successfully submitted an image publication"

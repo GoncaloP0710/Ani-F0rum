@@ -55,17 +55,9 @@ def all_topics():
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def create(body):
+def create(topicname):
 
     print('Handling a create request')
-
-    print('Received body')
-    print(body)
-
-    topicname = body.get('name')
-    
-    print('Received value')
-    print(topicname)
 
     with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
@@ -119,41 +111,45 @@ def get_topic(topic_name):
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def publish(topic_name, body):
+def publish_message(topic_name, publication_name, username, content):
 
     print('Handling a publish request')
 
-    print('Received value')
-    print(topic_name)
-    print('Received body')
-    print(body)
+    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
+        stub = Publisher_pb2_grpc.PublisherStub(channel)
+        request = Publisher_pb2.PublishInTopicRequestPub(
+            topicname=topic_name,
+            publicationname=publication_name,
+            image=None,
+            message=Topic_pb2.Message(
+                username=username,
+                content=content
+            )
+        )
 
-    publicationname = body.get('name')
-    msg = body.get('message')
-    img = body.get('images')[0] if body.get('images') else None
+        try:  # Make the request
+            response = stub.Publish(request)
+            print("Published: " + response.publicationname)
+            return response.publicationname  # Return the list of animes as JSON
+        except grpc.RpcError as e:
+            return {"error": f"RPC failed: {e}"}, 500
+
+
+def publish_image(topic_name, publication_name, username, image_name):
+
+    print('Handling a publish request')
 
     with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
-        if msg != None:
-            request = Publisher_pb2.PublishInTopicRequestPub(
-                topicname=topic_name,
-                publicationname=publicationname,
-                image=None,
-                message=Topic_pb2.Message(
-                    username=msg.get('username'),
-                    content=msg.get('content')
-                )
-            )
-        else:
-            request = Publisher_pb2.PublishInTopicRequestPub(
-                topicname=topic_name,
-                publicationname=publicationname,
-                image=Topic_pb2.Image(
-                    username=img.get('username'),
-                    name=img.get('name')
-                ),
-                message=None
-            )
+        request = Publisher_pb2.PublishInTopicRequestPub(
+            topicname=topic_name,
+            publicationname=publication_name,
+            image=Topic_pb2.Image(
+                username=username,
+                name=image_name
+            ),
+            message=None
+        )
 
         try:  # Make the request
             response = stub.Publish(request)
