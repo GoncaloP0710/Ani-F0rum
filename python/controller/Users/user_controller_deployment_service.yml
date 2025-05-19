@@ -4,6 +4,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-controller
+  annotations:
+    linkerd.io/inject: enabled
   labels:
     app: user-controller
 spec:

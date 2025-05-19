@@ -1,0 +1,26 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: user-controller
+spec:
+  routes:
+    - name: GET /user
+      condition:
+        method: GET
+        pathRegex: ^/user$
+      isRetryable: true
+      timeout: 2s
+
+  #  - name: GET /api/items
+  #    condition:
+  #      method: GET
+  #      pathRegex: ^/api/items$
+  #    isRetryable: true
+  #    timeout: 1s
+
+  # - name: POST /api/items
+  #   condition:
+  #     method: POST
+  #     pathRegex: ^/api/items$
+  #   isRetryable: false
+  #   timeout: 3s
