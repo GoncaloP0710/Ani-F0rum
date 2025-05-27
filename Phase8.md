@@ -1,0 +1,3 @@
+Due to other UCs evaluations we could not find sufficient time to work or contribute for this project in this week, although we just did exploratory work on the Linkerd in the secure channel topic we discussed about in pratical class. 
+We as a group reached the conclusion of working on the other projects now in order to be able to focus sollely in this one starting next week.
+We might focus too in the remaing errors from the other phases and the appointments shown in the discussion.
