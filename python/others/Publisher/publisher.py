@@ -103,8 +103,6 @@ class PublishService(PublisherServicer):
 
         try:
             if message != None:
-
-                micro_service_response = Topic()
     
                 print('message user')
                 print(message.username)
@@ -127,7 +125,6 @@ class PublishService(PublisherServicer):
                 print('image username')
                 print(image.username)
 
-                micro_service_response = Topic()
                 response = self.stub.PublishImage(TopicRepository_pb2.PublishImageInTopicRequest(
                     topicname=topic_name,
                     publicationname=publication_name,
@@ -138,7 +135,7 @@ class PublishService(PublisherServicer):
                 ))
         
             else:
-                raise "Invalid content of publication"
+                raise ValueError("Invalid content of publication")
 
             print(response)
 

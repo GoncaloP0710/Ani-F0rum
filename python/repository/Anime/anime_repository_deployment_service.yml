@@ -26,7 +26,14 @@ spec:
 
         
         ports:
-        - containerPort: 50053
+          - containerPort: 50053
+
+        env:
+          - name: API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: BigSecret
+                key: API_TOKEN
 
         # TODO: Check if this is correct ----------------------------------------
 

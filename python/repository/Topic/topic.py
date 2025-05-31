@@ -2,8 +2,6 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
-import random
-from collections import Counter
 from concurrent import futures
 
 # ---------------------------------------------------------------
@@ -20,8 +18,6 @@ from python.repository.Topic.TopicRepository_pb2_grpc import (
 )
 
 from python.repository.Topic.TopicRepository_pb2 import (
-    MostUsedTopicsResponse,
-    TopicSubscribersResponse,
     RecomendationResponse,
     GetTopicsResponse,
     CreateTopicResponse,

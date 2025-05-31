@@ -24,9 +24,15 @@ spec:
         image: 4sparkz/user-repository:latest
         imagePullPolicy: Always
 
-        
         ports:
-        - containerPort: 50043
+          - containerPort: 50043
+
+        env:
+          - name: API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: BigSecret
+                key: API_TOKEN
 
         # TODO: Check if this is correct ----------------------------------------
 
