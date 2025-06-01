@@ -32,7 +32,7 @@ spec:
           - name: API_TOKEN
             valueFrom:
               secretKeyRef:
-                name: BigSecret
+                name: ani-f0rum
                 key: API_TOKEN
 
         # TODO: Check if this is correct ----------------------------------------
