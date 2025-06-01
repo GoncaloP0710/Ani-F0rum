@@ -4,6 +4,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 from concurrent import futures
 
+# fase 9 -------------------------------
+from google.oauth2 import service_account
+import json, os
+#---------------------------------------
+
 # ---------------------------------------------------------------
 from concurrent import futures
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -47,7 +52,12 @@ logging.basicConfig(
     ]
 )
 
-client = bigquery.Client(project="cn-fc58192", location="europe-west1")
+#client = bigquery.Client(project="cn-fc58192", location="europe-west1")
+json_string = os.environ.get('API_TOKEN')
+json_file = json.loads(json_string)
+credentials = service_account.Credentials.from_service_account_info(json_file)
+client = bigquery.Client(credentials=credentials, location="europe-west1")
+
 
 class TopicService(TopicRepositoryServicer):
 

@@ -282,6 +282,7 @@ kubectl apply \
 kubectl apply -f python/entry/entry_point_deployment_service.yml
 ```
 
+(IMPORTANTE ESPERAR 30s)
 ```python
 kubectl apply -f python/entry/entry_point_ingress.yml
 ```
