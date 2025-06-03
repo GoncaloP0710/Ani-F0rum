@@ -48,11 +48,12 @@ logging.basicConfig(
     ]
 )
 
-#client = bigquery.Client(project="cn-fc58192", location="europe-west1")
-json_string = os.environ.get('API_TOKEN')
-json_file = json.loads(json_string)
-credentials = service_account.Credentials.from_service_account_info(json_file)
-client = bigquery.Client( credentials=credentials, location="europe-west1")
+# client = bigquery.Client(project="cn-fc58192", location="europe-west1")
+# json_string = os.environ.get('API_TOKEN')
+# json_file = json.loads(json_string)
+# credentials = service_account.Credentials.from_service_account_info(json_file)
+# client = bigquery.Client( credentials=credentials, location="europe-west1")
+client = bigquery.Client()
 
 
 

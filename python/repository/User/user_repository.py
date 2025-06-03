@@ -45,11 +45,12 @@ import logging
 
 
 #client = bigquery.Client(project="cn-fc58192", location="europe-west1")
-json_string = os.environ.get('API_TOKEN')
-json_file = json.loads(json_string)
-credentials = service_account.Credentials.from_service_account_info(json_file)
-client = bigquery.Client(credentials=credentials, location="europe-west1")
+# json_string = os.environ.get('API_TOKEN')
+# json_file = json.loads(json_string)
+# credentials = service_account.Credentials.from_service_account_info(json_file)
+# client = bigquery.Client(credentials=credentials, location="europe-west1")
 #kubectl create deployment ani-f0rum --image=us-docker.pkg.dev/Ani-F0rum/containers/gke/hello-app:1.0
+client = bigquery.Client()
 
 logging.basicConfig(
     level=logging.INFO,  # Set the log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)

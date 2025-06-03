@@ -16,6 +16,7 @@ spec:
       labels:
         app: topic-repository
     spec:
+      serviceAccountName: ani-f0rum-k8s
       containers:
       - name: topic-repository
 
@@ -27,12 +28,12 @@ spec:
         ports:
           - containerPort: 50062
 
-        env:
-          - name: API_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: ani-f0rum
-                key: API_TOKEN
+        # env:
+        #   - name: API_TOKEN
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: ani-f0rum
+        #         key: API_TOKEN
 
         # TODO: Check if this is correct ----------------------------------------
 
