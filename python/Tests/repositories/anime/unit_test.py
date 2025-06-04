@@ -6,7 +6,7 @@ from grpc_interceptor.exceptions import NotFound
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.repository.Anime.anime_repository import AnimeRepository_Service
 from python.repository.Anime.AnimeRepository_pb2 import (
