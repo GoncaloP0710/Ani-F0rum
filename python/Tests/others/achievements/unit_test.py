@@ -21,9 +21,9 @@ from python.repository.User import UserRepository_pb2 as ur_pb2
 from python.others.Achievements.achievements import achievements
 
 
-class FakeContext(ServicerContext):
-    def abort(self, code, details):
-        raise NotFound(details)
+# class FakeContext(ServicerContext):
+#     def abort(self, code, details):
+#         raise NotFound(details)
 
 
 class TestAchievementsService(unittest.TestCase):
@@ -31,22 +31,22 @@ class TestAchievementsService(unittest.TestCase):
     def setUp(self):
         self.service = achievements()
         self.service.stub = MagicMock()
-        self.context = FakeContext()
+        self.context = MagicMock() #FakeContext()
 
     def test_GetAchievementList_success(self):
         mock_response = ur_pb2.get_user_achievements_Response(
-            achievements=[Achievement(title="Title 1")]
+            achievements=[Achievement(title="Wow")]
         )
         self.service.stub.GetUserAchievements.return_value = mock_response
 
         request = MagicMock()
-        request.user_name = "test_user"
+        request.user_name = "Crystal"
 
         response = self.service.GetAchivementList(request, self.context)
 
         self.assertIsInstance(response, AchievementListResponse)
         self.assertEqual(len(response.achievements), 1)
-        self.assertEqual(response.achievements[0].title, "Title 1")
+        self.assertEqual(response.achievements[0].title, "Wow")
 
     def test_GetAchievementList_not_found(self):
         mock_response = ur_pb2.get_user_achievements_Response(achievements=None)
@@ -60,17 +60,17 @@ class TestAchievementsService(unittest.TestCase):
 
     def test_GetAchievement_success(self):
         mock_response = ur_pb2.get_achievement_Response(
-            achievement=Achievement(title="Achievement X")
+            achievement=Achievement(title="Wow")
         )
         self.service.stub.GetAchievement.return_value = mock_response
 
         request = MagicMock()
-        request.title = "Achievement X"
+        request.title = "Wow"
 
         response = self.service.GetAchievement(request, self.context)
 
         self.assertIsInstance(response, AchievementResponse)
-        self.assertEqual(response.item.title, "Achievement X")
+        self.assertEqual(response.item.title, "Wow")
 
     def test_GetAchievement_not_found(self):
         mock_response = ur_pb2.get_achievement_Response(achievement=None)
@@ -87,8 +87,8 @@ class TestAchievementsService(unittest.TestCase):
         self.service.stub.UpdateUserAchievement.return_value = mock_response
 
         request = MagicMock()
-        request.title = "Achievement X"
-        request.user_name = "test_user"
+        request.title = "Wow"
+        request.user_name = "Crystal"
 
         response = self.service.UpdateAchievement(request, self.context)
 
@@ -100,8 +100,8 @@ class TestAchievementsService(unittest.TestCase):
         self.service.stub.UpdateUserAchievement.return_value = mock_response
 
         request = MagicMock()
-        request.title = "Achievement X"
-        request.user_name = "unknown_user"
+        request.title = "Wow"
+        request.user_name = "Crystal"
 
         with self.assertRaises(NotFound):
             self.service.UpdateAchievement(request, self.context)
