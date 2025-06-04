@@ -5,10 +5,10 @@ from unittest.mock import MagicMock, patch
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.others.UserRecommendations.UserRecommendations_pb2 import users_related_by_anime_Request
-from python.Common.Anime_pb2 import Anime
+from python.Common.Anime_pb2 import Anime, AnimeGenre
 from python.Common.User_pb2 import User
 
 from python.others.UserRecommendations.user_recommendations import UserRecommendations_Service
@@ -55,10 +55,10 @@ class TestUserRecommendationsService(unittest.TestCase):
         # Setup
         self.service.stub.GetAllAnime.return_value = MagicMock(
             anime_list=[
-                Anime(name="Naruto", genre="ACTION"),
-                Anime(name="One Piece", genre="ADVENTURE"),
-                Anime(name="Bleach", genre="FANTASY"),
-                Anime(name="Death Note", genre="THRILLER"),
+                Anime(name="Naruto", genres=[AnimeGenre.ACTION]),
+                Anime(name="One Piece", genres=[AnimeGenre.ADVENTURE]),
+                Anime(name="Bleach", genres=[AnimeGenre.FANTASY]),
+                Anime(name="Death Note", genres=[AnimeGenre.THRILLER]),
             ]
         )
 

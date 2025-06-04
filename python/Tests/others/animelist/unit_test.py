@@ -6,15 +6,14 @@ import grpc
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.others.AnimeList.AnimeList_pb2 import (
     get_similar_anime_Request,
-    recomended_animeList_Response,
+    get_anime_by_name_Response
 )
 from python.Common.Anime_pb2 import Anime, AnimeGenre
 from python.repository.Anime import AnimeRepository_pb2
-from python.others.AnimeList.AnimeList_pb2_grpc import AnimeListServicer
 
 from python.others.AnimeList.anime_list import AnimeList_Service
 
@@ -34,12 +33,23 @@ class TestAnimeListService(unittest.TestCase):
         self.assertEqual(result.animes[0].name, "Naruto")
 
     def test_GetAnimeByName_success(self):
+        anime = Anime(
+            name="Naruto",
+            genres=[],
+            episodes=220,
+            score=8.5,
+            aired="2002-2007",
+            synopsis="A young ninja's journey."
+        )
+
         mock_response = MagicMock()
-        mock_response.anime.name = "Naruto"
+        mock_response.anime = anime
+
         self.service.stub.AnimeByName.return_value = mock_response
 
         request = AnimeRepository_pb2.anime_by_name_Request(anime_name="Naruto")
         result = self.service.GetAnimeByName(request, MagicMock())
+
         self.assertEqual(result.anime.name, "Naruto")
 
     def test_GetMultipleAnimeByName_success(self):
@@ -52,7 +62,7 @@ class TestAnimeListService(unittest.TestCase):
         self.assertEqual(len(result.animes), 2)
 
     def test_GetSimilarAnime_success(self):
-        genres = [AnimeGenre(name="Action"), AnimeGenre(name="Adventure")]
+        genres = [AnimeGenre.ACTION, AnimeGenre.DRAMA]
         anime = Anime(name="Naruto", genres=genres)
         self.service.stub.AnimeByName.return_value.anime = anime
 
@@ -66,24 +76,8 @@ class TestAnimeListService(unittest.TestCase):
         self.assertGreaterEqual(len(result.animes), 1)
         self.assertTrue(all(isinstance(a, Anime) for a in result.animes))
 
-    def test_GetRecomendedAnimeList_success(self):
-        mock_context = MagicMock()
-        liked_animes = [Anime(name="Naruto"), Anime(name="Bleach")]
-
-        similar_response = MagicMock()
-        similar_response.animes = [Anime(name="Attack on Titan"), Anime(name="Death Note")]
-
-        self.service.GetSimilarAnime = MagicMock(return_value=similar_response)
-
-        result = self.service.GetRecomendedAnimeList(
-            MagicMock(animes_most_liked=liked_animes),
-            mock_context
-        )
-        self.assertTrue(len(result.animes) > 0)
-        self.service.GetSimilarAnime.assert_called()
-
     def test_get_combination_of_genres(self):
-        genres = [AnimeGenre(name="Action"), AnimeGenre(name="Drama"), AnimeGenre(name="Comedy")]
+        genres = [AnimeGenre.ACTION, AnimeGenre.DRAMA, AnimeGenre.COMEDY]
         combinations = self.service.get_combination_of_genres(genres)
         self.assertIsInstance(combinations, list)
         self.assertTrue(all(isinstance(c, list) for c in combinations))

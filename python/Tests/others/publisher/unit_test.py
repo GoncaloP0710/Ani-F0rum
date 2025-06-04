@@ -6,7 +6,7 @@ import grpc
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.Common.Topic_pb2 import Topic, Message, Image
 
@@ -72,11 +72,11 @@ class TestPublishService(unittest.TestCase):
         self.service.stub.PublishMessage.assert_called_once()
 
     def test_Publish_image_success(self):
-        image = Image(username="user2", name="screenshot")
+        image1 = Image(name="screenshot", username="user1")
         request = PublishInTopicRequestPub(
             topicname="tech",
             publicationname="pub2",
-            image=image
+            image=image1
         )
 
         self.service.stub.PublishImage.return_value = MagicMock(publicationname="pub2")
@@ -89,7 +89,7 @@ class TestPublishService(unittest.TestCase):
     def test_Publish_invalid_content(self):
         request = PublishInTopicRequestPub(topicname="tech", publicationname="pub3")
 
-        with self.assertRaises(TypeError):  # Porque o código tenta lançar uma string diretamente
+        with self.assertRaises(TypeError):
             self.service.Publish(request, self.context)
 
 

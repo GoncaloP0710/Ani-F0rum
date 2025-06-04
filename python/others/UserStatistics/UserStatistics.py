@@ -12,7 +12,7 @@ from python.others.UserStatistics.UserStatistics_pb2_grpc import(
 )
 from grpc_interceptor import ExceptionToStatusInterceptor
 from grpc_interceptor.exceptions import NotFound
-from UserStatistics_pb2 import (
+from python.others.UserStatistics.UserStatistics_pb2 import (
     Top10_Response,
     MostUsedTopics_Response,
     MostUsedTopics_Request,

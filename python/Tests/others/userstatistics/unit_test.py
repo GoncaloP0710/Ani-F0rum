@@ -5,11 +5,11 @@ from unittest.mock import MagicMock, patch
 import grpc
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.others.UserStatistics.UserStatistics import UserStatistics
 from python.Common.Anime_pb2 import Anime
-from python.Common.Topic_pb2 import Topic, Message, Publication
+from python.Common.Topic_pb2 import Topic, Message, Publication, Image
 from python.Common.User_pb2 import User
 
 class TestUserStatistics(unittest.TestCase):
@@ -37,7 +37,7 @@ class TestUserStatistics(unittest.TestCase):
 
     def test_get_most_used_topics_success(self):
         pub1 = Publication(message=Message(username="test_user"))
-        pub2 = Publication(images=Publication.Image(username="test_user"))
+        pub2 = Publication(images=Image(name="screnshoot", username="test_user"))
 
         topic1 = Topic(topicname="topic1", publications=[pub1, pub2])
         topic2 = Topic(topicname="topic2", publications=[pub1])

@@ -6,7 +6,7 @@ from grpc_interceptor.exceptions import NotFound
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', "..")))
 
 from python.repository.User.user_repository import UserRepository_Service
 from python.repository.User.UserRepository_pb2 import (

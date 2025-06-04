@@ -55,14 +55,14 @@ def all_topics():
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def create(topicname):
+def create(topic_name):
 
     print('Handling a create request')
 
     with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
         print('Before request to other micro service')
-        request = Publisher_pb2.CreateTopicRequestPub(topicname=topicname) # Create a request
+        request = Publisher_pb2.CreateTopicRequestPub(topicname=topic_name) # Create a request
         
         try:  # Make the request
             response = stub.CreateTopic(request)

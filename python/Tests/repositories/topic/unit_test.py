@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
 
 from python.repository.Topic.TopicRepository_pb2 import (
     GetTopicsResponse,
