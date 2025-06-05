@@ -8,7 +8,6 @@ from grpc_interceptor.exceptions import NotFound
 
 import sys
 import os
-print("PILA")
 print(os.path.dirname(__file__))
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
