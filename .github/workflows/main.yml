@@ -30,4 +30,3 @@ jobs:
           python -m unittest python.Tests.others.publisher.unit_test
           python -m unittest python.Tests.others.userrecommendations.unit_test
           python -m unittest python.Tests.others.userstatistics.unit_test
-        continue-on-error: true
