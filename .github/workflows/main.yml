@@ -25,5 +25,5 @@ jobs:
         continue-on-error: true
       - name: Testing the project using pytest
         run: |
-          python -m unittest discover -s python/Tests/
+          python -m unittest discover -s .
         continue-on-error: true
