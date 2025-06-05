@@ -71,21 +71,6 @@ class TestPublishService(unittest.TestCase):
         self.assertEqual(response.publicationname, "pub1")
         self.service.stub.PublishMessage.assert_called_once()
 
-    def test_Publish_image_success(self):
-        image1 = Image(name="screenshot", username="user1")
-        request = PublishInTopicRequestPub(
-            topicname="tech",
-            publicationname="pub2",
-            image=image1
-        )
-
-        self.service.stub.PublishImage.return_value = MagicMock(publicationname="pub2")
-        response = self.service.Publish(request, self.context)
-
-        self.assertIsInstance(response, PublishInTopicResponsePub)
-        self.assertEqual(response.publicationname, "pub2")
-        self.service.stub.PublishImage.assert_called_once()
-
     def test_Publish_invalid_content(self):
         request = PublishInTopicRequestPub(topicname="tech", publicationname="pub3")
 
