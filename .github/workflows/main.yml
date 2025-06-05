@@ -25,5 +25,9 @@ jobs:
         continue-on-error: true
       - name: Testing the project using pytest
         run: |
-          python -m unittest discover -s python/Tests -p "*_test.py"
+          python -m unittest python.Tests.others.achievements.unit_test.py
+          python -m unittest python.Tests.others.animelist.unit_test.py
+          python -m unittest python.Tests.others.publisher.unit_test.py
+          python -m unittest python.Tests.others.userrecommendations.unit_test.py
+          python -m unittest python.Tests.others.userstatistics.unit_test.py
         continue-on-error: true
