@@ -118,7 +118,6 @@ docker build -t 4sparkz/topic-repository:latest -f python/repository/Topic/Docke
 docker push 4sparkz/topic-repository:latest
 ```
 
-
 # Entry-Point
 
 ```python
