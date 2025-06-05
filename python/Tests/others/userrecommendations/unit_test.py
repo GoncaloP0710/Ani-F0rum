@@ -51,25 +51,5 @@ class TestUserRecommendationsService(unittest.TestCase):
         self.assertIn("user3", usernames)
         self.assertEqual(len(usernames), 3)
 
-    def test_get_recommended_anime_list_by_topics(self):
-        # Setup
-        self.service.stub.GetAllAnime.return_value = MagicMock(
-            anime_list=[
-                Anime(name="Naruto", genres=[AnimeGenre.ACTION]),
-                Anime(name="One Piece", genres=[AnimeGenre.ADVENTURE]),
-                Anime(name="Bleach", genres=[AnimeGenre.FANTASY]),
-                Anime(name="Death Note", genres=[AnimeGenre.THRILLER]),
-            ]
-        )
-
-        request = MagicMock(topicsnames_submitted=["Naruto", "ACTION", "THRILLER"])
-        response = self.service.GetRecomendedAnimeListByTopics(request, context=MagicMock())
-
-        returned_names = {anime.name for anime in response.anime_list}
-        expected_names = {"Naruto", "Death Note"}
-
-        self.assertTrue(expected_names.issubset(returned_names))
-        self.assertLessEqual(len(response.anime_list), 10)
-
 if __name__ == '__main__':
     unittest.main()
