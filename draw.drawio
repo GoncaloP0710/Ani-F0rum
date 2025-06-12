@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="ypNgHtK_cnsTJMlkypur" name="Phase 3 – Functional requirements and application architecture">
-        <mxGraphModel dx="1944" dy="761" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="2137" dy="895" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -82,15 +82,6 @@
                 <mxCell id="76" value="/topics" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="-220" y="521" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="R2yVV-g7roi1aGbfgLEV-115" value="Anime List:&amp;nbsp;&lt;div&gt;Generate similar anime&lt;/div&gt;&lt;div&gt;Search anime by genre&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="-404.75" y="1000" width="160" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="DDFgqJIRZyD7DjnSiCl7-120" value="Feed Generator:&lt;div&gt;General feed&lt;/div&gt;&lt;div&gt;Topic recomendations for users&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="-90" y="885" width="209.5" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="118" value="Label Generation:&lt;br&gt;&lt;div&gt;send the image for keyword generation.&lt;/div&gt;&lt;div&gt;search image by keyword.&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="417.5" y="905" width="230" height="60" as="geometry"/>
-                </mxCell>
                 <mxCell id="130" value="gRPC Communication" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="393.5" y="120" width="140" height="30" as="geometry"/>
                 </mxCell>
@@ -138,9 +129,6 @@
                 </mxCell>
                 <mxCell id="3nlse7nU_7aJ0FhMdwJK-149" value="User statistics" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="139.25" y="305" width="90" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="R2yVV-g7roi1aGbfgLEV-149" value="User&amp;nbsp;statistics&lt;div&gt;&lt;div style=&quot;scrollbar-color: light-dark(#e2e2e2, #4b4b4b)&lt;br/&gt;&#x9;&#x9;&#x9;&#x9;&#x9;light-dark(#fbfbfb, var(--dark-panel-color));&quot;&gt;Create a list of the most used topics&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="-95.25" y="1000" width="220" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="152" value="" style="shape=flexArrow;endArrow=classic;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -193,9 +181,6 @@
                         <mxPoint x="-310" y="450" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="DDFgqJIRZyD7DjnSiCl7-121" value="Publisher:&lt;div&gt;&lt;div&gt;create topics that do not exist on the forum.&lt;/div&gt;&lt;div&gt;publish a message or image in a specific topic.&lt;/div&gt;&lt;/div&gt;&lt;div&gt;Karma system for the user&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="160" y="885" width="180" height="115" as="geometry"/>
-                </mxCell>
                 <mxCell id="3nlse7nU_7aJ0FhMdwJK-82" value="Anime Controller" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-120" y="320" width="90.5" height="60" as="geometry"/>
                 </mxCell>
@@ -204,12 +189,6 @@
                         <mxPoint x="130" y="440" as="sourcePoint"/>
                         <mxPoint x="180" y="390" as="targetPoint"/>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="116" value="User Recommendations:&lt;div&gt;Links users based on anime preferences&lt;/div&gt;&lt;div&gt;Links users based on their messages&lt;/div&gt;&lt;div&gt;Links users based on topics&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Recommendation of anime based on the user&#39;s topics of interest analisys.&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="-549.75" y="890" width="440" height="90" as="geometry"/>
-                </mxCell>
-                <mxCell id="117" value="Achievement Controller:&lt;div&gt;show achivement list&lt;/div&gt;&lt;div&gt;show an achievement&lt;/div&gt;&lt;div&gt;add achievement to user&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="190" y="1010" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="R2yVV-g7roi1aGbfgLEV-93" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="3nlse7nU_7aJ0FhMdwJK-85" target="R2yVV-g7roi1aGbfgLEV-91" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
