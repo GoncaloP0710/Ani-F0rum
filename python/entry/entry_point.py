@@ -286,30 +286,16 @@ def get_topic(topic_name):
         print(f"An error occurred: {e}")
         return None
 
-def publish_message(topic_name, publication_name, username, content):
-
+def publish(topic_name, body):
     try:
-        # Make a GET request to the /topics/{topic_name}/publish/message/{publication_name}/{username}/{content} endpoint
-        response = requests.get(f"http://topics-controller:50060/topics/{topic_name}/publish/message/{publication_name}/{username}/{content}")
+        # Make a POST request to the /topics/{topic_name} endpoint
+        response = requests.post(
+            url=f"http://topics-controller:50060/topics/{topic_name}",
+            json=body
+        )
 
         # Check if the response status code is 200 (OK)
-        if response.status_code == 200:
-            return response.json()  # Return the created topic name
-        else:
-            print(f"Failed to create a topic. Status code: {response.status_code}")
-            print(f"Response: {response.text}")
-            return None
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
-    
-def publish_image(topic_name, publication_name, username, image_name):
-    try:
-        # Make a GET request to the /topics/{topic_name}/publish/image/{publication_name}/{username}/{image_name} endpoint
-        response = requests.get(f"http://topics-controller:50060/topics/{topic_name}/publish/image/{publication_name}/{username}/{image_name}")
-
-        # Check if the response status code is 200 (OK)
-        if response.status_code == 200:
+        if response.status_code > 200 and response.status_code < 300:
             return response.json()  # Return the created topic name
         else:
             print(f"Failed to create a topic. Status code: {response.status_code}")
