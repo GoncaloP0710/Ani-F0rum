@@ -7,7 +7,7 @@ REGION="europe-west1"
 PROJECT_ID="cn-fc58192"
 SA_EMAIL="fc58192-service@cn-fc58192.iam.gserviceaccount.com"
 K8S_SA="ani-f0rum-k8s"
-DEPLOYMENT_DIR="./deployment_yml/"
+DEPLOYMENT_DIR="./deployment_yml"
 
 echo "Creating GKE cluster..."
 gcloud container clusters create-auto $CLUSTER_NAME --region=$REGION
@@ -44,14 +44,14 @@ kubectl annotate serviceaccount \
 echo "Deploying ingress-nginx controller..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.6.4/deploy/static/provider/cloud/deploy.yaml
 
-echo "Applying Kubernetes deployments whithout entry_point_ingress.yaml..."
-find $DEPLOYMENT_DIR -type f ! -name 'entry_point_ingress.yaml' -exec kubectl apply -f {} \;
+echo "Applying Kubernetes deployments whithout entry_point_ingress.yml..."
+find $DEPLOYMENT_DIR -type f ! -name 'entry_point_ingress.yml' -exec kubectl apply -f {} \;
 
-echo "Waiting to start entry_point_ingress.yaml..."
+echo "Waiting to start entry_point_ingress.yml..."
 sleep 420
 
-echo "Aplicando entry_point_ingress.yaml..."
-kubectl apply -f $DEPLOYMENT_DIR/entry_point_ingress.yaml
+echo "Aplicando entry_point_ingress.yml..."
+kubectl apply -f $DEPLOYMENT_DIR/entry_point_ingress.yml
 
 echo "Getting ingress-nginx service info..."
 kubectl get svc -n ingress-nginx

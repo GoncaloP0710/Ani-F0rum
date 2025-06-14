@@ -73,4 +73,10 @@ Repositories are responsible for interacting with the database. They provide low
 
 ## How to run
 
-[All the information needed is here](cmd_promps/cummernets.md).
+(outdated) [All the information needed is here](cmd_promps/cummernets.md).
+
+(new) ./deploy.sh (This may take a while, only works on fc58192 google cloud account)
+
+## Close cluster
+
+gcloud container clusters delete ani-cluster --region=europe-west1
