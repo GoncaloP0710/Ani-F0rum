@@ -75,7 +75,8 @@ Repositories are responsible for interacting with the database. They provide low
 
 (outdated) [All the information needed is here](cmd_promps/cummernets.md).
 
-(new) ./deploy.sh (This may take a while, only works on fc58192 google cloud account)
+(new) chmod +x deploy.sh (for premissions)
+./deploy.sh (This may take a while, only works on fc58192 google cloud account)
 
 ## Close cluster
 
