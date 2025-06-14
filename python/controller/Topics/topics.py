@@ -111,21 +111,54 @@ def get_topic(topic_name):
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
 
-def publish_message(topic_name, publication_name, username, content):
+def publish(body):
 
     print('Handling a publish request')
 
+    publication_name = body.get('name')
+    topic_name = body.get('topic_name')
+    message = body.get('message')
+    images = body.get('images')
+    content = None
+    username = None
+    image_name = None
+    
+    if message:
+        content = message.get('content')
+        username = message.get('username')
+    else:
+        username = images.get('username')
+        image_name = images.get('name')
+
+
     with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
         stub = Publisher_pb2_grpc.PublisherStub(channel)
-        request = Publisher_pb2.PublishInTopicRequestPub(
-            topicname=topic_name,
-            publicationname=publication_name,
-            image=None,
-            message=Topic_pb2.Message(
-                username=username,
-                content=content
+
+        request = None
+
+        if message:
+            request = Publisher_pb2.PublishInTopicRequestPub(
+                topicname=topic_name,
+                publicationname=publication_name,
+                image=None,
+                message=Topic_pb2.Message(
+                    username=username,
+                    content=content
+                )
             )
-        )
+        elif images:
+            request = Publisher_pb2.PublishInTopicRequestPub(
+                topicname=topic_name,
+                publicationname=publication_name,
+                image=Topic_pb2.Image(
+                    username=username,
+                    name=image_name
+                ),
+                message=None
+            )
+        
+        else:
+            return {"error": "Invalid content of publication"}, 400
 
         try:  # Make the request
             response = stub.Publish(request)
@@ -133,40 +166,9 @@ def publish_message(topic_name, publication_name, username, content):
             return response.publicationname  # Return the list of animes as JSON
         except grpc.RpcError as e:
             return {"error": f"RPC failed: {e}"}, 500
-
-
-def publish_image(topic_name, publication_name, username, image_name):
-
-    print('Handling a publish request')
-
-    with grpc.insecure_channel('publisher:50061') as channel: # Connect to the anime_list server
-        stub = Publisher_pb2_grpc.PublisherStub(channel)
-        request = Publisher_pb2.PublishInTopicRequestPub(
-            topicname=topic_name,
-            publicationname=publication_name,
-            image=Topic_pb2.Image(
-                username=username,
-                name=image_name
-            ),
-            message=None
-        )
-
-        try:  # Make the request
-            response = stub.Publish(request)
-            print("Published: " + response.publicationname)
-            return response.publicationname  # Return the list of animes as JSON
-        except grpc.RpcError as e:
-            return {"error": f"RPC failed: {e}"}, 500
-
 
 def healthz():
     return {"status": "ok"}, 200
-
-def readiness():
-    return {"status": "ready"}, 200
-
-def startup():
-    return {"status": "started"}, 200
 
 if __name__ == "__main__":
     connex_app.run(host="0.0.0.0", port=50060)

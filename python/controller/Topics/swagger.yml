@@ -46,8 +46,11 @@ components:
     Image: # Image schema that represents a Image
       type: "object"
       required: 
+        - username
         - name
       properties:
+        username:
+          type: "string"
         name:
           type: "string"
     Message: # Message schema that represents a message
@@ -98,42 +101,6 @@ paths:
                 properties:
                   status:
                     type: "string"
-
-  # Readiness Check Endpoint
-  /topics/readiness:
-    get:
-      operationId: "topics.readiness"
-      tags:
-        - Health
-      summary: "Check if the service is ready to serve traffic"
-      responses:
-        "200":
-          description: "Service is ready"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  status:
-                    type: "string"
-
-  # Startup Check Endpoint
-  /topics/startup:
-    get:
-      operationId: "topics.startup"
-      tags:
-        - Health
-      summary: "Check if the service has started successfully"
-      responses:
-        "200":
-          description: "Service has started"
-          content:
-            application/json:
-              schema:
-                type: "object"
-                properties:
-                  status:
-                    type: "string"
                     
   # =====================================================
   # ======================= Topic =======================
@@ -176,6 +143,21 @@ paths:
                 $ref: "#/components/schemas/Topic"
         "404":
           description: "Topic not found"
+    post:
+      operationId: "topics.publish"
+      tags:
+        - Topic
+      summary: "Create a publication in the topic"
+      requestBody:
+          description: "Publication to publish"
+          required: True
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Publication"
+      responses:
+        "201":
+          description: "Successfully submitted a publication"
   /topics/{topic_name}/create:
     parameters:
       - name: "topic_name"
@@ -192,71 +174,3 @@ paths:
       responses:
         "200":
           description: "Successfully created a topic"
-  /topics/{topic_name}/publish/message/{publication_name}/{username}/{content}:
-    parameters:
-      - name: "topic_name"
-        in: path
-        required: true
-        description: "Name of the topic"
-        schema:
-          type: "string"
-      - name: "publication_name"
-        in: path
-        required: true
-        description: "Name of the publication"
-        schema:
-          type: "string"
-      - name: "username"
-        in: path
-        required: true
-        description: "Name of the user"
-        schema:
-          type: "string"
-      - name: "content"
-        in: path
-        required: true
-        description: "Content of the message"
-        schema:
-          type: "string"
-    get:
-      tags:
-        - Topic
-      operationId: "entry_point.publish_message"
-      summary: "Create a publication in the topic"
-      responses:
-        "200":
-          description: "Successfully submitted a message publication"
-  /topics/{topic_name}/publish/image/{publication_name}/{username}/{image_name}:
-    parameters:
-      - name: "topic_name"
-        in: path
-        required: true
-        description: "Name of the topic"
-        schema:
-          type: "string"
-      - name: "publication_name"
-        in: path
-        required: true
-        description: "Name of the publication"
-        schema:
-          type: "string"
-      - name: "username"
-        in: path
-        required: true
-        description: "Name of the user"
-        schema:
-          type: "string"
-      - name: "image_name"
-        in: path
-        required: true
-        description: "Name of the image"
-        schema:
-          type: "string"
-    get:
-      tags:
-        - Topic
-      operationId: "entry_point.publish_image"
-      summary: "Create a publication in the topic"
-      responses:
-        "200":
-          description: "Successfully submitted an image publication"

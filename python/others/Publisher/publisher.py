@@ -148,7 +148,7 @@ class PublishService(PublisherServicer):
 # HTTP server for Kubernetes probes
 class ProbeHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path in ["/healthz", "/readiness", "/startup"]:
+        if self.path in ["/healthz"]:
             self.send_response(200)
             self.end_headers()
             self.wfile.write(b"OK")
