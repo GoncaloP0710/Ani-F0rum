@@ -43,8 +43,8 @@ spec:
             memory: "128Mi"
             cpu: "250m"
           limits:
-            memory: "256Mi"
-            cpu: "500m"
+            memory: "128Mi"
+            cpu: "250m"
 
         # The liveness probe checks if the container is still running and healthy.
         livenessProbe:
