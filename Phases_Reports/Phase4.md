@@ -17,7 +17,7 @@ Ani-F-rum is a cloud-based application designed to create an anime forum with a 
 
 The project is built using a microservices architecture, with each service responsible for a specific domain. Communication between services is achieved using gRPC, while REST APIs are exposed for external interaction.
 
-<img src="draw.png" alt="plot" width="500"/>
+<img src="../draw.png" alt="plot" width="500"/>
 
 ### Server Entry Point
 
@@ -273,34 +273,34 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 ## Tests Preview
 
 <div align="center">
-  <img src="/README_Files/AnimeTests.png" alt="plot" width="500"/>
+  <img src="../README_Files/AnimeTests.png" alt="plot" width="500"/>
   <p><em>Figure: Anime related Test Results</em></p>
 </div>
 
 <div align="center">
-  <img src="/README_Files/User.png" alt="plot" width="500"/>
+  <img src="../README_Files/User.png" alt="plot" width="500"/>
   <p><em>Figure: User related Test Results</em></p>
 </div>
 
 ---
 
 <div align="center">
-  <img src="/README_Files/Topic_Client.png" alt="Topic Client Test" width="400"/>
+  <img src="../README_Files/Topic_Client.png" alt="Topic Client Test" width="400"/>
   <p><em>Figure: Topic Client Test Results</em></p>
 </div>
 
 <div align="center">
-  <img src="/README_Files/Topic_Controller.png" alt="Topic Controller" width="400"/>
+  <img src="../README_Files/Topic_Controller.png" alt="Topic Controller" width="400"/>
   <p><em>Figure: Topic Controller Results</em></p>
 </div>
 
 <div align="center">
-  <img src="/README_Files/Topic_Other.png" alt="Publisher" width="400"/>
+  <img src="../README_Files/Topic_Other.png" alt="Publisher" width="400"/>
   <p><em>Figure: Topic Publisher Test Results</em></p>
 </div>
 
 <div align="center">
-  <img src="/README_Files/Topic_Repository.png" alt="Topic Repository" width="400"/>
+  <img src="../README_Files/Topic_Repository.png" alt="Topic Repository" width="400"/>
   <p><em>Figure: Topic Repository Test Results</em></p>
 </div>
 
