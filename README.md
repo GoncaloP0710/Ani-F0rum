@@ -1,4 +1,4 @@
-# Ani-F-rum Project
+# Ani-F0rum Project
 
 ## Authors
 
@@ -11,7 +11,7 @@
 
 ## Overview
 
-Ani-F-rum is a cloud-native application designed to create an anime forum with integrated social networking features. The platform leverages Google Cloud services and Kubernetes to deliver scalable and resilient microservices. It provides REST and gRPC APIs for managing users, anime data, topics, and recommendations. The project integrates advanced cloud-native technologies such as autoscaling, service mesh, and metrics-driven monitoring to ensure high availability and performance.
+Ani-F0rum is a cloud-native application designed to create an anime forum with integrated social networking features. The platform leverages Google Cloud services and Kubernetes to deliver scalable and resilient microservices. It provides REST and gRPC APIs for managing users, anime data, topics, and recommendations. The project integrates advanced cloud-native technologies such as autoscaling, service mesh, and metrics-driven monitoring to ensure high availability and performance.
 
 ### Dataset
 
