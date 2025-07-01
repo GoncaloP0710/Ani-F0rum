@@ -23,7 +23,10 @@ The project uses the [MyAnimeList Dataset](https://www.kaggle.com/datasets/dbdmo
 
 The project is built using a microservices architecture, with each service responsible for a specific domain. Communication between services is achieved using gRPC, while REST APIs are exposed for external interaction.
 
-<img src="draw.png" alt="plot" width="500"/>
+<div align="center">
+  <img src="/README_Files/draw.png" alt="plot" width="500"/>
+  <p><em>Figure 1: Architecture of the project</em></p>
+</div>
 
 ### Kubernetes
 
@@ -63,12 +66,12 @@ Repositories are responsible for interacting with the database. They provide low
 
 <div align="center">
   <img src="/README_Files/anime_controller_pod.png" alt="plot" width="500"/>
-  <p><em>Figure: Anime controller pod test Results</em></p>
+  <p><em>Figure 2: Anime controller pod test Results</em></p>
 </div>
 
 <div align="center">
   <img src="/README_Files/anime-list-hpa.png" alt="plot" width="500"/>
-  <p><em>Figure: Anime list hpa test Results</em></p>
+  <p><em>Figure 3: Anime list hpa test Results</em></p>
 </div>
 
 ## How to run
